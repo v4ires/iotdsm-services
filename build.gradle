@@ -1,0 +1,70 @@
+group 'iot-repository'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    ext.kotlin_version = '1.1.4-3'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+group 'iot-repository'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    //Test Unit
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
+    //Hibernate Dependencies
+    compile 'org.hibernate:hibernate-core:5.2.11.Final'
+    compile 'org.hibernate:hibernate-entitymanager:5.2.11.Final'
+
+    //Class Preprocess
+    compileOnly 'org.projectlombok:lombok:1.16.18'
+
+    //Web Framework
+    compile "com.sparkjava:spark-core:2.6.0"
+
+    //Serializer Dependencies
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
+    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
+    compile group: 'javax.xml.parsers', name: 'jaxp-api', version: '1.4.5'
+
+    //JDBC Drivers
+    compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+}
