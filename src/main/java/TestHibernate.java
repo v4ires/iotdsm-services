@@ -4,9 +4,9 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import persistence.SensorJPA;
 import persistence.SensorSQL;
-import utils.CustomTransation;
-import utils.HibernateUtil;
-import utils.JDBConnection;
+import utils.hibernate.CustomTransation;
+import utils.hibernate.HibernateUtil;
+import utils.sql.JDBConnection;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -36,17 +36,6 @@ public class TestHibernate {
         executor.shutdown();
         while (!executor.isTerminated()) ;
         HibernateUtil.getSessionFactory().close();
-    }
-
-    public static void foo_rest() {
-        get("/hello", (req, res) -> {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            CustomTransation tx = new CustomTransation(session, transaction);
-            List<Sensor> sensors = new SensorJPA().findAll(tx);
-            tx.close();
-            return new Gson().toJson(sensors);
-        });
     }
 
     public static void foo_insert() {
@@ -95,7 +84,7 @@ public class TestHibernate {
                     "('', 0.0, 0.0, 'foodeu');";
             String sql_select = "SELECT * FROM tb_sensor;";
 
-            List<Sensor> sensors = (List<Sensor>) (Object) new SensorSQL().select_sql(sql_select, postgresConn);
+            List<Sensor> sensors = (List<Sensor>) (Object) new SensorSQL(mysqlConn).select_sql(sql_select);
             sensors.forEach(s -> System.out.println(s.getName()));
         } catch (SQLException e) {
             e.printStackTrace();

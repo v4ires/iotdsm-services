@@ -1,4 +1,4 @@
-package utils;
+package utils.sql;
 
 import lombok.Builder;
 

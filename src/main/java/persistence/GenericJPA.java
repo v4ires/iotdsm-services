@@ -5,8 +5,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import utils.HibernateUtil;
-import utils.CustomTransation;
+import utils.hibernate.HibernateUtil;
+import utils.hibernate.CustomTransation;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;

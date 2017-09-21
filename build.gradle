@@ -64,7 +64,18 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
     compile group: 'javax.xml.parsers', name: 'jaxp-api', version: '1.4.5'
 
-    //JDBC Drivers
-    compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    //Object Mapping JDBC - SQL Databases
+    compile group: 'org.sql2o', name: 'sql2o', version: '1.5.4'
+
+    //JDBC Drivers - SQL Databases
+    compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4' //Works
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6' //Works
+    compile group: 'com.h2database', name: 'h2', version: '1.3.148'
+
+    //JDBC Drivers - NOSQL Databases
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.5.0'
+    compile group: 'org.apache-extras.cassandra-jdbc', name: 'cassandra-jdbc', version: '1.2.5'
+
+    //Commons Library
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
 }
