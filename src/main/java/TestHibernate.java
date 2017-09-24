@@ -1,13 +1,16 @@
 import com.google.gson.Gson;
+import lombok.experimental.var;
 import model.Sensor;
+import model.SensorMeasureType;
+import model.SensorSource;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import persistence.SensorJPA;
-import persistence.SensorSQL;
+import persistence.*;
 import utils.hibernate.CustomTransation;
 import utils.hibernate.HibernateUtil;
 import utils.sql.JDBConnection;
 
+import java.io.Console;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -18,7 +21,7 @@ import static spark.Spark.get;
 public class TestHibernate {
 
     public static void main(String[] args) {
-        foo_insertSQL();
+        foo_insert();
     }
 
     public static void foo_load() {
@@ -44,14 +47,20 @@ public class TestHibernate {
         Transaction transaction = session.beginTransaction();
         CustomTransation tx = new CustomTransation(session, transaction);
 
-        Sensor sensor = Sensor.builder().name("aaaa").build();
+        SensorSource sensorSrc = SensorSource.builder().name("OpenIoT").description("").build();
+        new SensorSourceJPA().insert(tx, sensorSrc);
+
+        Sensor sensor = Sensor.builder().name("aaaa").sensorSource(sensorSrc).build();
         new SensorJPA().insert(tx, sensor);
 
-        sensor = Sensor.builder().name("bbb").build();
+        sensor = Sensor.builder().name("bbb").sensorSource(sensorSrc).build();
         new SensorJPA().insert(tx, sensor);
 
-        sensor = Sensor.builder().name("ccc").build();
+        sensor = Sensor.builder().name("ccc").sensorSource(sensorSrc).build();
         new SensorJPA().insert(tx, sensor);
+
+        SensorMeasureType sensorMeasureType = SensorMeasureType.builder().name("ccc").build();
+        new SensorMeasureTypeJPA().insert(tx, sensorMeasureType);
 
         tx.commit();
         tx.close();
