@@ -30,7 +30,7 @@ public class TestHibernate {
             Runnable worker = () -> {
                 Session session = HibernateUtil.getSessionFactory().openSession();
                 Transaction transaction = session.beginTransaction();
-                String out = new Gson().toJson(new SensorJPA().findAll(new CustomTransation(session, transaction)));
+                String out = new Gson().toJson(new GenericJPA<>(Sensor.class).findAll(new CustomTransation(session, transaction)));
                 System.out.println(out);
                 session.close();
             };
@@ -48,19 +48,19 @@ public class TestHibernate {
         CustomTransation tx = new CustomTransation(session, transaction);
 
         SensorSource sensorSrc = SensorSource.builder().name("OpenIoT").description("").build();
-        new SensorSourceJPA().insert(tx, sensorSrc);
+        new GenericJPA<>(SensorSource.class).insert(tx, sensorSrc);
 
         Sensor sensor = Sensor.builder().name("aaaa").sensorSource(sensorSrc).build();
-        new SensorJPA().insert(tx, sensor);
+        new GenericJPA<>(Sensor.class).insert(tx, sensor);
 
         sensor = Sensor.builder().name("bbb").sensorSource(sensorSrc).build();
-        new SensorJPA().insert(tx, sensor);
+        new GenericJPA<>(Sensor.class).insert(tx, sensor);
 
         sensor = Sensor.builder().name("ccc").sensorSource(sensorSrc).build();
-        new SensorJPA().insert(tx, sensor);
+        new GenericJPA<>(Sensor.class).insert(tx, sensor);
 
         SensorMeasureType sensorMeasureType = SensorMeasureType.builder().name("ccc").build();
-        new SensorMeasureTypeJPA().insert(tx, sensorMeasureType);
+        new GenericJPA<>(SensorMeasureType.class).insert(tx, sensorMeasureType);
 
         tx.commit();
         tx.close();
