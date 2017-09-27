@@ -10,6 +10,7 @@ import java.util.Date;
 
 @Data
 @MappedSuperclass
+
 public class BasicEntity implements Serializable {
 
     @Id

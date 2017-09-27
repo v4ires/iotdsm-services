@@ -1,4 +1,6 @@
 import com.google.gson.Gson;
+import drivers.HibernateMySQLDriver;
+import drivers.JDBCMySQLDriver;
 import lombok.experimental.var;
 import model.Sensor;
 import model.SensorMeasureType;
@@ -21,7 +23,38 @@ import static spark.Spark.get;
 public class TestHibernate {
 
     public static void main(String[] args) {
-        foo_insert();
+        testJDBCMySQlDriver();
+        testHibernateMySQlDriver();
+    }
+
+    public static void testJDBCMySQlDriver()
+    {
+        for(Sensor s: new JDBCMySQLDriver().getSensors())
+        {
+            System.out.println(s.getId()+" - "+s.getName());
+        }
+
+        Sensor s = new JDBCMySQLDriver().getSensorById(2);
+
+        if(s == null)
+            System.out.println("Sensor null");
+        else
+            System.out.println(s.getId()+" - "+s.getName());
+    }
+
+    public static void testHibernateMySQlDriver()
+    {
+        for(Sensor s: new HibernateMySQLDriver().getSensors())
+        {
+            System.out.println(s.getId()+" - "+s.getName());
+        }
+
+        Sensor s = new HibernateMySQLDriver().getSensorById(2);
+
+        if(s == null)
+            System.out.println("Sensor null");
+        else
+            System.out.println(s.getId()+" - "+s.getName());
     }
 
     public static void foo_load() {
@@ -91,7 +124,8 @@ public class TestHibernate {
                     "(description, latitude, longitude, name)" +
                     " VALUES " +
                     "('', 0.0, 0.0, 'foodeu');";
-            String sql_select = "SELECT * FROM tb_sensor;";
+
+            String sql_select = "SELECT s.*,ss.name as sensor_source_name,ss.description as sensor_source_description FROM tb_sensor s JOIN tb_sensor_source ss ON (s.sensor_source_id = ss.id);";
 
             List<Sensor> sensors = (List<Sensor>) (Object) new SensorSQL(mysqlConn).select_sql(sql_select);
             sensors.forEach(s -> System.out.println(s.getName()));

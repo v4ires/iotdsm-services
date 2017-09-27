@@ -2,6 +2,7 @@ package persistence;
 
 import lombok.*;
 import model.Sensor;
+import model.SensorSource;
 import utils.sql.JDBConnection;
 import utils.sql.SQLOperation;
 
@@ -44,11 +45,19 @@ public class SensorSQL implements SQLOperation {
             Statement stmt = jdbConn.getJDBConn().createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
+                SensorSource sensor_src = SensorSource.builder()
+                        .name(rs.getString("sensor_source_name"))
+                        .description(rs.getString("sensor_source_description"))
+                        .build();
+
                 Sensor sensor_row = Sensor.builder()
                         .name(rs.getString("name"))
                         .description(rs.getString("description"))
                         .latitude(rs.getDouble("latitude"))
-                        .longitude(rs.getDouble("longitude")).build();
+                        .longitude(rs.getDouble("longitude"))
+                        .sensorSource(sensor_src)
+                        .build();
+
                 sensors_row.add(sensor_row);
             }
         } catch (SQLException e) {
