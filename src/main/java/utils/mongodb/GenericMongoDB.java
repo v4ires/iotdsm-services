@@ -2,6 +2,8 @@ package utils.mongodb;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -26,6 +28,11 @@ public class GenericMongoDB implements MongoOperation {
         gson = new Gson();
     }
 
+    @Override
+    public boolean createMongoDB() {
+        return false;
+    }
+
     /**
      * Método que retonra a referência de uma base de dados do Mongodb
      *
@@ -35,6 +42,11 @@ public class GenericMongoDB implements MongoOperation {
     @Override
     public MongoDatabase getMongoDatabase(String db_name) {
         return mongoFactory.getDatabase(db_name);
+    }
+
+    @Override
+    public boolean createMongoCollection(MongoDatabase db) {
+        return false;
     }
 
     /**
@@ -48,6 +60,17 @@ public class GenericMongoDB implements MongoOperation {
     @Override
     public MongoCollection<Document> getMongoCollection(MongoDatabase db, String db_name, String collection) {
         return getMongoDatabase(db_name).getCollection(collection);
+    }
+
+    /**
+     * Método que retorna a quantidade de itens em uma collection
+     *
+     * @param collection
+     * @return long
+     */
+    @Override
+    public long getCollectionCount(DBCollection collection) {
+        return collection.count();
     }
 
     /**
@@ -71,8 +94,8 @@ public class GenericMongoDB implements MongoOperation {
      * @return boolean
      */
     @Override
-    public boolean insert_mongo(Document document) {
-        throw new NotImplementedException();
+    public boolean insert_mongo(DBObject document, DBCollection collection) {
+        return collection.insert(document) != null ? true : false;
     }
 
     /**
