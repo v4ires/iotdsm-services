@@ -12,14 +12,16 @@ public class JDBConnection {
     public String pass;
     public String urlConn;
     public String classDriver;
+    public String databaseType;
 
     private static Connection conn;
 
-    public JDBConnection(String user, String pass, String urlConn, String classDriver) {
+    public JDBConnection(String user, String pass, String urlConn, String classDriver, String databaseType) {
         this.user = user;
         this.pass = pass;
         this.urlConn = urlConn;
         this.classDriver = classDriver;
+        this.databaseType = databaseType;
     }
 
     public Connection getJDBConn() {

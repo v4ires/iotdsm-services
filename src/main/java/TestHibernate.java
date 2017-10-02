@@ -1,18 +1,20 @@
 import com.google.gson.Gson;
-import drivers.HibernateMySQLDriver;
-import drivers.JDBCMySQLDriver;
-import lombok.experimental.var;
 import model.Sensor;
 import model.SensorMeasureType;
 import model.SensorSource;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import persistence.*;
+import utils.PropertiesReader;
 import utils.hibernate.CustomTransation;
 import utils.hibernate.HibernateUtil;
 import utils.sql.JDBConnection;
+import utils.sql.SQLQueryDatabase;
 
-import java.io.Console;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -22,40 +24,53 @@ import static spark.Spark.get;
 
 public class TestHibernate {
 
+    private static PropertiesReader _propertiesReader;
+    private static String _configFileName = "out/production/resources/config.properties";
+
     public static void main(String[] args) {
-        testJDBCMySQlDriver();
-        testHibernateMySQlDriver();
-    }
+        Path path = Paths.get(_configFileName);
 
-    public static void testJDBCMySQlDriver()
-    {
-        for(Sensor s: new JDBCMySQLDriver().getSensors())
-        {
-            System.out.println(s.getId()+" - "+s.getName());
+        if (!Files.exists(path)) {
+            System.out.println("Arquivo de configurações \"config.properties\" não encontrado.");
+            return;
         }
+        _propertiesReader = new PropertiesReader(_configFileName);
 
-        Sensor s = new JDBCMySQLDriver().getSensorById(2);
-
-        if(s == null)
-            System.out.println("Sensor null");
-        else
-            System.out.println(s.getId()+" - "+s.getName());
+        testSensorSQL();
     }
 
-    public static void testHibernateMySQlDriver()
+    public static void testSensorSQL()
     {
-        for(Sensor s: new HibernateMySQLDriver().getSensors())
-        {
-            System.out.println(s.getId()+" - "+s.getName());
+        JDBConnection jdbConnection = JDBConnection
+                .builder().user(_propertiesReader.getValue("USER")).pass(_propertiesReader.getValue("PASSWORD"))
+                .urlConn("jdbc:"+_propertiesReader.getValue("DATABASETYPE")+"://"+_propertiesReader.getValue("HOST")+":"+_propertiesReader.getValue("PORT")+"/"+_propertiesReader.getValue("DATABASE"))
+                .classDriver(_propertiesReader.getValue("DRIVER"))
+                .build();
+
+        SensorSQL sensorSql = new SensorSQL(jdbConnection);
+
+        try {
+            List<Sensor> sensors = (List<Sensor>) (Object)sensorSql.select_sql(SQLQueryDatabase.mySqlSensorQuery);
+            for(Sensor sensor: sensors)
+            {
+                String out = new Gson().toJson(sensor);
+                System.out.println(out);
+            }
+
+            Sensor s = (Sensor) sensorSql.select_unique_sql(String.format(SQLQueryDatabase.mySqlUniqueSensorQuery, 1));
+
+            System.out.println(new Gson().toJson(s));
+
+            s = (Sensor) sensorSql.select_unique_sql(String.format(SQLQueryDatabase.mySqlUniqueSensorQuery, 2));
+
+            System.out.println(new Gson().toJson(s));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-        Sensor s = new HibernateMySQLDriver().getSensorById(2);
-
-        if(s == null)
-            System.out.println("Sensor null");
-        else
-            System.out.println(s.getId()+" - "+s.getName());
     }
+
+
 
     public static void foo_load() {
         ExecutorService executor = Executors.newFixedThreadPool(4);
