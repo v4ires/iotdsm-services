@@ -8,9 +8,9 @@ import java.util.Properties;
 
 public class PropertiesReader {
 
-    private Properties props;
+    private static Properties props;
 
-    public PropertiesReader(String fileName) {
+    public static void initialize(String fileName) {
         props = new Properties();
         try {
             InputStream in = new FileInputStream(fileName);
@@ -22,8 +22,7 @@ public class PropertiesReader {
         }
     }
 
-    public String getValue(String key) {
+    public static String getValue(String key) {
         return props.getProperty(key);
     }
-
 }

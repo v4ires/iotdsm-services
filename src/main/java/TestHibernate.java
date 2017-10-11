@@ -1,4 +1,5 @@
 import com.google.gson.Gson;
+import deserialization.OpenWeatherJsonDeserializer;
 import model.Sensor;
 import model.SensorMeasureType;
 import model.SensorSource;
@@ -24,27 +25,29 @@ import static spark.Spark.get;
 
 public class TestHibernate {
 
-    private static PropertiesReader _propertiesReader;
     private static String _configFileName = "out/production/resources/config.properties";
 
-    public static void main(String[] args) {
+    public static void a(String[] args) {
         Path path = Paths.get(_configFileName);
 
         if (!Files.exists(path)) {
             System.out.println("Arquivo de configurações \"config.properties\" não encontrado.");
             return;
         }
-        _propertiesReader = new PropertiesReader(_configFileName);
 
-        testSensorSQL();
+        OpenWeatherJsonDeserializer deserializer = new OpenWeatherJsonDeserializer();
+        deserializer.loadContent("C:\\Users\\leobe\\Desktop\\TCC\\daily_16.json");
+
+        deserializer.readObject();
+
     }
 
     public static void testSensorSQL()
     {
         JDBConnection jdbConnection = JDBConnection
-                .builder().user(_propertiesReader.getValue("USER")).pass(_propertiesReader.getValue("PASSWORD"))
-                .urlConn("jdbc:"+_propertiesReader.getValue("DATABASETYPE")+"://"+_propertiesReader.getValue("HOST")+":"+_propertiesReader.getValue("PORT")+"/"+_propertiesReader.getValue("DATABASE"))
-                .classDriver(_propertiesReader.getValue("DRIVER"))
+                .builder().user(PropertiesReader.getValue("USER")).pass(PropertiesReader.getValue("PASSWORD"))
+                .urlConn("jdbc:"+PropertiesReader.getValue("DATABASETYPE")+"://"+PropertiesReader.getValue("HOST")+":"+PropertiesReader.getValue("PORT")+"/"+PropertiesReader.getValue("DATABASE"))
+                .classDriver(PropertiesReader.getValue("DRIVER"))
                 .build();
 
         SensorSQL sensorSql = new SensorSQL(jdbConnection);
