@@ -48,7 +48,7 @@ public class SensorSQL implements SQLOperation {
 
     public List<Sensor> parseSensors(ResultSet rs) throws SQLException {
 
-        HashMap<Long, Sensor> sensors = new HashMap<>();
+        ArrayList<Sensor> sensors = new ArrayList<>();
 
         while (rs.next()) {
             SensorSource sensor_src = SensorSource.builder()
@@ -56,14 +56,9 @@ public class SensorSQL implements SQLOperation {
                     .description(rs.getString("sensor_source_description"))
                     .build();
 
+            sensor_src.setCreate_time(rs.getDate("sensor_source_create_time"));
+
             sensor_src.setId(rs.getLong("sensor_source_id"));
-
-            SensorMeasureType sensor_measure_type = SensorMeasureType.builder()
-                    .name(rs.getString("sensor_measure_type_name"))
-                    .unit(rs.getString("sensor_measure_type_unit"))
-                    .build();
-
-            sensor_measure_type.setId(rs.getLong("sensor_measure_type_id"));
 
             Sensor sensor_row = Sensor.builder()
                     .name(rs.getString("name"))
@@ -74,16 +69,12 @@ public class SensorSQL implements SQLOperation {
                     .sensorMeasures(new HashSet<>())
                     .build();
 
-            sensor_row.getSensorMeasures().add(sensor_measure_type);
-            sensor_row.setId(rs.getLong("id"));
+            sensor_row.setCreate_time(rs.getDate("create_time"));
 
-            if(!sensors.containsKey(sensor_row.getId()))
-                sensors.put(sensor_row.getId(), sensor_row);
-            else
-                sensors.get(sensor_row.getId()).getSensorMeasures().add(sensor_measure_type);
+            sensors.add(sensor_row);
         }
 
-        return new ArrayList<>(sensors.values());
+        return sensors;
     }
 
     @Override

@@ -25,9 +25,9 @@ public class Sensor extends BasicEntity {
             @JoinColumn(name = "sensor_id", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "sensor_measure_type_id",
                     nullable = false, updatable = false) })
-    Set<SensorMeasureType> sensorMeasures;
+    transient Set<SensorMeasureType> sensorMeasures;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sensor_source_id", nullable = false)
     SensorSource sensorSource;
 }

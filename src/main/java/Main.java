@@ -26,5 +26,11 @@ public class Main {
         spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
 
         spark.Spark.get("/sensor", SensorController.serveSensorListPage, gson::toJson);
+        spark.Spark.get("/sensor/:id", SensorController.serveSensorById, gson::toJson);
+        spark.Spark.post("/upload", "multipart/form-data", SensorController.handleFileUpload);
+
+        spark.Spark.exception(Exception.class, (exception, request, response) -> {
+            exception.printStackTrace();
+        });
     }
 }
