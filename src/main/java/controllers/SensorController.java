@@ -1,8 +1,10 @@
 package controllers;
 
 import com.google.gson.Gson;
+import deserialization.OpenWeatherJsonDeserializer;
 import javafx.beans.binding.BooleanBinding;
 import model.Sensor;
+import model.SensorMeasure;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import persistence.GenericJPA;
@@ -137,6 +139,11 @@ public class SensorController {
         multipartConfigElement = null;
         parts = null;
         uploadedFile = null;
+
+        OpenWeatherJsonDeserializer deserializer = new OpenWeatherJsonDeserializer();
+        deserializer.loadContent(out.toAbsolutePath().toString());
+
+        List<SensorMeasure> smList = (List<SensorMeasure>)(Object) deserializer.readArray();
 
         return "OK";
     };
