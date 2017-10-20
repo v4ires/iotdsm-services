@@ -58,6 +58,8 @@ dependencies {
 
     //Web Framework
     compile "com.sparkjava:spark-core:2.6.0"
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
 
     //Serializer Dependencies
     compile group: 'com.google.code.gson', name: 'gson', version: '2.7'

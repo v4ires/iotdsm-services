@@ -1,5 +1,6 @@
 import com.google.gson.Gson;
 import controllers.SensorController;
+import org.apache.log4j.BasicConfigurator;
 import utils.PropertiesReader;
 
 import java.nio.file.Files;
@@ -11,6 +12,7 @@ public class Main {
     private static String _configFileName = "out/production/resources/config.properties";
 
     public static void main(String[] args) {
+        BasicConfigurator.configure();
         Path path = Paths.get(_configFileName);
 
         if (!Files.exists(path)) {

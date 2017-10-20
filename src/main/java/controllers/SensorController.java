@@ -1,8 +1,6 @@
 package controllers;
 
-import com.google.gson.Gson;
 import deserialization.OpenWeatherJsonDeserializer;
-import javafx.beans.binding.BooleanBinding;
 import model.Sensor;
 import model.SensorMeasure;
 import org.hibernate.Session;
@@ -21,7 +19,10 @@ import utils.sql.SQLQueryDatabase;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 import java.io.InputStream;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;

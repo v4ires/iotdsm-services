@@ -1,8 +1,10 @@
 package persistence;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import model.Sensor;
-import model.SensorMeasureType;
 import model.SensorSource;
 import utils.sql.JDBConnection;
 import utils.sql.SQLOperation;
@@ -11,7 +13,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 

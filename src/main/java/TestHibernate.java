@@ -5,14 +5,14 @@ import model.SensorMeasureType;
 import model.SensorSource;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import persistence.*;
+import persistence.GenericJPA;
+import persistence.SensorSQL;
 import utils.PropertiesReader;
 import utils.hibernate.CustomTransation;
 import utils.hibernate.HibernateUtil;
 import utils.sql.JDBConnection;
 import utils.sql.SQLQueryDatabase;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,8 +20,6 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import static spark.Spark.get;
 
 public class TestHibernate {
 
