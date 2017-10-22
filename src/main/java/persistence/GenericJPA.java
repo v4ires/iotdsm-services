@@ -13,7 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-public class GenericJPA<T extends BasicEntity> {
+public class GenericJPA<T> {
 
     private final Class<T> persistentClass;
     private final SessionFactory sf;

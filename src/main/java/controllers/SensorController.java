@@ -2,6 +2,7 @@ package controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import deserialization.OpenWeatherCsvDeserializer;
 import deserialization.OpenWeatherJsonDeserializer;
 import model.Sensor;
 import model.SensorMeasure;
@@ -11,6 +12,7 @@ import repositories.SensorMeasureRepository;
 import repositories.SensorMeasureTypeRepository;
 import repositories.SensorRepository;
 import repositories.SensorSourceRepository;
+import services.SensorService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -198,50 +200,24 @@ public class SensorController extends BaseController {
             multipartConfigElement = null;
             uploadedFile = null;
 
-            List<SensorMeasure> smList;
+            SensorService sensorService = new SensorService();
 
             switch (inputFormat) {
+                case "csv":
+                    OpenWeatherCsvDeserializer csvDeserializer = new OpenWeatherCsvDeserializer();
+                    csvDeserializer.loadContent(out.toAbsolutePath().toString(), ",");
+
+                    insertedMeasures = sensorService.deserializeMeasures(csvDeserializer);
+
+                    csvDeserializer.close();
+                    break;
                 default:
                 case "json":
                     OpenWeatherJsonDeserializer deserializer = new OpenWeatherJsonDeserializer();
                     deserializer.loadContent(out.toAbsolutePath().toString());
 
-                    SensorSourceRepository _sensorSourceRepository = new SensorSourceRepository();
-                    SensorRepository _sensorRepository = new SensorRepository();
-                    SensorMeasureTypeRepository _sensorMeasureTypeRepository = new SensorMeasureTypeRepository();
-                    SensorMeasureRepository _sensorMeasureRepository = new SensorMeasureRepository();
+                    insertedMeasures = sensorService.deserializeMeasures(deserializer);
 
-                    smList = (List<SensorMeasure>) (Object) deserializer.readArray();
-
-                    Map<String, SensorMeasureType> insertedSensorMeasureType = new HashMap<String, SensorMeasureType>();
-                    Map<String, SensorSource> insertedSensorSource = new HashMap<String, SensorSource>();
-
-                    while (smList != null) {
-                        List<Sensor> insertedSensor = new ArrayList<Sensor>();
-
-                        for (SensorMeasure sm : smList) {
-
-                            if (!insertedSensorSource.containsKey(sm.getSensor().getSensorSource().getName())) {
-                                _sensorSourceRepository.addSensorSource(sm.getSensor().getSensorSource());
-                                insertedSensorSource.put(sm.getSensor().getSensorSource().getName(), sm.getSensor().getSensorSource());
-                            }
-
-                            if (!insertedSensorMeasureType.containsKey(sm.getSensorMeasureType().getName())) {
-                                _sensorMeasureTypeRepository.addSensorMeasureType(sm.getSensorMeasureType());
-                                insertedSensorMeasureType.put(sm.getSensorMeasureType().getName(), sm.getSensorMeasureType());
-                            }
-
-                            if (!insertedSensor.contains(sm.getSensor())) {
-                                _sensorRepository.addSensor(sm.getSensor());
-                                insertedSensor.add(sm.getSensor());
-                            }
-
-                            _sensorMeasureRepository.addSensorMeasure(sm);
-                            insertedMeasures++;
-                        }
-
-                        smList = (List<SensorMeasure>) (Object) deserializer.readArray();
-                    }
                     deserializer.close();
                     break;
             }

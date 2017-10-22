@@ -2,8 +2,10 @@ package model;
 
 import com.google.gson.annotations.Expose;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "tb_sensor_measure")
@@ -12,7 +14,16 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SensorMeasure extends BasicEntity{
+public class SensorMeasure {
+    @Expose
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+
+    @Expose
+    private Date create_time;
+
     @Expose
     String value;
 
