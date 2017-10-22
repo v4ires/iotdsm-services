@@ -16,6 +16,7 @@ public class Main {
 
     public static void main(String[] args) {
         BasicConfigurator.configure();
+
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuração.");
         options.addOption("h", "help", false, "Mostra ajuda.");
 
@@ -45,17 +46,15 @@ public class Main {
         //Spark config
         spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
 
-        SensorSourceController sensorSourceController = new SensorSourceController();
-        spark.Spark.get("/sensorSource", sensorSourceController.serveSensorSourceListPage);
-        spark.Spark.get("/sensorSource/:id", sensorSourceController.serveSensorById);
+        spark.Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
+        spark.Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
 
-        SensorController sensorController = new SensorController();
-        spark.Spark.get("/sensor", sensorController.serveSensorListPage);
-        spark.Spark.get("/sensor/:id/measure", sensorController.serveSensorMeasureTypesBySensorId);
-        spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", sensorController.serveSensorMeasuresBySensorIdAndDate);
-        spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", sensorController.serveSensorMeasuresBySensorIdAndDate);
-        spark.Spark.get("/sensor/:id", sensorController.serveSensorById);
-        spark.Spark.post("/sensor/upload", "multipart/form-data", sensorController.handleFileUpload);
+        spark.Spark.get("/sensor", SensorController.serveSensorListPage);
+        spark.Spark.get("/sensor/:id/measure", SensorController.serveSensorMeasureTypesBySensorId);
+        spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
+        spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
+        spark.Spark.get("/sensor/:id", SensorController.serveSensorById);
+        spark.Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
 
         spark.Spark.exception(Exception.class, (exception, request, response) -> {
             exception.printStackTrace();

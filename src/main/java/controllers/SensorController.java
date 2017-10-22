@@ -26,22 +26,9 @@ import java.time.Instant;
 import java.util.*;
 
 public class SensorController extends BaseController {
-    private SensorRepository _sensorRepository;
-    private SensorMeasureTypeRepository _sensorMeasureTypeRepository;
-    private SensorMeasureRepository _sensorMeasureRepository;
-    private SensorSourceRepository _sensorSourceRepository;
-    private Gson _gson;
+    private static Gson _gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-    public SensorController()
-    {
-        _sensorRepository = new SensorRepository();
-        _sensorMeasureTypeRepository = new SensorMeasureTypeRepository();
-        _sensorMeasureRepository = new SensorMeasureRepository();
-        _sensorSourceRepository = new SensorSourceRepository();
-        _gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    }
-
-    public Route serveSensorListPage = (Request request, Response response) -> {
+    public static Route serveSensorListPage = (Request request, Response response) -> {
         try {
             String outputFormat = "json";
 
@@ -52,14 +39,14 @@ public class SensorController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorRepository.getSensors()));
+                    return success(response, _gson.toJson(new SensorRepository().getSensors()));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
         }
     };
 
-    public Route serveSensorMeasureTypesBySensorId = (Request request, Response response) -> {
+    public static Route serveSensorMeasureTypesBySensorId = (Request request, Response response) -> {
         try {
             String outputFormat = "json";
             Long sensorId;
@@ -81,14 +68,14 @@ public class SensorController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorMeasureTypeRepository.getSensorMeasureTypeBySensor(sensorId)));
+                    return success(response, _gson.toJson(new SensorMeasureTypeRepository().getSensorMeasureTypeBySensor(sensorId)));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
         }
     };
 
-    public Route serveSensorMeasuresBySensorIdAndDate = (Request request, Response response) -> {
+    public static Route serveSensorMeasuresBySensorIdAndDate = (Request request, Response response) -> {
         try {
             String outputFormat = "json";
             Long sensorId;
@@ -143,14 +130,14 @@ public class SensorController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorMeasureRepository.getSensorMeasure(sensorId, measureTypeId, startDate, endDate)));
+                    return success(response, _gson.toJson(new SensorMeasureRepository().getSensorMeasure(sensorId, measureTypeId, startDate, endDate)));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
         }
     };
 
-    public Route serveSensorById = (Request request, Response response) -> {
+    public static Route serveSensorById = (Request request, Response response) -> {
         try {
             String outputFormat = "json";
             Long sensorId;
@@ -172,19 +159,19 @@ public class SensorController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorRepository.getSensorById(sensorId)));
+                    return success(response, _gson.toJson(new SensorRepository().getSensorById(sensorId)));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
         }
     };
 
-    public Route handleFileUpload = (Request request, Response response) -> {
+    public static Route handleFileUpload = (Request request, Response response) -> {
         try {
             String inputFormat = "json";
             String location = PropertiesReader.getValue("UPLOADDIR");          // the directory location where files will be stored
-            long maxFileSize = 100000000;       // the maximum size allowed for uploaded files
-            long maxRequestSize = 100000000;    // the maximum size allowed for multipart/form-data requests
+            long maxFileSize = 10000000000L;       // the maximum size allowed for uploaded files
+            long maxRequestSize = 10000000000L;    // the maximum size allowed for multipart/form-data requests
             int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk
             long insertedMeasures = 0;
 
@@ -219,6 +206,11 @@ public class SensorController extends BaseController {
                     OpenWeatherJsonDeserializer deserializer = new OpenWeatherJsonDeserializer();
                     deserializer.loadContent(out.toAbsolutePath().toString());
 
+                    SensorSourceRepository _sensorSourceRepository = new SensorSourceRepository();
+                    SensorRepository _sensorRepository = new SensorRepository();
+                    SensorMeasureTypeRepository _sensorMeasureTypeRepository = new SensorMeasureTypeRepository();
+                    SensorMeasureRepository _sensorMeasureRepository = new SensorMeasureRepository();
+
                     smList = (List<SensorMeasure>) (Object) deserializer.readArray();
 
                     Map<String, SensorMeasureType> insertedSensorMeasureType = new HashMap<String, SensorMeasureType>();
@@ -250,6 +242,7 @@ public class SensorController extends BaseController {
 
                         smList = (List<SensorMeasure>) (Object) deserializer.readArray();
                     }
+                    deserializer.close();
                     break;
             }
 

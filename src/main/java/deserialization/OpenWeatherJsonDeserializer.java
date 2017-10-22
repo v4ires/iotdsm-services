@@ -15,6 +15,11 @@ import java.util.*;
 
 public class OpenWeatherJsonDeserializer implements IDeserializer {
     private Scanner fileStream;
+    private SensorSource sensorSource;
+    private SensorMeasureType tempMeasureType;
+    private SensorMeasureType pressMeasureType;
+    private SensorMeasureType humidityMeasureType;
+    private SensorMeasureType speedWindMeasureType;
 
     @Override
     public Object readObject() {
@@ -25,80 +30,83 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
     public List<Object> readArray() {
         String line;
 
-        try{
+        try {
             line = fileStream.nextLine();
-        }
-        catch(Exception ex) {
+        } catch (Exception ex) {
             return null;
         }
 
         List<SensorMeasure> sensorMeasures = new ArrayList<>();
 
-        if(line != null && !line.equals("")) {
+        if (line != null && !line.equals("")) {
             OpenWeatherEntry result = new Gson().fromJson(line, OpenWeatherEntry.class);
 
-            SensorSource sensorSource = SensorSource.builder()
-                    .name("OpenWeatherMap")
-                    .build();
+            if (sensorSource == null)
+                sensorSource = SensorSource.builder()
+                        .name("OpenWeatherMap")
+                        .build();
 
             Sensor tempSensor = Sensor.builder()
-                    .name("temperature sensor - "+result.getCity().getName())
+                    .name("temperature sensor - " + result.getCity().getName())
                     .latitude(result.getCity().getCoord().getLat())
                     .longitude(result.getCity().getCoord().getLon())
                     .sensorSource(sensorSource)
                     .sensorMeasures(new HashSet<>())
                     .build();
 
-            SensorMeasureType tempMeasureType = SensorMeasureType.builder()
-                    .name("temperature")
-                    .unit("K")
-                    .build();
+            if (tempMeasureType == null)
+                tempMeasureType = SensorMeasureType.builder()
+                        .name("temperature")
+                        .unit("K")
+                        .build();
             tempSensor.getSensorMeasures().add(tempMeasureType);
 
             Sensor pressureSensor = Sensor.builder()
-                    .name("pressure sensor - "+result.getCity().getName())
+                    .name("pressure sensor - " + result.getCity().getName())
                     .latitude(result.getCity().getCoord().getLat())
                     .longitude(result.getCity().getCoord().getLon())
                     .sensorSource(sensorSource)
                     .sensorMeasures(new HashSet<>())
                     .build();
 
-            SensorMeasureType pressMeasureType = SensorMeasureType.builder()
-                    .name("pressure")
-                    .unit("hPa")
-                    .build();
+            if (pressMeasureType == null)
+                pressMeasureType = SensorMeasureType.builder()
+                        .name("pressure")
+                        .unit("hPa")
+                        .build();
             pressureSensor.getSensorMeasures().add(pressMeasureType);
 
-           Sensor humiditySensor = Sensor.builder()
-                    .name("humidity sensor - "+result.getCity().getName())
+            Sensor humiditySensor = Sensor.builder()
+                    .name("humidity sensor - " + result.getCity().getName())
                     .latitude(result.getCity().getCoord().getLat())
                     .longitude(result.getCity().getCoord().getLon())
                     .sensorSource(sensorSource)
                     .sensorMeasures(new HashSet<>())
                     .build();
 
-            SensorMeasureType humidityMeasureType = SensorMeasureType.builder()
-                    .name("humidity")
-                    .unit("%")
-                    .build();
+            if (humidityMeasureType == null)
+                humidityMeasureType = SensorMeasureType.builder()
+                        .name("humidity")
+                        .unit("%")
+                        .build();
             humiditySensor.getSensorMeasures().add(humidityMeasureType);
 
-           Sensor speedWindSensor = Sensor.builder()
-                    .name("speed_wind sensor - "+result.getCity().getName())
+            Sensor speedWindSensor = Sensor.builder()
+                    .name("speed_wind sensor - " + result.getCity().getName())
                     .latitude(result.getCity().getCoord().getLat())
                     .longitude(result.getCity().getCoord().getLon())
                     .sensorSource(sensorSource)
                     .sensorMeasures(new HashSet<>())
                     .build();
 
-            SensorMeasureType speedWindMeasureType = SensorMeasureType.builder()
-                    .name("speed_wind")
-                    .unit("m/s")
-                    .build();
+            if (speedWindMeasureType == null)
+                speedWindMeasureType = SensorMeasureType.builder()
+                        .name("speed_wind")
+                        .unit("m/s")
+                        .build();
             speedWindSensor.getSensorMeasures().add(speedWindMeasureType);
 
-            for(SensorData measure : result.getData())
-            {
+            for (SensorData measure : result.getData()) {
                 SensorMeasure tempSensorMeasure = SensorMeasure.builder()
                         .value(measure.getTemp().getDay().toString())
                         .sensor(tempSensor)
@@ -136,7 +144,7 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
                 sensorMeasures.add(speedWindSensorMeasure);
             }
 
-            return (List<Object>)(Object)sensorMeasures;
+            return (List<Object>) (Object) sensorMeasures;
         }
 
         return null;
@@ -155,5 +163,11 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
         }
 
         return true;
+    }
+
+    @Override
+    public void close() {
+        if(fileStream != null)
+            fileStream.close();
     }
 }

@@ -27,16 +27,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class SensorSourceController extends BaseController {
-    private SensorSourceRepository _sensorSourceRepository;
-    private Gson _gson;
+    private static Gson _gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
-    public SensorSourceController()
-    {
-        _sensorSourceRepository = new SensorSourceRepository();
-        _gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-    }
-
-    public Route serveSensorSourceListPage = (Request request, Response response) -> {
+    public static Route serveSensorSourceListPage = (Request request, Response response) -> {
         try {
             String outputFormat = "json";
 
@@ -47,14 +40,14 @@ public class SensorSourceController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorSourceRepository.getSensorSources()));
+                    return success(response, _gson.toJson(new SensorSourceRepository().getSensorSources()));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
         }
     };
 
-    public Route serveSensorById = (Request request, Response response) -> {
+    public static Route serveSensorById = (Request request, Response response) -> {
         try {
             String outputFormat = "json";
             Long sensorId;
@@ -76,7 +69,7 @@ public class SensorSourceController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorSourceRepository.getSensorSourceById(sensorId)));
+                    return success(response, _gson.toJson(new SensorSourceRepository().getSensorSourceById(sensorId)));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
