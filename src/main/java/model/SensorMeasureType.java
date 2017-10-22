@@ -1,5 +1,6 @@
 package model;
 
+import com.google.gson.annotations.Expose;
 import lombok.*;
 
 import javax.persistence.Entity;
@@ -14,6 +15,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SensorMeasureType extends BasicEntity {
+    @Expose
     String name;
+
+    @Expose
     String unit;
 }

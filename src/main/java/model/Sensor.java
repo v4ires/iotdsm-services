@@ -1,5 +1,6 @@
 package model;
 
+import com.google.gson.annotations.Expose;
 import lombok.*;
 
 import javax.persistence.*;
@@ -15,9 +16,13 @@ import java.util.Set;
 @NoArgsConstructor
 public class Sensor extends BasicEntity {
 
+    @Expose
     String name;
+    @Expose
     String description;
+    @Expose
     double latitude;
+    @Expose
     double longitude;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -25,9 +30,10 @@ public class Sensor extends BasicEntity {
             @JoinColumn(name = "sensor_id", nullable = false, updatable = false) },
             inverseJoinColumns = { @JoinColumn(name = "sensor_measure_type_id",
                     nullable = false, updatable = false) })
-    transient Set<SensorMeasureType> sensorMeasures;
+    Set<SensorMeasureType> sensorMeasures;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "sensor_source_id", nullable = false)
+    @Expose
     SensorSource sensorSource;
 }

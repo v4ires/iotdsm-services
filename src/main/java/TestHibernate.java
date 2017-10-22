@@ -53,18 +53,18 @@ public class TestHibernate {
         SensorSQL sensorSql = new SensorSQL(jdbConnection);
 
         try {
-            List<Sensor> sensors = (List<Sensor>) (Object)sensorSql.select_sql(SQLQueryDatabase.mySqlSensorQuery);
+            List<Sensor> sensors = (List<Sensor>) (Object)sensorSql.select_sql(SQLQueryDatabase.mySqlSensorSelectQuery);
             for(Sensor sensor: sensors)
             {
                 String out = new Gson().toJson(sensor);
                 System.out.println(out);
             }
 
-            Sensor s = (Sensor) sensorSql.select_unique_sql(String.format(SQLQueryDatabase.mySqlUniqueSensorQuery, 1));
+            Sensor s = (Sensor) sensorSql.select_unique_sql(String.format(SQLQueryDatabase.mySqlUniqueSensorSelectQuery, 1));
 
             System.out.println(new Gson().toJson(s));
 
-            s = (Sensor) sensorSql.select_unique_sql(String.format(SQLQueryDatabase.mySqlUniqueSensorQuery, 2));
+            s = (Sensor) sensorSql.select_unique_sql(String.format(SQLQueryDatabase.mySqlUniqueSensorSelectQuery, 2));
 
             System.out.println(new Gson().toJson(s));
 

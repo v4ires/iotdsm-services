@@ -1,5 +1,6 @@
 package model;
 
+import com.google.gson.annotations.Expose;
 import lombok.*;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SensorMeasure extends BasicEntity{
+    @Expose
     String value;
 
     @ManyToOne(fetch = FetchType.LAZY)

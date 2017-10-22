@@ -1,8 +1,11 @@
 package persistence;
 
-import lombok.*;
-import model.Sensor;
-import model.SensorSource;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
+import model.SensorMeasure;
+import model.SensorMeasureType;
 import utils.sql.JDBConnection;
 import utils.sql.SQLOperation;
 
@@ -10,20 +13,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Data
 @Getter
 @Setter
-public class SensorSQL implements SQLOperation {
+public class SensorMeasureTypeSQL implements SQLOperation {
 
     @NonNull
     private JDBConnection jdbConn;
 
     private Long lastInsertedId;
 
-    public SensorSQL(JDBConnection jdbConn) {
+    public SensorMeasureTypeSQL(JDBConnection jdbConn) {
         this.jdbConn = jdbConn;
     }
 
@@ -63,35 +65,23 @@ public class SensorSQL implements SQLOperation {
         return null;
     }
 
-    public List<Sensor> parseSensors(ResultSet rs) throws SQLException {
+    public List<SensorMeasureType> parseSensorMeasureTypes(ResultSet rs) throws SQLException {
 
-        ArrayList<Sensor> sensors = new ArrayList<>();
+        ArrayList<SensorMeasureType> sensorMeasureTypes = new ArrayList<>();
 
         while (rs.next()) {
-            SensorSource sensor_src = SensorSource.builder()
-                    .name(rs.getString("sensor_source_name"))
-                    .description(rs.getString("sensor_source_description"))
-                    .build();
 
-            sensor_src.setCreate_time(rs.getTimestamp("sensor_source_create_time"));
-
-            sensor_src.setId(rs.getLong("sensor_source_id"));
-
-            Sensor sensor_row = Sensor.builder()
+            SensorMeasureType sensor_row = SensorMeasureType.builder()
                     .name(rs.getString("name"))
-                    .description(rs.getString("description"))
-                    .latitude(rs.getDouble("latitude"))
-                    .longitude(rs.getDouble("longitude"))
-                    .sensorSource(sensor_src)
-                    .sensorMeasures(new HashSet<>())
+                    .unit(rs.getString("unit"))
                     .build();
-
+            sensor_row.setId(rs.getLong("id"));
             sensor_row.setCreate_time(rs.getTimestamp("create_time"));
 
-            sensors.add(sensor_row);
+            sensorMeasureTypes.add(sensor_row);
         }
 
-        return sensors;
+        return sensorMeasureTypes;
     }
 
     @Override
@@ -106,7 +96,7 @@ public class SensorSQL implements SQLOperation {
 
             ResultSet rs = stmt.executeQuery();
 
-            return (List<Object>) (Object) parseSensors(rs);
+            return (List<Object>) (Object) parseSensorMeasureTypes(rs);
 
         } catch (SQLException e) {
             throw e;

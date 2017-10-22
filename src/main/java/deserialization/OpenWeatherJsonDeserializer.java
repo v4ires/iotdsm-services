@@ -23,7 +23,14 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
 
     @Override
     public List<Object> readArray() {
-        String line = fileStream.nextLine();
+        String line;
+
+        try{
+            line = fileStream.nextLine();
+        }
+        catch(Exception ex) {
+            return null;
+        }
 
         List<SensorMeasure> sensorMeasures = new ArrayList<>();
 
@@ -46,6 +53,7 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
                     .name("temperature")
                     .unit("K")
                     .build();
+            tempSensor.getSensorMeasures().add(tempMeasureType);
 
             Sensor pressureSensor = Sensor.builder()
                     .name("pressure sensor - "+result.getCity().getName())
@@ -59,6 +67,7 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
                     .name("pressure")
                     .unit("hPa")
                     .build();
+            pressureSensor.getSensorMeasures().add(pressMeasureType);
 
            Sensor humiditySensor = Sensor.builder()
                     .name("humidity sensor - "+result.getCity().getName())
@@ -72,6 +81,7 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
                     .name("humidity")
                     .unit("%")
                     .build();
+            humiditySensor.getSensorMeasures().add(humidityMeasureType);
 
            Sensor speedWindSensor = Sensor.builder()
                     .name("speed_wind sensor - "+result.getCity().getName())
@@ -85,6 +95,7 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
                     .name("speed_wind")
                     .unit("m/s")
                     .build();
+            speedWindSensor.getSensorMeasures().add(speedWindMeasureType);
 
             for(SensorData measure : result.getData())
             {

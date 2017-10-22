@@ -1,5 +1,6 @@
 package model;
 
+import com.google.gson.annotations.Expose;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,6 +14,9 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SensorSource extends BasicEntity {
+    @Expose
     String name;
+
+    @Expose
     String description;
 }
