@@ -47,6 +47,10 @@ public class GenericJPA<T extends BasicEntity> {
         tx.session.persist(entity);
     }
 
+    public void insertOrUpdate(CustomTransation tx, T entity) {
+        tx.session.saveOrUpdate(entity);
+    }
+
     public void update(CustomTransation tx, T entity) {
         tx.session.merge(entity);
     }

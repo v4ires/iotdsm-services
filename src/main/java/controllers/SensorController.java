@@ -15,6 +15,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 import utils.PropertiesReader;
+import utils.hibernate.CustomTransation;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
@@ -39,6 +40,7 @@ public class SensorController extends BaseController {
         _sensorSourceRepository = new SensorSourceRepository();
         _gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
     }
+
     public Route serveSensorListPage = (Request request, Response response) -> {
         try {
             String outputFormat = "json";
@@ -230,15 +232,11 @@ public class SensorController extends BaseController {
                             if (!insertedSensorSource.containsKey(sm.getSensor().getSensorSource().getName())) {
                                 _sensorSourceRepository.addSensorSource(sm.getSensor().getSensorSource());
                                 insertedSensorSource.put(sm.getSensor().getSensorSource().getName(), sm.getSensor().getSensorSource());
-                            } else {
-                                sm.getSensor().setSensorSource(insertedSensorSource.get(sm.getSensor().getSensorSource().getName()));
                             }
 
                             if (!insertedSensorMeasureType.containsKey(sm.getSensorMeasureType().getName())) {
                                 _sensorMeasureTypeRepository.addSensorMeasureType(sm.getSensorMeasureType());
                                 insertedSensorMeasureType.put(sm.getSensorMeasureType().getName(), sm.getSensorMeasureType());
-                            } else {
-                                sm.setSensorMeasureType(insertedSensorMeasureType.get(sm.getSensorMeasureType().getName()));
                             }
 
                             if (!insertedSensor.contains(sm.getSensor())) {

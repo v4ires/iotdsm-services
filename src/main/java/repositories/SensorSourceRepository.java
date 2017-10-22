@@ -23,6 +23,8 @@ public class SensorSourceRepository {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             List<SensorSource> sensorSources = new GenericJPA<>(SensorSource.class).findAll(new CustomTransation(session, transaction));
+            transaction.commit();
+            session.close();
 
             return sensorSources;
         } else {
@@ -49,6 +51,8 @@ public class SensorSourceRepository {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             SensorSource sensorSource = new GenericJPA<>(SensorSource.class).findById(new CustomTransation(session, transaction), sensorSourceId);
+            transaction.commit();
+            session.close();
 
             return sensorSource;
         } else {
@@ -76,6 +80,8 @@ public class SensorSourceRepository {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             new GenericJPA<>(SensorSource.class).insert(new CustomTransation(session, transaction), sensorSource);
+            transaction.commit();
+            session.close();
 
         } else {
             JDBConnection jdbConnection = JDBConnection

@@ -24,6 +24,8 @@ public class SensorMeasureRepository {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             SensorMeasure sensorMeasure = new GenericJPA<>(SensorMeasure.class).findById(new CustomTransation(session, transaction), sensorMeasureId);
+            transaction.commit();
+            session.close();
 
             return sensorMeasure;
         } else {
@@ -53,6 +55,8 @@ public class SensorMeasureRepository {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             List<SensorMeasure> sensors = new GenericJPA<>(SensorMeasure.class).resultList(new CustomTransation(session, transaction), "FROM SensorMeasure WHERE sensor.id="+sensorId+" AND sensorMeasureType.id="+measureTypeId+" AND create_time >= '"+df.format(startDate)+"' AND create_time <= '"+df.format(endDate)+"'");
+            transaction.commit();
+            session.close();
 
             return sensors;
         } else {
@@ -80,7 +84,8 @@ public class SensorMeasureRepository {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             new GenericJPA<>(SensorMeasure.class).insert(new CustomTransation(session, transaction), sensorMeasure);
-
+            transaction.commit();
+            session.close();
         } else {
             JDBConnection jdbConnection = JDBConnection
                     .builder().user(PropertiesReader.getValue("USER")).pass(PropertiesReader.getValue("PASSWORD"))

@@ -22,6 +22,8 @@ public class SensorRepository {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             Sensor sensor = new GenericJPA<>(Sensor.class).findById(new CustomTransation(session, transaction), sensorId);
+            transaction.commit();
+            session.close();
 
             return sensor;
         } else {
@@ -49,6 +51,8 @@ public class SensorRepository {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             List<Sensor> sensors = new GenericJPA<>(Sensor.class).findAll(new CustomTransation(session, transaction));
+            transaction.commit();
+            session.close();
 
             return sensors;
         } else {
@@ -75,7 +79,9 @@ public class SensorRepository {
         if (Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
-            new GenericJPA<>(Sensor.class).insert(new CustomTransation(session, transaction), sensor);
+            new GenericJPA<>(Sensor.class).insertOrUpdate(new CustomTransation(session, transaction), sensor);
+            transaction.commit();
+            session.close();
 
         } else {
             JDBConnection jdbConnection = JDBConnection
