@@ -1,5 +1,6 @@
 import com.google.gson.Gson;
 import controllers.SensorController;
+import org.apache.log4j.BasicConfigurator;
 import controllers.SensorSourceController;
 import org.apache.commons.cli.*;
 import utils.PropertiesReader;
@@ -14,6 +15,7 @@ public class Main {
     private static Options options = new Options();
 
     public static void main(String[] args) {
+        BasicConfigurator.configure();
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuração.");
         options.addOption("h", "help", false, "Mostra ajuda.");
 
