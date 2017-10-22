@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import deserialization.OpenWeatherCsvDeserializer;
 import deserialization.OpenWeatherJsonDeserializer;
+import deserialization.OpenWeatherXmlDeserializer;
 import model.Sensor;
 import model.SensorMeasure;
 import model.SensorMeasureType;
@@ -210,6 +211,14 @@ public class SensorController extends BaseController {
                     insertedMeasures = sensorService.deserializeMeasures(csvDeserializer);
 
                     csvDeserializer.close();
+                    break;
+                case "xml":
+                    OpenWeatherXmlDeserializer xmlDeserializer = new OpenWeatherXmlDeserializer();
+                    xmlDeserializer.loadContent(out.toAbsolutePath().toString());
+
+                    insertedMeasures = sensorService.deserializeMeasures(xmlDeserializer);
+
+                    xmlDeserializer.close();
                     break;
                 default:
                 case "json":

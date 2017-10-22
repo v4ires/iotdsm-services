@@ -96,7 +96,7 @@ public class SensorMeasureRepository {
             SensorMeasureSQL sensorMeasureSql = new SensorMeasureSQL(jdbConnection);
 
             try {
-                sensorMeasureSql.insert_sql(SQLQueryDatabase.mySqlSensorMeasureInsertQuery, sensorMeasure.getSensor().getId(), sensorMeasure.getValue(), sensorMeasure.getSensorMeasureType().getId());
+                sensorMeasureSql.insert_sql(SQLQueryDatabase.mySqlSensorMeasureInsertQuery, sensorMeasure.getSensor().getId(), sensorMeasure.getValue(), sensorMeasure.getSensorMeasureType().getId(), sensorMeasure.getCreate_time());
                 sensorMeasure.setId(sensorMeasureSql.get_last_generated_key());
             } catch (SQLException e) {
                 e.printStackTrace();
