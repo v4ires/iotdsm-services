@@ -44,6 +44,10 @@ public class OpenWeatherCsvDeserializer implements IDeserializer {
                 try {
                     line = fileStream.nextLine();
                 } catch (Exception ex) {
+
+                    if(sensorMeasures.size() > 0)
+                        return (List<Object>)(Object)sensorMeasures;
+
                     return null;
                 }
             } else {
@@ -179,8 +183,6 @@ public class OpenWeatherCsvDeserializer implements IDeserializer {
                 speedWindSensorMeasure.setCreate_time(Date.from(Instant.ofEpochSecond(Long.parseLong(fields[5]))));
                 sensorMeasures.add(speedWindSensorMeasure);
             }
-
-            return (List<Object>) (Object) sensorMeasures;
         }
     }
 
