@@ -1,33 +1,11 @@
 package controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import deserialization.OpenWeatherJsonDeserializer;
-import model.Sensor;
-import model.SensorMeasure;
-import model.SensorMeasureType;
-import model.SensorSource;
-import repositories.SensorMeasureRepository;
-import repositories.SensorMeasureTypeRepository;
-import repositories.SensorRepository;
 import repositories.SensorSourceRepository;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import utils.PropertiesReader;
-
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.http.Part;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 public class SensorSourceController extends BaseController {
-    private static Gson _gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     public static Route serveSensorSourceListPage = (Request request, Response response) -> {
         try {

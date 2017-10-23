@@ -1,6 +1,5 @@
 package deserialization;
 
-import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import deserialization.openweather.OpenWeatherEntry;
@@ -13,7 +12,10 @@ import model.SensorSource;
 
 import java.io.*;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
 
 public class OpenWeatherXmlDeserializer implements IDeserializer {
     private SensorSource sensorSource;

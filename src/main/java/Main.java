@@ -1,8 +1,7 @@
-import com.google.gson.Gson;
 import controllers.SensorController;
-import org.apache.log4j.BasicConfigurator;
 import controllers.SensorSourceController;
 import org.apache.commons.cli.*;
+import org.apache.log4j.BasicConfigurator;
 import utils.PropertiesReader;
 
 import java.nio.file.Files;

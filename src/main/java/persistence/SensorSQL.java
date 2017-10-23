@@ -1,6 +1,9 @@
 package persistence;
 
-import lombok.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import model.Sensor;
 import model.SensorSource;
 import utils.sql.JDBConnection;

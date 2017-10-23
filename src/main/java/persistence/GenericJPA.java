@@ -1,6 +1,5 @@
 package persistence;
 
-import model.BasicEntity;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

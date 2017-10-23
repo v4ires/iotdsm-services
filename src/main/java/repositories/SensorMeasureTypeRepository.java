@@ -1,12 +1,13 @@
 package repositories;
 
-import model.SensorMeasure;
+import com.mongodb.client.FindIterable;
+import com.mongodb.client.MongoCollection;
 import model.SensorMeasureType;
+import org.bson.Document;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import persistence.GenericJPA;
 import persistence.SensorMeasureTypeSQL;
-import persistence.SensorSQL;
 import utils.PropertiesReader;
 import utils.hibernate.CustomTransation;
 import utils.hibernate.HibernateUtil;
@@ -14,12 +15,30 @@ import utils.sql.JDBConnection;
 import utils.sql.SQLQueryDatabase;
 
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
-public class SensorMeasureTypeRepository {
+import static com.mongodb.client.model.Filters.eq;
+
+public class SensorMeasureTypeRepository extends BaseRepository {
+
+    protected SensorMeasureTypeSQL getJdbcSql()
+    {
+        if(jdbcSql == null) {
+            JDBConnection jdbConnection = JDBConnection
+                    .builder().user(PropertiesReader.getValue("USER")).pass(PropertiesReader.getValue("PASSWORD"))
+                    .urlConn("jdbc:" + databaseType + "://" + PropertiesReader.getValue("HOST") + ":" + PropertiesReader.getValue("PORT") + "/" + PropertiesReader.getValue("DATABASE"))
+                    .classDriver(PropertiesReader.getValue("DRIVER"))
+                    .build();
+
+            jdbcSql = new SensorMeasureTypeSQL(jdbConnection);
+        }
+
+        return (SensorMeasureTypeSQL) jdbcSql;
+    }
+
     public List<SensorMeasureType> getSensorMeasureTypeBySensor(long sensorId){
-        if (Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
+        if (useHibernate) {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             List<SensorMeasureType> sensorMeasureTypes = new GenericJPA<>(SensorMeasureType.class).resultList(new CustomTransation(session, transaction), "SELECT s.sensorMeasures FROM Sensor s WHERE s.id = "+sensorId);
@@ -27,46 +46,48 @@ public class SensorMeasureTypeRepository {
             session.close();
             return sensorMeasureTypes;
         } else {
-            JDBConnection jdbConnection = JDBConnection
-                    .builder().user(PropertiesReader.getValue("USER")).pass(PropertiesReader.getValue("PASSWORD"))
-                    .urlConn("jdbc:" + PropertiesReader.getValue("DATABASETYPE") + "://" + PropertiesReader.getValue("HOST") + ":" + PropertiesReader.getValue("PORT") + "/" + PropertiesReader.getValue("DATABASE"))
-                    .classDriver(PropertiesReader.getValue("DRIVER"))
-                    .build();
+            if (databaseType.equals("mongo")) {
+                MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(getMongoConnection().getMongoDatabase(PropertiesReader.getValue("DATABASE")), PropertiesReader.getValue("DATABASE"), "sensor_measure_type");
 
-            SensorMeasureTypeSQL sensorMeasureTypeSql = new SensorMeasureTypeSQL(jdbConnection);
+                FindIterable<Document> sensorDocument = sensorCollection.find(eq("sensor_id", sensorId));
 
-            try {
-                List<SensorMeasureType> sensorMeasureTypes = (List<SensorMeasureType>)(Object)sensorMeasureTypeSql.select_sql(SQLQueryDatabase.mySqlSensorMeasureTypeBySensorSelectQuery, sensorId);
+                List<SensorMeasureType> sensorMeasureTypes = new ArrayList<>();
+
+                for(Document sensorMeasureTypeDocument : sensorDocument)
+                    sensorMeasureTypes.add(_gson.fromJson(sensorMeasureTypeDocument.toJson(), SensorMeasureType.class));
 
                 return sensorMeasureTypes;
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return null;
+            }else {
+
+                try {
+                    List<SensorMeasureType> sensorMeasureTypes = (List<SensorMeasureType>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.mySqlSensorMeasureTypeBySensorSelectQuery, sensorId);
+
+                    return sensorMeasureTypes;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return null;
+                }
             }
         }
     }
 
     public void addSensorMeasureType(SensorMeasureType sensorMeasureType) {
-        if (Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
+        if (useHibernate) {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             new GenericJPA<>(SensorMeasureType.class).insert(new CustomTransation(session, transaction), sensorMeasureType);
             transaction.commit();
             session.close();
         } else {
-            JDBConnection jdbConnection = JDBConnection
-                    .builder().user(PropertiesReader.getValue("USER")).pass(PropertiesReader.getValue("PASSWORD"))
-                    .urlConn("jdbc:" + PropertiesReader.getValue("DATABASETYPE") + "://" + PropertiesReader.getValue("HOST") + ":" + PropertiesReader.getValue("PORT") + "/" + PropertiesReader.getValue("DATABASE"))
-                    .classDriver(PropertiesReader.getValue("DRIVER"))
-                    .build();
+            //Adicionamos as medidas no Mongo direto no método de adicionar sensores
+            if (!databaseType.equals("mongo")){
 
-            SensorMeasureTypeSQL sensorMeasureTypeSql = new SensorMeasureTypeSQL(jdbConnection);
-
-            try {
-                sensorMeasureTypeSql.insert_sql(SQLQueryDatabase.mySqlSensorMeasureTypeInsertQuery, sensorMeasureType.getName(), sensorMeasureType.getUnit());
-                sensorMeasureType.setId(sensorMeasureTypeSql.get_last_generated_key());
-            } catch (SQLException e) {
-                e.printStackTrace();
+                try {
+                    getJdbcSql().insert_sql(SQLQueryDatabase.mySqlSensorMeasureTypeInsertQuery, sensorMeasureType.getName(), sensorMeasureType.getUnit());
+                    sensorMeasureType.setId(getJdbcSql().get_last_generated_key());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
