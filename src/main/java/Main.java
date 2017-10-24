@@ -1,8 +1,7 @@
-import com.google.gson.Gson;
 import controllers.SensorController;
-import org.apache.log4j.BasicConfigurator;
 import controllers.SensorSourceController;
 import org.apache.commons.cli.*;
+import org.apache.log4j.BasicConfigurator;
 import utils.PropertiesReader;
 
 import java.nio.file.Files;
@@ -11,7 +10,7 @@ import java.nio.file.Paths;
 
 public class Main {
 
-    private static String _configFileName = "out/production/resources/config.properties";
+    private static String _configFileName = "config.properties";
     private static Options options = new Options();
 
     public static void main(String[] args) {
@@ -23,21 +22,20 @@ public class Main {
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
 
-        try
-        {
+        try {
             cmd = parser.parse(options, args);
-
         } catch (ParseException e) {
             showHelp();
         }
 
-        if(cmd.hasOption("c"))
+        if (cmd.hasOption("c")) {
             _configFileName = cmd.getOptionValue("c");
+        }
 
         Path path = Paths.get(_configFileName);
 
         if (!Files.exists(path)) {
-            System.out.println("Arquivo de configurações \"config.properties\" não encontrado no caminho \""+path+"\".");
+            System.out.println("Arquivo de configurações \"config.properties\" não encontrado no caminho \"" + path + "\".");
             return;
         }
 
@@ -60,7 +58,7 @@ public class Main {
         });
     }
 
-    private static void showHelp(){
+    private static void showHelp() {
         HelpFormatter formater = new HelpFormatter();
 
         formater.printHelp("Main", options);
