@@ -25,7 +25,7 @@ public class GenericMongoDB implements MongoOperation {
      */
     public GenericMongoDB(MongoClient mongoFactory) {
         this.mongoFactory = mongoFactory;
-        gson = new Gson();
+        gson =  new Gson();
     }
 
     @Override

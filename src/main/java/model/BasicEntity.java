@@ -12,7 +12,6 @@ import java.util.Date;
 @MappedSuperclass
 
 public class BasicEntity implements Serializable {
-
     @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

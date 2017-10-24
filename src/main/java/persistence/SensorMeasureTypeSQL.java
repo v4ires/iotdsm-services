@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import model.SensorMeasure;
 import model.SensorMeasureType;
 import utils.sql.JDBConnection;
 import utils.sql.SQLOperation;

@@ -1,16 +1,28 @@
 package utils.mongodb;
 
-import com.mongodb.MongoClient;
+import com.mongodb.BasicDBObject;
+import com.mongodb.client.MongoCollection;
+import org.bson.Document;
+import utils.PropertiesReader;
 
 public class MongoDBUtil {
 
-    private static MongoClient mongoFactory;
+    public static Long getNextSequence(GenericMongoDB genericMongoDB, String name) {
+        MongoCollection<Document> sequenceCollection = genericMongoDB.getMongoCollection(genericMongoDB.getMongoDatabase(PropertiesReader.getValue("DATABASE")), PropertiesReader.getValue("DATABASE"), "sequences");
+        BasicDBObject find = new BasicDBObject();
+        find.put("_id", name);
+        BasicDBObject update = new BasicDBObject();
+        update.put("$inc", new BasicDBObject("seq", 1));
+        Document obj =  sequenceCollection.findOneAndUpdate(find, update);
 
-    static {
-        mongoFactory = new MongoClient("localhost", 27017);
-    }
+        if(obj == null) {
+            Document document = new Document();
+            document.put("_id", name);
+            document.put("seq", 1);
+            sequenceCollection.insertOne(document);
+            return getNextSequence(genericMongoDB, name);
+        }
 
-    public static MongoClient getMongoFactory() {
-        return mongoFactory;
+        return Long.parseLong(obj.get("seq").toString());
     }
 }

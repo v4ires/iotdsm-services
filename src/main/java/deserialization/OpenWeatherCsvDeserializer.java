@@ -1,8 +1,5 @@
 package deserialization;
 
-import com.google.gson.Gson;
-import deserialization.openweather.OpenWeatherEntry;
-import deserialization.openweather.SensorData;
 import model.Sensor;
 import model.SensorMeasure;
 import model.SensorMeasureType;

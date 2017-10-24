@@ -1,7 +1,6 @@
 package services;
 
 import deserialization.IDeserializer;
-import deserialization.OpenWeatherJsonDeserializer;
 import model.Sensor;
 import model.SensorMeasure;
 import model.SensorMeasureType;

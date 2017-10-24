@@ -1,33 +1,12 @@
 package controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import deserialization.OpenWeatherJsonDeserializer;
-import model.Sensor;
-import model.SensorMeasure;
-import model.SensorMeasureType;
-import model.SensorSource;
-import repositories.SensorMeasureRepository;
-import repositories.SensorMeasureTypeRepository;
 import repositories.SensorRepository;
 import repositories.SensorSourceRepository;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import utils.PropertiesReader;
-
-import javax.servlet.MultipartConfigElement;
-import javax.servlet.http.Part;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 public class SensorSourceController extends BaseController {
-    private static Gson _gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     public static Route serveSensorSourceListPage = (Request request, Response response) -> {
         try {
@@ -41,6 +20,8 @@ public class SensorSourceController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorSourceRepository().getSensorSources()));
+                case "xml":
+                    return successXml(response, new SensorSourceRepository().getSensorSources());
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -70,6 +51,8 @@ public class SensorSourceController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorSourceRepository().getSensorSourceById(sensorId)));
+                case "xml":
+                    return successXml(response, new SensorSourceRepository().getSensorSourceById(sensorId));
             }
         } catch (Exception ex) {
             return serverError(response, ex);

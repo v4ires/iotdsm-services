@@ -1,35 +1,28 @@
 package controllers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import deserialization.OpenWeatherCsvDeserializer;
 import deserialization.OpenWeatherJsonDeserializer;
 import deserialization.OpenWeatherXmlDeserializer;
-import model.Sensor;
-import model.SensorMeasure;
-import model.SensorMeasureType;
-import model.SensorSource;
 import repositories.SensorMeasureRepository;
 import repositories.SensorMeasureTypeRepository;
 import repositories.SensorRepository;
-import repositories.SensorSourceRepository;
 import services.SensorService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
 import utils.PropertiesReader;
-import utils.hibernate.CustomTransation;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 import java.io.InputStream;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.util.*;
+import java.util.Date;
 
 public class SensorController extends BaseController {
-    private static Gson _gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
 
     public static Route serveSensorListPage = (Request request, Response response) -> {
         try {
@@ -43,6 +36,11 @@ public class SensorController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorRepository().getSensors()));
+                case "xml":
+                    return successXml(response, new SensorRepository().getSensors());
+                case "csv":
+                    return successCsv(response, new SensorRepository().getSensors());
+
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -72,6 +70,10 @@ public class SensorController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorMeasureTypeRepository().getSensorMeasureTypeBySensor(sensorId)));
+                case "xml":
+                    return successXml(response, new SensorMeasureTypeRepository().getSensorMeasureTypeBySensor(sensorId));
+                case "csv":
+                    return successCsv(response, new SensorMeasureTypeRepository().getSensorMeasureTypeBySensor(sensorId));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -134,6 +136,8 @@ public class SensorController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorMeasureRepository().getSensorMeasure(sensorId, measureTypeId, startDate, endDate)));
+                case "xml":
+                    return successXml(response, new SensorMeasureRepository().getSensorMeasure(sensorId, measureTypeId, startDate, endDate));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -163,6 +167,8 @@ public class SensorController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorRepository().getSensorById(sensorId)));
+                case "xml":
+                    return successXml(response, new SensorRepository().getSensorById(sensorId));
             }
         } catch (Exception ex) {
             return serverError(response, ex);

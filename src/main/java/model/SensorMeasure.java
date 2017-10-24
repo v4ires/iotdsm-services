@@ -2,7 +2,6 @@ package model;
 
 import com.google.gson.annotations.Expose;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -14,7 +13,7 @@ import java.util.Date;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SensorMeasure {
+public class SensorMeasure{
     @Expose
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

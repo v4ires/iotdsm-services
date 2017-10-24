@@ -4,9 +4,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import model.Sensor;
 import model.SensorMeasure;
-import model.SensorSource;
 import utils.sql.JDBConnection;
 import utils.sql.SQLOperation;
 
@@ -14,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 @Data
