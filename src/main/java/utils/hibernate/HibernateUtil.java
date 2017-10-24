@@ -24,8 +24,8 @@ public class HibernateUtil {
             configuration.setProperty("hibernate.connection.username", PropertiesReader.getValue("USER"));
             configuration.setProperty("hibernate.connection.password", PropertiesReader.getValue("PASSWORD"));
             configuration.setProperty("hibernate.dialect", PropertiesReader.getValue("DIALECT"));
-            configuration.setProperty("hibernate.hbm2ddl.auto", "update");
             configuration.setProperty("show_sql", "false");
+            configuration.setProperty("hibernate.hbm2ddl.auto", "update");
 
             StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
             sessionFactory = configuration.buildSessionFactory(builder.build());

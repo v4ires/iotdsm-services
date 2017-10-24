@@ -47,7 +47,6 @@ public class Main {
 
         spark.Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
         spark.Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
-
         spark.Spark.get("/sensor", SensorController.serveSensorListPage);
         spark.Spark.get("/sensor/:id/measure", SensorController.serveSensorMeasureTypesBySensorId);
         spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
@@ -60,8 +59,7 @@ public class Main {
         });
     }
 
-    private static void showHelp()
-    {
+    private static void showHelp(){
         HelpFormatter formater = new HelpFormatter();
 
         formater.printHelp("Main", options);
