@@ -1,5 +1,6 @@
 package controllers;
 
+import repositories.SensorRepository;
 import repositories.SensorSourceRepository;
 import spark.Request;
 import spark.Response;
@@ -19,6 +20,8 @@ public class SensorSourceController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorSourceRepository().getSensorSources()));
+                case "xml":
+                    return successXml(response, new SensorSourceRepository().getSensorSources());
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -48,6 +51,8 @@ public class SensorSourceController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorSourceRepository().getSensorSourceById(sensorId)));
+                case "xml":
+                    return successXml(response, new SensorSourceRepository().getSensorSourceById(sensorId));
             }
         } catch (Exception ex) {
             return serverError(response, ex);

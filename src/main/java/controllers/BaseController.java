@@ -2,6 +2,10 @@ package controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 import spark.Response;
 
 public class BaseController {
@@ -29,6 +33,29 @@ public class BaseController {
         response.type("application/json");
 
         return message;
+    }
+
+    protected static String successXml(Response response, Object message)
+    {
+        response.status(200);
+        response.type("application/xml");
+
+        XStream xstream = new XStream(new DomDriver());
+
+        return xstream.toXML(message);
+    }
+
+    protected static String successCsv(Response response, Object message){
+        StringBuilder appendable = new StringBuilder();
+        try {
+            CSVPrinter printer = new CSVPrinter(appendable, CSVFormat.DEFAULT);
+
+            printer.printRecord(message);
+        }catch(Exception ex){
+            return error(response, ex.getMessage());
+        }
+
+        return appendable.toString();
     }
 
     protected static Gson _gson = new GsonBuilder()

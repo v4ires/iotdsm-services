@@ -36,6 +36,11 @@ public class SensorController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorRepository().getSensors()));
+                case "xml":
+                    return successXml(response, new SensorRepository().getSensors());
+                case "csv":
+                    return successCsv(response, new SensorRepository().getSensors());
+
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -65,6 +70,10 @@ public class SensorController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorMeasureTypeRepository().getSensorMeasureTypeBySensor(sensorId)));
+                case "xml":
+                    return successXml(response, new SensorMeasureTypeRepository().getSensorMeasureTypeBySensor(sensorId));
+                case "csv":
+                    return successCsv(response, new SensorMeasureTypeRepository().getSensorMeasureTypeBySensor(sensorId));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -127,6 +136,8 @@ public class SensorController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorMeasureRepository().getSensorMeasure(sensorId, measureTypeId, startDate, endDate)));
+                case "xml":
+                    return successXml(response, new SensorMeasureRepository().getSensorMeasure(sensorId, measureTypeId, startDate, endDate));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -156,6 +167,8 @@ public class SensorController extends BaseController {
                 default:
                 case "json":
                     return success(response, _gson.toJson(new SensorRepository().getSensorById(sensorId)));
+                case "xml":
+                    return successXml(response, new SensorRepository().getSensorById(sensorId));
             }
         } catch (Exception ex) {
             return serverError(response, ex);

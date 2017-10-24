@@ -1,6 +1,7 @@
 package repositories;
 
 import com.mongodb.client.DistinctIterable;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import model.Sensor;
 import model.SensorSource;
@@ -18,9 +19,7 @@ import utils.sql.SQLQueryDatabase;
 
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -55,13 +54,16 @@ public class SensorSourceRepository extends BaseRepository{
             if (databaseType.equals("mongo")) {
                 MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(getMongoConnection().getMongoDatabase(PropertiesReader.getValue("DATABASE")), PropertiesReader.getValue("DATABASE"), "sensor");
 
-                DistinctIterable<Document> sensorDocument = sensorCollection.distinct("sensorSource.id", Document.class);
-                List<SensorSource> sensorSources = new ArrayList<>();
+                FindIterable<Document> sensorDocument = sensorCollection.find();
+                Map<Long, SensorSource> sensorSources = new HashMap<>();
 
-                for(Document cur: sensorDocument)
-                    sensorSources.add(_gson.fromJson(cur.toJson(), Sensor.class).getSensorSource());
+                for(Document cur: sensorDocument) {
+                    Sensor s = _gson.fromJson(cur.toJson(), Sensor.class);
+                    if(!sensorSources.containsKey(s.getSensorSource().getId()))
+                        sensorSources.put(s.getSensorSource().getId(), s.getSensorSource());
+                }
 
-                return sensorSources;
+                return new ArrayList<>(sensorSources.values());
             }
             else {
 
