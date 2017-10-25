@@ -9,7 +9,7 @@ import org.hibernate.Transaction;
 import persistence.GenericJPA;
 import persistence.SensorMeasureTypeSQL;
 import utils.PropertiesReader;
-import utils.hibernate.CustomTransation;
+import utils.hibernate.CustomTransaction;
 import utils.hibernate.HibernateUtil;
 import utils.sql.JDBConnection;
 import utils.sql.SQLQueryDatabase;
@@ -21,7 +21,13 @@ import java.util.List;
 import static com.mongodb.client.model.Filters.eq;
 
 public class SensorMeasureTypeRepository extends BaseRepository {
+    public SensorMeasureTypeRepository(CustomTransaction customTransaction){
+        this.hibernateTransaction = customTransaction;
+    }
 
+    public SensorMeasureTypeRepository(){
+
+    }
     protected SensorMeasureTypeSQL getJdbcSql()
     {
         if(jdbcSql == null) {
@@ -39,11 +45,8 @@ public class SensorMeasureTypeRepository extends BaseRepository {
 
     public List<SensorMeasureType> getSensorMeasureTypeBySensor(long sensorId){
         if (useHibernate) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            List<SensorMeasureType> sensorMeasureTypes = new GenericJPA<>(SensorMeasureType.class).resultList(new CustomTransation(session, transaction), "SELECT s.sensorMeasures FROM Sensor s WHERE s.id = "+sensorId);
-            transaction.commit();
-            session.close();
+            List<SensorMeasureType> sensorMeasureTypes = new GenericJPA<>(SensorMeasureType.class).resultList(getHibernateTransaction(), "SELECT s.sensorMeasures FROM Sensor s WHERE s.id = "+sensorId);
+
             return sensorMeasureTypes;
         } else {
             if (databaseType.equals("mongo")) {
@@ -73,11 +76,7 @@ public class SensorMeasureTypeRepository extends BaseRepository {
 
     public void addSensorMeasureType(SensorMeasureType sensorMeasureType) {
         if (useHibernate) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            new GenericJPA<>(SensorMeasureType.class).insert(new CustomTransation(session, transaction), sensorMeasureType);
-            transaction.commit();
-            session.close();
+            new GenericJPA<>(SensorMeasureType.class).insert(getHibernateTransaction(), sensorMeasureType);
         } else {
             //Adicionamos as medidas no Mongo direto no método de adicionar sensores
             if (!databaseType.equals("mongo")){

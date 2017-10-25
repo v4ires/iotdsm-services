@@ -1,7 +1,9 @@
 import controllers.SensorController;
 import controllers.SensorSourceController;
+import deserialization.OpenWeatherJsonDeserializer;
 import org.apache.commons.cli.*;
 import org.apache.log4j.BasicConfigurator;
+import services.SensorService;
 import utils.PropertiesReader;
 
 import java.nio.file.Files;
@@ -60,9 +62,9 @@ public class Main {
     }
 
     private static void showHelp(){
-        HelpFormatter formater = new HelpFormatter();
+        HelpFormatter formatter = new HelpFormatter();
 
-        formater.printHelp("Main", options);
+        formatter.printHelp("Main", options);
 
         System.exit(0);
     }

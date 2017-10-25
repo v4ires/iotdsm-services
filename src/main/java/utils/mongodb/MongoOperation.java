@@ -108,4 +108,11 @@ public interface MongoOperation {
      * @return
      */
     public boolean remove_list_mongo(List<Document> documents, MongoCollection<Document> collection);
+
+    /**
+     * Método para fechar conexões ativas
+     *
+     * @return
+     */
+    public void close();
 }

@@ -121,4 +121,10 @@ public class SensorMeasureTypeSQL implements SQLOperation {
     public Long get_last_generated_key() {
         return lastInsertedId;
     }
+
+    @Override
+    public void close() {
+        if(jdbConn != null)
+            jdbConn.close();
+    }
 }

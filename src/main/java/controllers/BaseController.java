@@ -2,11 +2,16 @@ package controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import spark.Response;
+
+import java.lang.reflect.Field;
+import java.util.Set;
 
 public class BaseController {
     protected static String error(Response response, String message)
@@ -49,6 +54,10 @@ public class BaseController {
         StringBuilder appendable = new StringBuilder();
         try {
             CSVPrinter printer = new CSVPrinter(appendable, CSVFormat.DEFAULT);
+
+            Set<Field> exposedFields = utils.Utils.findFields(message.getClass(), Expose.class);
+
+
 
             printer.printRecord(message);
         }catch(Exception ex){

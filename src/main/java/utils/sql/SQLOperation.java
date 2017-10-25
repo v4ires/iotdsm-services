@@ -67,4 +67,11 @@ public interface SQLOperation {
      * @throws SQLException
      */
     public Long get_last_generated_key();
+
+    /**
+     * Método para fechar conexões ativas
+     *
+     * @return
+     */
+    public void close();
 }

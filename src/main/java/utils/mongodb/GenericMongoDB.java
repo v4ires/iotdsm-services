@@ -157,4 +157,10 @@ public class GenericMongoDB implements MongoOperation {
     public boolean remove_list_mongo(List<Document> documents, MongoCollection<Document> collection) {
         throw new NotImplementedException();
     }
+
+    @Override
+    public void close() {
+        if(mongoFactory != null)
+            mongoFactory.close();
+    }
 }

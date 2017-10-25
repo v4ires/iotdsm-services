@@ -1,6 +1,5 @@
 package controllers;
 
-import repositories.SensorRepository;
 import repositories.SensorSourceRepository;
 import spark.Request;
 import spark.Response;
@@ -9,6 +8,8 @@ import spark.Route;
 public class SensorSourceController extends BaseController {
 
     public static Route serveSensorSourceListPage = (Request request, Response response) -> {
+        SensorSourceRepository _sensorSourceRepository = new SensorSourceRepository();
+
         try {
             String outputFormat = "json";
 
@@ -22,13 +23,20 @@ public class SensorSourceController extends BaseController {
                     return success(response, _gson.toJson(new SensorSourceRepository().getSensorSources()));
                 case "xml":
                     return successXml(response, new SensorSourceRepository().getSensorSources());
+                case "csv":
+                    return successCsv(response, new SensorSourceRepository().getSensorSources());
             }
         } catch (Exception ex) {
             return serverError(response, ex);
         }
+        finally {
+            _sensorSourceRepository.close();
+        }
     };
 
     public static Route serveSensorById = (Request request, Response response) -> {
+        SensorSourceRepository _sensorSourceRepository = new SensorSourceRepository();
+
         try {
             String outputFormat = "json";
             Long sensorId;
@@ -50,12 +58,18 @@ public class SensorSourceController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(new SensorSourceRepository().getSensorSourceById(sensorId)));
+                    return success(response, _gson.toJson(_sensorSourceRepository.getSensorSourceById(sensorId)));
                 case "xml":
-                    return successXml(response, new SensorSourceRepository().getSensorSourceById(sensorId));
+                    return successXml(response, _sensorSourceRepository.getSensorSourceById(sensorId));
+                case "csv":
+                    return successCsv(response, _sensorSourceRepository.getSensorSourceById(sensorId));
+
             }
         } catch (Exception ex) {
             return serverError(response, ex);
+        }
+        finally {
+            _sensorSourceRepository.close();
         }
     };
 

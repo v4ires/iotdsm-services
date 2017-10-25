@@ -11,7 +11,7 @@ import org.hibernate.Transaction;
 import persistence.GenericJPA;
 import persistence.SensorSQL;
 import utils.PropertiesReader;
-import utils.hibernate.CustomTransation;
+import utils.hibernate.CustomTransaction;
 import utils.hibernate.HibernateUtil;
 import utils.mongodb.GenericMongoDB;
 import utils.mongodb.MongoDBUtil;
@@ -27,6 +27,13 @@ import java.util.List;
 import static com.mongodb.client.model.Filters.eq;
 
 public class SensorRepository extends BaseRepository {
+    public SensorRepository(CustomTransaction customTransaction){
+        this.hibernateTransaction = customTransaction;
+    }
+
+    public SensorRepository(){
+
+    }
     protected SensorSQL getJdbcSql()
     {
         if(jdbcSql == null) {
@@ -44,11 +51,8 @@ public class SensorRepository extends BaseRepository {
 
     public Sensor getSensorById(long sensorId){
         if (useHibernate) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            Sensor sensor = new GenericJPA<>(Sensor.class).findById(new CustomTransation(session, transaction), sensorId);
-            transaction.commit();
-            session.close();
+
+            Sensor sensor = new GenericJPA<>(Sensor.class).findById(getHibernateTransaction(), sensorId);
 
             return sensor;
         } else {
@@ -79,11 +83,7 @@ public class SensorRepository extends BaseRepository {
 
     public List<Sensor> getSensors(){
         if (useHibernate) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            List<Sensor> sensors = new GenericJPA<>(Sensor.class).findAll(new CustomTransation(session, transaction));
-            transaction.commit();
-            session.close();
+            List<Sensor> sensors = new GenericJPA<>(Sensor.class).findAll(getHibernateTransaction());
 
             return sensors;
         } else {
@@ -114,11 +114,7 @@ public class SensorRepository extends BaseRepository {
 
     public void addSensor(Sensor sensor) {
         if (useHibernate) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            new GenericJPA<>(Sensor.class).insertOrUpdate(new CustomTransation(session, transaction), sensor);
-            transaction.commit();
-            session.close();
+            new GenericJPA<>(Sensor.class).insertOrUpdate(getHibernateTransaction(), sensor);
 
         } else {
             if (databaseType.equals("mongo")) {

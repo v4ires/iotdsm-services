@@ -4,12 +4,12 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-public class CustomTransation {
+public class CustomTransaction {
 
     public Session session;
     private Transaction tx;
 
-    public CustomTransation(Session session, Transaction tx) {
+    public CustomTransaction(Session session, Transaction tx) {
         this.session = session;
         this.tx = tx;
     }

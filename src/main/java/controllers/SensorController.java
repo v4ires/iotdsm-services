@@ -25,6 +25,8 @@ import java.util.Date;
 public class SensorController extends BaseController {
 
     public static Route serveSensorListPage = (Request request, Response response) -> {
+        SensorRepository _sensorRepository = new SensorRepository();
+
         try {
             String outputFormat = "json";
 
@@ -35,19 +37,23 @@ public class SensorController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(new SensorRepository().getSensors()));
+                    return success(response, _gson.toJson(_sensorRepository.getSensors()));
                 case "xml":
-                    return successXml(response, new SensorRepository().getSensors());
+                    return successXml(response, _sensorRepository.getSensors());
                 case "csv":
-                    return successCsv(response, new SensorRepository().getSensors());
+                    return successCsv(response, _sensorRepository.getSensors());
 
             }
         } catch (Exception ex) {
             return serverError(response, ex);
         }
+        finally {
+            _sensorRepository.close();
+        }
     };
 
     public static Route serveSensorMeasureTypesBySensorId = (Request request, Response response) -> {
+        SensorMeasureTypeRepository _sensorMeasureTypeRepository = new SensorMeasureTypeRepository();
         try {
             String outputFormat = "json";
             Long sensorId;
@@ -69,18 +75,23 @@ public class SensorController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(new SensorMeasureTypeRepository().getSensorMeasureTypeBySensor(sensorId)));
+                    return success(response, _gson.toJson(_sensorMeasureTypeRepository.getSensorMeasureTypeBySensor(sensorId)));
                 case "xml":
-                    return successXml(response, new SensorMeasureTypeRepository().getSensorMeasureTypeBySensor(sensorId));
+                    return successXml(response, _sensorMeasureTypeRepository.getSensorMeasureTypeBySensor(sensorId));
                 case "csv":
-                    return successCsv(response, new SensorMeasureTypeRepository().getSensorMeasureTypeBySensor(sensorId));
+                    return successCsv(response, _sensorMeasureTypeRepository.getSensorMeasureTypeBySensor(sensorId));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
         }
+        finally{
+            _sensorMeasureTypeRepository.close();
+        }
     };
 
     public static Route serveSensorMeasuresBySensorIdAndDate = (Request request, Response response) -> {
+        SensorMeasureRepository _sensorMeasureRepository = new SensorMeasureRepository();
+
         try {
             String outputFormat = "json";
             Long sensorId;
@@ -135,16 +146,23 @@ public class SensorController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(new SensorMeasureRepository().getSensorMeasure(sensorId, measureTypeId, startDate, endDate)));
+                    return success(response, _gson.toJson(_sensorMeasureRepository.getSensorMeasure(sensorId, measureTypeId, startDate, endDate)));
                 case "xml":
-                    return successXml(response, new SensorMeasureRepository().getSensorMeasure(sensorId, measureTypeId, startDate, endDate));
+                    return successXml(response, _sensorMeasureRepository.getSensorMeasure(sensorId, measureTypeId, startDate, endDate));
+                case "csv":
+                    return successCsv(response, _sensorMeasureRepository.getSensorMeasure(sensorId, measureTypeId, startDate, endDate));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
         }
+        finally {
+            _sensorMeasureRepository.close();
+        }
     };
 
     public static Route serveSensorById = (Request request, Response response) -> {
+        SensorRepository _sensorRepository = new SensorRepository();
+
         try {
             String outputFormat = "json";
             Long sensorId;
@@ -166,12 +184,17 @@ public class SensorController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(new SensorRepository().getSensorById(sensorId)));
+                    return success(response, _gson.toJson(_sensorRepository.getSensorById(sensorId)));
                 case "xml":
-                    return successXml(response, new SensorRepository().getSensorById(sensorId));
+                    return successXml(response, _sensorRepository.getSensorById(sensorId));
+                case "csv":
+                    return successCsv(response, _sensorRepository.getSensorById(sensorId));
             }
         } catch (Exception ex) {
             return serverError(response, ex);
+        }
+        finally {
+            _sensorRepository.close();
         }
     };
 
@@ -189,19 +212,15 @@ public class SensorController extends BaseController {
             }
 
             MultipartConfigElement multipartConfigElement = new MultipartConfigElement(
-                    location, maxFileSize, maxRequestSize, fileSizeThreshold);
+                    System.getProperty("java.io.tmpdir"), maxFileSize, maxRequestSize, fileSizeThreshold);
             request.raw().setAttribute("org.eclipse.jetty.multipartConfig",
                     multipartConfigElement);
 
             String fName = request.raw().getPart("file").getSubmittedFileName();
 
             Part uploadedFile = request.raw().getPart("file");
-            Path out = Paths.get(location + "/" + fName);
 
-            try (final InputStream in = uploadedFile.getInputStream()) {
-                Files.copy(in, out, StandardCopyOption.REPLACE_EXISTING);
-                uploadedFile.delete();
-            }
+            uploadedFile.write(location + "/" + fName);
 
             // cleanup
             multipartConfigElement = null;
@@ -212,7 +231,7 @@ public class SensorController extends BaseController {
             switch (inputFormat) {
                 case "csv":
                     OpenWeatherCsvDeserializer csvDeserializer = new OpenWeatherCsvDeserializer();
-                    csvDeserializer.loadContent(out.toAbsolutePath().toString(), ",");
+                    csvDeserializer.loadContent(location + "/" + fName, ",");
 
                     insertedMeasures = sensorService.deserializeMeasures(csvDeserializer);
 
@@ -220,7 +239,7 @@ public class SensorController extends BaseController {
                     break;
                 case "xml":
                     OpenWeatherXmlDeserializer xmlDeserializer = new OpenWeatherXmlDeserializer();
-                    xmlDeserializer.loadContent(out.toAbsolutePath().toString());
+                    xmlDeserializer.loadContent(location + "/" + fName);
 
                     insertedMeasures = sensorService.deserializeMeasures(xmlDeserializer);
 
@@ -229,7 +248,7 @@ public class SensorController extends BaseController {
                 default:
                 case "json":
                     OpenWeatherJsonDeserializer deserializer = new OpenWeatherJsonDeserializer();
-                    deserializer.loadContent(out.toAbsolutePath().toString());
+                    deserializer.loadContent(location + "/" + fName);
 
                     insertedMeasures = sensorService.deserializeMeasures(deserializer);
 

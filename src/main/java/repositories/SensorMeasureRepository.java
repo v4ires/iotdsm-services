@@ -4,13 +4,10 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import model.SensorMeasure;
 import org.bson.Document;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import persistence.GenericJPA;
 import persistence.SensorMeasureSQL;
 import utils.PropertiesReader;
-import utils.hibernate.CustomTransation;
-import utils.hibernate.HibernateUtil;
+import utils.hibernate.CustomTransaction;
 import utils.mongodb.MongoDBUtil;
 import utils.sql.JDBConnection;
 import utils.sql.SQLQueryDatabase;
@@ -26,6 +23,13 @@ import static com.mongodb.client.model.Filters.*;
 
 public class SensorMeasureRepository extends BaseRepository {
 
+    public SensorMeasureRepository(CustomTransaction customTransaction){
+        this.hibernateTransaction = customTransaction;
+    }
+
+    public SensorMeasureRepository(){
+
+    }
     protected SensorMeasureSQL getJdbcSql()
     {
         if(jdbcSql == null) {
@@ -43,11 +47,8 @@ public class SensorMeasureRepository extends BaseRepository {
 
     public SensorMeasure getSensorMeasureById(long sensorMeasureId){
         if (useHibernate) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            SensorMeasure sensorMeasure = new GenericJPA<>(SensorMeasure.class).findById(new CustomTransation(session, transaction), sensorMeasureId);
-            transaction.commit();
-            session.close();
+            
+            SensorMeasure sensorMeasure = new GenericJPA<>(SensorMeasure.class).findById(getHibernateTransaction(), sensorMeasureId);
 
             return sensorMeasure;
         } else {
@@ -79,11 +80,7 @@ public class SensorMeasureRepository extends BaseRepository {
         if (useHibernate) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            List<SensorMeasure> sensors = new GenericJPA<>(SensorMeasure.class).resultList(new CustomTransation(session, transaction), "FROM SensorMeasure WHERE sensor.id="+sensorId+" AND sensorMeasureType.id="+measureTypeId+" AND create_time >= '"+df.format(startDate)+"' AND create_time <= '"+df.format(endDate)+"'");
-            transaction.commit();
-            session.close();
+            List<SensorMeasure> sensors = new GenericJPA<>(SensorMeasure.class).resultList(getHibernateTransaction(), "FROM SensorMeasure WHERE sensor.id="+sensorId+" AND sensorMeasureType.id="+measureTypeId+" AND create_time >= '"+df.format(startDate)+"' AND create_time <= '"+df.format(endDate)+"'");
 
             return sensors;
         } else {
@@ -117,11 +114,8 @@ public class SensorMeasureRepository extends BaseRepository {
 
     public void addSensorMeasure(SensorMeasure sensorMeasure) {
         if (useHibernate) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            new GenericJPA<>(SensorMeasure.class).insert(new CustomTransation(session, transaction), sensorMeasure);
-            transaction.commit();
-            session.close();
+            new GenericJPA<>(SensorMeasure.class).insert(getHibernateTransaction(), sensorMeasure);
+
         } else {
             if (databaseType.equals("mongo")) {
                 MongoCollection<Document> sensorMeasureCollection = getMongoConnection().getMongoCollection(getMongoConnection().getMongoDatabase(PropertiesReader.getValue("DATABASE")), PropertiesReader.getValue("DATABASE"), "sensor_measure");

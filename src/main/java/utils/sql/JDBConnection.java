@@ -4,6 +4,7 @@ import lombok.Builder;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 @Builder
 public class JDBConnection {
@@ -32,5 +33,14 @@ public class JDBConnection {
             e.printStackTrace();
         }
         return conn;
+    }
+
+    public void close() {
+        if(conn != null)
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
     }
 }

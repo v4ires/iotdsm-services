@@ -1,6 +1,5 @@
 package repositories;
 
-import com.mongodb.client.DistinctIterable;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import model.Sensor;
@@ -11,7 +10,7 @@ import org.hibernate.Transaction;
 import persistence.GenericJPA;
 import persistence.SensorSourceSQL;
 import utils.PropertiesReader;
-import utils.hibernate.CustomTransation;
+import utils.hibernate.CustomTransaction;
 import utils.hibernate.HibernateUtil;
 import utils.mongodb.MongoDBUtil;
 import utils.sql.JDBConnection;
@@ -24,7 +23,13 @@ import java.util.*;
 import static com.mongodb.client.model.Filters.eq;
 
 public class SensorSourceRepository extends BaseRepository{
+    public SensorSourceRepository(CustomTransaction customTransaction){
+        this.hibernateTransaction = customTransaction;
+    }
 
+    public SensorSourceRepository(){
+
+    }
     protected SensorSourceSQL getJdbcSql()
     {
         if(jdbcSql == null) {
@@ -43,11 +48,7 @@ public class SensorSourceRepository extends BaseRepository{
     public List<SensorSource> getSensorSources()
     {
         if (useHibernate) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            List<SensorSource> sensorSources = new GenericJPA<>(SensorSource.class).findAll(new CustomTransation(session, transaction));
-            transaction.commit();
-            session.close();
+            List<SensorSource> sensorSources = new GenericJPA<>(SensorSource.class).findAll(getHibernateTransaction());
 
             return sensorSources;
         } else {
@@ -80,11 +81,8 @@ public class SensorSourceRepository extends BaseRepository{
     }
     public SensorSource getSensorSourceById(long sensorSourceId){
         if (useHibernate) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            SensorSource sensorSource = new GenericJPA<>(SensorSource.class).findById(new CustomTransation(session, transaction), sensorSourceId);
-            transaction.commit();
-            session.close();
+
+            SensorSource sensorSource = new GenericJPA<>(SensorSource.class).findById(getHibernateTransaction(), sensorSourceId);
 
             return sensorSource;
         } else {
@@ -114,11 +112,7 @@ public class SensorSourceRepository extends BaseRepository{
 
     public void addSensorSource(SensorSource sensorSource) {
         if (useHibernate) {
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            new GenericJPA<>(SensorSource.class).insert(new CustomTransation(session, transaction), sensorSource);
-            transaction.commit();
-            session.close();
+            new GenericJPA<>(SensorSource.class).insert(getHibernateTransaction(), sensorSource);
 
         } else {
             //Adicionamos os sources dos sensores direto na coleção de sensores no Mongo, no objeto Sensor. Aqui, só geramos um ID unico e a data de criação.
