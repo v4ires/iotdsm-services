@@ -24,6 +24,7 @@ public class SensorService {
     public long deserializeMeasures(IDeserializer deserializer) {
         List<SensorMeasure> smList;
         Long insertedMeasures = 0L;
+        Long resetCount = 0L;
 
         CustomTransaction hibernateTransaction = null;
         if(Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
@@ -66,11 +67,28 @@ public class SensorService {
 
                     _sensorMeasureRepository.addSensorMeasure(sm);
                     insertedMeasures++;
+                    resetCount++;
                 }
 
-                if(insertedMeasures%1000 == 0)
-                    System.out.println("Inseridas: "+insertedMeasures);
+                if(resetCount > 50000) {
+                    System.out.println("Inseridas: " + insertedMeasures);
+                    resetCount = 0L;
+                    if(hibernateTransaction != null) {
+                        hibernateTransaction.commit();
 
+                        Session session = HibernateUtil.getSessionFactory().openSession();
+                        Transaction transaction = session.beginTransaction();
+
+                        hibernateTransaction = new CustomTransaction(session, transaction);
+
+                        _sensorSourceRepository.setHibernateTransaction(hibernateTransaction);
+                        _sensorRepository.setHibernateTransaction(hibernateTransaction);
+                        _sensorMeasureTypeRepository.setHibernateTransaction(hibernateTransaction);
+                        _sensorMeasureRepository.setHibernateTransaction(hibernateTransaction);
+                    }
+                }
+
+                smList.clear();
                 smList = (List<SensorMeasure>) (Object) deserializer.readArray();
             }
 
