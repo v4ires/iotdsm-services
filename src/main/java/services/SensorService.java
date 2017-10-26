@@ -71,7 +71,6 @@ public class SensorService {
                 }
 
                 if(resetCount > 50000) {
-                    System.out.println("Inseridas: " + insertedMeasures);
                     resetCount = 0L;
                     if(hibernateTransaction != null) {
                         hibernateTransaction.commit();

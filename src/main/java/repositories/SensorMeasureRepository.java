@@ -53,7 +53,7 @@ public class SensorMeasureRepository extends BaseRepository {
             return sensorMeasure;
         } else {
             if (databaseType.equals("mongo")) {
-                MongoCollection<Document> sensorMeasureCollection = getMongoConnection().getMongoCollection(getMongoConnection().getMongoDatabase(PropertiesReader.getValue("DATABASE")), PropertiesReader.getValue("DATABASE"), "sensor_measure");
+                MongoCollection<Document> sensorMeasureCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor_measure");
 
                 Document sensorMeasureDocument = sensorMeasureCollection.find(eq("id", sensorMeasureId)).first();
 
@@ -85,7 +85,7 @@ public class SensorMeasureRepository extends BaseRepository {
             return sensors;
         } else {
             if (databaseType.equals("mongo")) {
-                MongoCollection<Document> sensorMeasureCollection = getMongoConnection().getMongoCollection(getMongoConnection().getMongoDatabase(PropertiesReader.getValue("DATABASE")), PropertiesReader.getValue("DATABASE"), "sensor_measure");
+                MongoCollection<Document> sensorMeasureCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor_measure");
 
                 FindIterable<Document> sensorMeasureDocuments = sensorMeasureCollection.find(and(eq("sensor_id", sensorId), gte("create_time", startDate), lte("create_time", endDate)));
 
@@ -118,7 +118,7 @@ public class SensorMeasureRepository extends BaseRepository {
 
         } else {
             if (databaseType.equals("mongo")) {
-                MongoCollection<Document> sensorMeasureCollection = getMongoConnection().getMongoCollection(getMongoConnection().getMongoDatabase(PropertiesReader.getValue("DATABASE")), PropertiesReader.getValue("DATABASE"), "sensor_measure");
+                MongoCollection<Document> sensorMeasureCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor_measure");
 
                 sensorMeasure.setId(MongoDBUtil.getNextSequence(getMongoConnection(), "sensor_measure"));
 

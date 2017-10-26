@@ -26,6 +26,8 @@ public class SensorController extends BaseController {
 
     public static Route serveSensorListPage = (Request request, Response response) -> {
         SensorRepository _sensorRepository = new SensorRepository();
+        int limit = 0;
+        int offset = 0;
 
         try {
             String outputFormat = "json";
@@ -34,14 +36,30 @@ public class SensorController extends BaseController {
                 outputFormat = request.queryParams("output_format");
             }
 
+            if (request.queryParams("limit") != null && !request.queryParams("limit").equals("")) {
+                try{
+                    limit = Integer.parseInt(request.queryParams("limit"));
+                }catch(Exception ex){
+                    error(response, "Invalid value for limit.");
+                }
+            }
+
+            if (request.queryParams("offset") != null && !request.queryParams("offset").equals("")) {
+                try{
+                    offset = Integer.parseInt(request.queryParams("offset"));
+                }catch(Exception ex){
+                    error(response, "Invalid value for offset.");
+                }
+            }
+
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorRepository.getSensors()));
+                    return success(response, _gson.toJson(_sensorRepository.getSensors(limit, offset)));
                 case "xml":
-                    return successXml(response, _sensorRepository.getSensors());
+                    return successXml(response, _sensorRepository.getSensors(limit, offset));
                 case "csv":
-                    return successCsv(response, _sensorRepository.getSensors());
+                    return successCsv(response, _sensorRepository.getSensors(limit, offset));
 
             }
         } catch (Exception ex) {
