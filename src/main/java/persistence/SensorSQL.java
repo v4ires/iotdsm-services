@@ -90,6 +90,7 @@ public class SensorSQL implements SQLOperation {
                     .build();
 
             sensor_row.setCreate_time(rs.getTimestamp("create_time"));
+            sensor_row.setId(rs.getLong("id"));
 
             sensors.add(sensor_row);
         }

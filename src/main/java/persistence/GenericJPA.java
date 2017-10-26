@@ -62,8 +62,16 @@ public class GenericJPA<T> {
         return tx.session.createQuery(query).getResultList();
     }
 
-    public List<T> resultList(CustomTransaction tx, String query, int first, int maxResult) {
-        return tx.session.createQuery(query).setFirstResult(first).setMaxResults(maxResult).getResultList();
+    public List<T> resultList(CustomTransaction tx, int first, int maxResult) {
+        CriteriaQuery<T> createQuery = tx.session.getCriteriaBuilder().createQuery(persistentClass);
+        createQuery.select(createQuery.from(persistentClass));
+        return tx.session.createQuery(createQuery).setFirstResult(first).setMaxResults(maxResult).getResultList();
+    }
+
+    public List<T> resultList(CustomTransaction tx, int first) {
+        CriteriaQuery<T> createQuery = tx.session.getCriteriaBuilder().createQuery(persistentClass);
+        createQuery.select(createQuery.from(persistentClass));
+        return tx.session.createQuery(createQuery).setFirstResult(first).getResultList();
     }
 
     public Long resultCount(CustomTransaction tx, String query) {

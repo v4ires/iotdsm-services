@@ -50,7 +50,7 @@ public class SensorMeasureTypeRepository extends BaseRepository {
             return sensorMeasureTypes;
         } else {
             if (databaseType.equals("mongo")) {
-                MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(getMongoConnection().getMongoDatabase(PropertiesReader.getValue("DATABASE")), PropertiesReader.getValue("DATABASE"), "sensor_measure_type");
+                MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor_measure_type");
 
                 FindIterable<Document> sensorDocument = sensorCollection.find(eq("sensor_id", sensorId));
 

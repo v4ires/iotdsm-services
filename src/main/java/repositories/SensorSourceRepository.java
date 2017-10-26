@@ -53,7 +53,7 @@ public class SensorSourceRepository extends BaseRepository{
             return sensorSources;
         } else {
             if (databaseType.equals("mongo")) {
-                MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(getMongoConnection().getMongoDatabase(PropertiesReader.getValue("DATABASE")), PropertiesReader.getValue("DATABASE"), "sensor");
+                MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor");
 
                 FindIterable<Document> sensorDocument = sensorCollection.find();
                 Map<Long, SensorSource> sensorSources = new HashMap<>();
@@ -87,7 +87,7 @@ public class SensorSourceRepository extends BaseRepository{
             return sensorSource;
         } else {
             if (databaseType.equals("mongo")) {
-                MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(getMongoConnection().getMongoDatabase(PropertiesReader.getValue("DATABASE")), PropertiesReader.getValue("DATABASE"), "sensor");
+                MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor");
 
                 Document sensorDocument = sensorCollection.find(eq("sensorSource.id", sensorSourceId)).first();
 

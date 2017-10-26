@@ -36,11 +36,11 @@ public interface MongoOperation {
     /**
      * Método que retorna uma Collection do MongoDB
      *
-     * @param db
+     * @param db_name
      * @param collection
      * @return
      */
-    public MongoCollection<Document> getMongoCollection(MongoDatabase db, String db_name, String collection);
+    public MongoCollection<Document> getMongoCollection(String db_name, String collection);
 
     /**
      * Método que retorna a quantidade de itens em uma collection
