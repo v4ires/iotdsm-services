@@ -1,7 +1,6 @@
 import controllers.SensorController;
 import controllers.SensorSourceController;
 import org.apache.commons.cli.*;
-import org.apache.log4j.BasicConfigurator;
 import utils.PropertiesReader;
 
 import java.nio.file.Files;
@@ -14,7 +13,7 @@ public class Main {
     private static Options options = new Options();
 
     public static void main(String[] args) {
-        BasicConfigurator.configure();
+        //BasicConfigurator.configure();
 
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuração.");
         options.addOption("h", "help", false, "Mostra ajuda.");
@@ -43,7 +42,6 @@ public class Main {
 
         //Spark config
         spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
-
         spark.Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
         spark.Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
         spark.Spark.get("/sensor", SensorController.serveSensorListPage);
@@ -58,7 +56,7 @@ public class Main {
         });
     }
 
-    private static void showHelp(){
+    private static void showHelp() {
         HelpFormatter formatter = new HelpFormatter();
 
         formatter.printHelp("Main", options);
