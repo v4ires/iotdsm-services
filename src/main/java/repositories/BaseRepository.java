@@ -53,4 +53,9 @@ public class BaseRepository {
         if(hibernateTransaction != null)
             hibernateTransaction.close();
     }
+
+    public void setHibernateTransaction(CustomTransaction hibernateTransaction)
+    {
+        this.hibernateTransaction = hibernateTransaction;
+    }
 }

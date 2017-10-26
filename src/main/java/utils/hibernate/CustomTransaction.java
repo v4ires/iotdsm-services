@@ -23,6 +23,15 @@ public class CustomTransaction {
         }
     }
 
+    public void commitAndBeginNewTransaction() {
+        assert session.isOpen();
+        try {
+            tx.commit();
+        } finally {
+
+        }
+    }
+
     public void rollback() {
         assert session.isOpen();
         try {
