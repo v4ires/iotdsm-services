@@ -1,11 +1,6 @@
 import controllers.SensorController;
 import controllers.SensorSourceController;
-import deserialization.OpenWeatherCsvDeserializer;
-import deserialization.OpenWeatherJsonDeserializer;
-import deserialization.OpenWeatherXmlDeserializer;
 import org.apache.commons.cli.*;
-import org.apache.log4j.BasicConfigurator;
-import services.SensorService;
 import utils.PropertiesReader;
 
 import java.nio.file.Files;
@@ -18,8 +13,7 @@ public class Main {
     private static Options options = new Options();
 
     public static void main(String[] args) {
-        //BasicConfigurator.configure();
-
+        
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuração.");
         options.addOption("h", "help", false, "Mostra ajuda.");
 

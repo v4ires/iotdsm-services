@@ -1,21 +1,15 @@
 package repositories;
 
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import model.Sensor;
 import model.SensorMeasureType;
 import org.bson.Document;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import persistence.GenericJPA;
 import persistence.SensorSQL;
 import utils.PropertiesReader;
 import utils.hibernate.CustomTransaction;
-import utils.hibernate.HibernateUtil;
 import utils.mongodb.GenericMongoDB;
 import utils.mongodb.MongoDBUtil;
 import utils.sql.JDBConnection;

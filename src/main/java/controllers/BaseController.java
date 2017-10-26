@@ -7,7 +7,6 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import spark.Response;
 
 import java.lang.reflect.Field;
