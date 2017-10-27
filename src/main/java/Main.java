@@ -1,12 +1,8 @@
 import controllers.SensorController;
 import controllers.SensorSourceController;
-import deserialization.OpenWeatherCsvDeserializer;
-import deserialization.OpenWeatherJsonDeserializer;
-import deserialization.OpenWeatherXmlDeserializer;
 import org.apache.commons.cli.*;
 import org.apache.log4j.BasicConfigurator;
 import repositories.SensorRepository;
-import services.SensorService;
 import utils.PropertiesReader;
 import utils.sql.JDBConnection;
 
@@ -20,9 +16,9 @@ public class Main {
     private static Options options = new Options();
 
     public static void main(String[] args) {
-        //BasicConfigurator.configure();
 
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuração.");
+        options.addOption("l", "log", true, "Habilitar ou desabilitar log.");
         options.addOption("h", "help", false, "Mostra ajuda.");
 
         CommandLineParser parser = new DefaultParser();
@@ -38,6 +34,12 @@ public class Main {
             _configFileName = cmd.getOptionValue("c");
         }
 
+        if (cmd.hasOption("l")) {
+            if (Boolean.parseBoolean(cmd.getOptionValue("l"))) {
+                BasicConfigurator.configure();
+            }
+        }
+
         Path path = Paths.get(_configFileName);
 
         if (!Files.exists(path)) {
@@ -47,8 +49,13 @@ public class Main {
 
         PropertiesReader.initialize(_configFileName);
 
+        System.out.println("Database Type: " + PropertiesReader.getValue("DATABASETYPE"));
+        System.out.println("Hibernate is On: " + PropertiesReader.getValue("USEHIBERNATE"));
+        System.out.println("SQL Debug is On: " + PropertiesReader.getValue("SQL_DEBUG"));
+
         //Spark config
         spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
+        //int cores = Runtime.getRuntime().availableProcessors();
         spark.Spark.threadPool(8, 2, 30000);
 
         spark.Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
