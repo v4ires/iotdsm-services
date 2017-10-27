@@ -26,9 +26,7 @@ public class BaseController {
         response.status(500);
         response.type("application/json");
 
-        ex.printStackTrace();
-
-        return String.format("{\"error\": \"%s\"}", ex.getMessage());
+        return String.format("{\"error\": \"%s\"}", org.apache.commons.lang.exception.ExceptionUtils.getStackTrace(ex).replaceAll("\"", "\\\""));
     }
 
     protected static String success(Response response, String message)

@@ -42,7 +42,7 @@ public class SensorMeasureTypeRepository extends BaseRepository {
 
     public List<SensorMeasureType> getSensorMeasureTypeBySensor(long sensorId){
         if (useHibernate) {
-            List<SensorMeasureType> sensorMeasureTypes = new GenericJPA<>(SensorMeasureType.class).resultList(getHibernateTransaction(), "SELECT s.sensorMeasures FROM Sensor s WHERE s.id = "+sensorId);
+            List<SensorMeasureType> sensorMeasureTypes = new GenericJPA<>(SensorMeasureType.class).resultList(getHibernateTransaction(), "SELECT FETCH s.sensorMeasures FROM Sensor s WHERE s.id = "+sensorId);
 
             return sensorMeasureTypes;
         } else {
