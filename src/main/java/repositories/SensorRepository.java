@@ -54,8 +54,7 @@ public class SensorRepository extends BaseRepository {
             return sensor;
         } else {
             if (databaseType.equals("mongo")) {
-                GenericMongoDB mongoConn = new GenericMongoDB(new MongoClient(PropertiesReader.getValue("HOST"), Integer.parseInt(PropertiesReader.getValue("PORT"))));
-                MongoCollection<Document> sensorCollection = mongoConn.getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor");
+                MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor");
 
 
                 Document sensorDocument = sensorCollection.find(eq("id", sensorId)).first();
@@ -84,19 +83,19 @@ public class SensorRepository extends BaseRepository {
 
             List<Sensor> sensors;
 
-            if(limit > 0)
-                sensors = new GenericJPA<>(Sensor.class).resultList(getHibernateTransaction(), offset, limit);
-            else if(offset > 0)
-                sensors = new GenericJPA<>(Sensor.class).resultList(getHibernateTransaction(), offset);
-            else
-                sensors = new GenericJPA<>(Sensor.class).findAll(getHibernateTransaction());
+            synchronized(hibernateTransaction) {
+                if (limit > 0)
+                    sensors = new GenericJPA<>(Sensor.class).resultList(getHibernateTransaction(), offset, limit);
+                else if (offset > 0)
+                    sensors = new GenericJPA<>(Sensor.class).resultList(getHibernateTransaction(), offset);
+                else
+                    sensors = new GenericJPA<>(Sensor.class).findAll(getHibernateTransaction());
+            }
 
             return sensors;
         } else {
             if (databaseType.equals("mongo")) {
-                GenericMongoDB mongoConn = new GenericMongoDB(new MongoClient(PropertiesReader.getValue("HOST"), Integer.parseInt(PropertiesReader.getValue("PORT"))));
-
-                MongoCollection<Document> sensorCollection = mongoConn.getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor");
+                MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor");
 
                 FindIterable<Document> sensorDocuments;
 

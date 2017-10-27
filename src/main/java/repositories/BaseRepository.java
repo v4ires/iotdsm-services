@@ -18,9 +18,9 @@ public class BaseRepository {
             .create();
     protected boolean useHibernate = Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"));
     protected String databaseType = PropertiesReader.getValue("DATABASETYPE");
-    private GenericMongoDB mongoConn;
+    private static GenericMongoDB mongoConn;
     protected SQLOperation jdbcSql;
-    protected CustomTransaction hibernateTransaction;
+    protected static CustomTransaction hibernateTransaction;
 
     public GenericMongoDB getMongoConnection()
     {
@@ -44,11 +44,7 @@ public class BaseRepository {
 
     public void close()
     {
-        if(mongoConn != null)
-            mongoConn.close();
 
-        if(hibernateTransaction != null)
-            hibernateTransaction.close();
     }
 
     public void setHibernateTransaction(CustomTransaction hibernateTransaction)
