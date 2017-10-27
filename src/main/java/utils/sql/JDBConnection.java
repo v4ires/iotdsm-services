@@ -25,13 +25,16 @@ public class JDBConnection {
         this.databaseType = databaseType;
     }
 
-    public Connection getJDBConn() {
-        try {
-            Class.forName(classDriver).newInstance();
-            conn = DriverManager.getConnection(urlConn, user, pass);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public synchronized Connection getJDBConn() {
+        if(conn == null) {
+            try {
+                Class.forName(classDriver).newInstance();
+                conn = DriverManager.getConnection(urlConn, user, pass);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
+
         return conn;
     }
 

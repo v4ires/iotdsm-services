@@ -7,6 +7,7 @@ import org.apache.commons.cli.*;
 import org.apache.log4j.BasicConfigurator;
 import services.SensorService;
 import utils.PropertiesReader;
+import utils.sql.JDBConnection;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,6 +48,7 @@ public class Main {
 
         //Spark config
         spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
+        spark.Spark.threadPool(8, 2, 30000);
 
         spark.Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
         spark.Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
@@ -60,6 +62,16 @@ public class Main {
         spark.Spark.exception(Exception.class, (exception, request, response) -> {
             exception.printStackTrace();
         });
+
+        if(!Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE")) && !PropertiesReader.getValue("DATABASETYPE").equals("mongo")){
+            JDBConnection jdbConnection = JDBConnection
+                    .builder().user(PropertiesReader.getValue("USER")).pass(PropertiesReader.getValue("PASSWORD"))
+                    .urlConn("jdbc:" + PropertiesReader.getValue("DATABASETYPE") + "://" + PropertiesReader.getValue("HOST") + ":" + PropertiesReader.getValue("PORT") + "/" + PropertiesReader.getValue("DATABASE"))
+                    .classDriver(PropertiesReader.getValue("DRIVER"))
+                    .build();
+
+            jdbConnection.getJDBConn();
+        }
     }
 
     private static void showHelp() {

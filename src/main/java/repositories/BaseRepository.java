@@ -44,9 +44,6 @@ public class BaseRepository {
 
     public void close()
     {
-        if(jdbcSql != null)
-            jdbcSql.close();
-
         if(mongoConn != null)
             mongoConn.close();
 
