@@ -4,13 +4,10 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import model.SensorMeasureType;
 import org.bson.Document;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import persistence.GenericJPA;
 import persistence.SensorMeasureTypeSQL;
 import utils.PropertiesReader;
 import utils.hibernate.CustomTransaction;
-import utils.hibernate.HibernateUtil;
 import utils.sql.JDBConnection;
 import utils.sql.SQLQueryDatabase;
 
