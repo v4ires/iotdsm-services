@@ -27,6 +27,17 @@ public class HibernateUtil {
             configuration.setProperty("hibernate.hbm2ddl.auto", "update");
             configuration.setProperty("show_sql", "false");
 
+            // HikariCP settings
+
+            // Maximum waiting time for a connection from the pool
+            configuration.setProperty("hibernate.hikari.connectionTimeout", "20000");
+            // Minimum number of ideal connections in the pool
+            configuration.setProperty("hibernate.hikari.minimumIdle", "10");
+            // Maximum number of actual connection in the pool
+            configuration.setProperty("hibernate.hikari.maximumPoolSize", "20");
+            // Maximum time that a connection is allowed to sit ideal in the pool
+            configuration.setProperty("hibernate.hikari.idleTimeout", "300000");
+
             StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
             sessionFactory = configuration.buildSessionFactory(builder.build());
         } catch (HibernateException he) {

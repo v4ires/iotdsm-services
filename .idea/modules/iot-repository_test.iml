@@ -36,8 +36,9 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="iot-repository_main" />
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib-jre8:1.1.4-3" level="project" />
-    <orderEntry type="library" name="Gradle: org.hibernate:hibernate-core:5.2.11.Final" level="project" />
     <orderEntry type="library" name="Gradle: org.hibernate:hibernate-entitymanager:5.2.11.Final" level="project" />
+    <orderEntry type="library" name="Gradle: org.hibernate:hibernate-hikaricp:5.2.12.Final" level="project" />
+    <orderEntry type="library" name="Gradle: com.zaxxer:HikariCP:2.7.2" level="project" />
     <orderEntry type="library" name="Gradle: com.sparkjava:spark-core:2.6.0" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" name="Gradle: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
@@ -90,6 +91,7 @@
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-util:9.4.4.v20170414" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-security:9.4.4.v20170414" level="project" />
     <orderEntry type="library" name="Gradle: org.eclipse.jetty:jetty-client:9.4.4.v20170414" level="project" />
+    <orderEntry type="library" name="Gradle: org.hibernate:hibernate-core:5.2.12.Final" level="project" />
     <orderEntry type="library" name="Gradle: commons-lang:commons-lang:2.5" level="project" />
   </component>
   <component name="TestModuleProperties" production-module="iot-repository_main" />

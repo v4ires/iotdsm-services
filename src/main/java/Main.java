@@ -1,12 +1,9 @@
 import controllers.SensorController;
 import controllers.SensorSourceController;
-import deserialization.OpenWeatherCsvDeserializer;
-import deserialization.OpenWeatherJsonDeserializer;
-import deserialization.OpenWeatherXmlDeserializer;
 import org.apache.commons.cli.*;
 import org.apache.log4j.BasicConfigurator;
+import repositories.BaseRepository;
 import repositories.SensorRepository;
-import services.SensorService;
 import utils.PropertiesReader;
 import utils.sql.JDBConnection;
 
@@ -64,21 +61,7 @@ public class Main {
             exception.printStackTrace();
         });
 
-        if (Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
-            new SensorRepository().getHibernateTransaction();
-        } else {
-            if (PropertiesReader.getValue("DATABASETYPE").equals("mongo")) {
-                new SensorRepository().getMongoConnection();
-            } else {
-                JDBConnection jdbConnection = JDBConnection
-                        .builder().user(PropertiesReader.getValue("USER")).pass(PropertiesReader.getValue("PASSWORD"))
-                        .urlConn("jdbc:" + PropertiesReader.getValue("DATABASETYPE") + "://" + PropertiesReader.getValue("HOST") + ":" + PropertiesReader.getValue("PORT") + "/" + PropertiesReader.getValue("DATABASE"))
-                        .classDriver(PropertiesReader.getValue("DRIVER"))
-                        .build();
-
-                jdbConnection.getJDBConn();
-            }
-        }
+        BaseRepository.initializeConnections();
     }
 
     private static void showHelp() {

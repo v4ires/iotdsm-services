@@ -9,6 +9,7 @@ import utils.PropertiesReader;
 import utils.hibernate.CustomTransaction;
 import utils.hibernate.HibernateUtil;
 import utils.mongodb.GenericMongoDB;
+import utils.sql.JDBConnection;
 import utils.sql.SQLOperation;
 
 public class BaseRepository {
@@ -20,7 +21,7 @@ public class BaseRepository {
     protected String databaseType = PropertiesReader.getValue("DATABASETYPE");
     private static GenericMongoDB mongoConn;
     protected SQLOperation jdbcSql;
-    protected static CustomTransaction hibernateTransaction;
+    protected CustomTransaction hibernateTransaction;
 
     public GenericMongoDB getMongoConnection()
     {
@@ -44,11 +45,28 @@ public class BaseRepository {
 
     public void close()
     {
-
+        if(hibernateTransaction != null)
+            hibernateTransaction.close();
     }
 
     public void setHibernateTransaction(CustomTransaction hibernateTransaction)
     {
         this.hibernateTransaction = hibernateTransaction;
+    }
+
+    public static void initializeConnections() {
+        if (!Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
+            if (PropertiesReader.getValue("DATABASETYPE").equals("mongo")) {
+                new SensorRepository().getMongoConnection();
+            } else {
+                JDBConnection jdbConnection = JDBConnection
+                        .builder().user(PropertiesReader.getValue("USER")).pass(PropertiesReader.getValue("PASSWORD"))
+                        .urlConn("jdbc:" + PropertiesReader.getValue("DATABASETYPE") + "://" + PropertiesReader.getValue("HOST") + ":" + PropertiesReader.getValue("PORT") + "/" + PropertiesReader.getValue("DATABASE"))
+                        .classDriver(PropertiesReader.getValue("DRIVER"))
+                        .build();
+
+                jdbConnection.getJDBConn();
+            }
+        }
     }
 }

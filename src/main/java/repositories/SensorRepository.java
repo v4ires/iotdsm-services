@@ -83,14 +83,12 @@ public class SensorRepository extends BaseRepository {
 
             List<Sensor> sensors;
 
-            synchronized(hibernateTransaction) {
-                if (limit > 0)
-                    sensors = new GenericJPA<>(Sensor.class).resultList(getHibernateTransaction(), offset, limit);
-                else if (offset > 0)
-                    sensors = new GenericJPA<>(Sensor.class).resultList(getHibernateTransaction(), offset);
-                else
-                    sensors = new GenericJPA<>(Sensor.class).findAll(getHibernateTransaction());
-            }
+            if (limit > 0)
+                sensors = new GenericJPA<>(Sensor.class).resultList(getHibernateTransaction(), offset, limit);
+            else if (offset > 0)
+                sensors = new GenericJPA<>(Sensor.class).resultList(getHibernateTransaction(), offset);
+            else
+                sensors = new GenericJPA<>(Sensor.class).findAll(getHibernateTransaction());
 
             return sensors;
         } else {
