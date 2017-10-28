@@ -1,35 +1,52 @@
 package utils.sql;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @Builder
+@AllArgsConstructor
 public class JDBConnection {
+    private static DataSource datasource;
 
     public String user;
     public String pass;
-    public String urlConn;
+    public String host;
+    public int port;
+    public String database;
     public String classDriver;
     public String databaseType;
+    private Connection conn;
 
-    private static Connection conn;
+    public Connection getJDBConn() {
+        if(datasource == null)
+        {
+            HikariConfig config = new HikariConfig();
 
-    public JDBConnection(String user, String pass, String urlConn, String classDriver, String databaseType) {
-        this.user = user;
-        this.pass = pass;
-        this.urlConn = urlConn;
-        this.classDriver = classDriver;
-        this.databaseType = databaseType;
-    }
+            config.setDriverClassName(classDriver);
+            config.setJdbcUrl("jdbc:"+databaseType+"://"+host+":"+port+"/"+database);
+            config.setUsername(user);
+            config.setPassword(pass);
 
-    public synchronized Connection getJDBConn() {
+            config.setMaximumPoolSize(10);
+            config.setAutoCommit(true);
+            config.addDataSourceProperty("cachePrepStmts", "true");
+            config.addDataSourceProperty("prepStmtCacheSize", "250");
+            config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+
+            datasource = new HikariDataSource(config);
+        }
+
         if(conn == null) {
             try {
-                Class.forName(classDriver).newInstance();
-                conn = DriverManager.getConnection(urlConn, user, pass);
+                conn = datasource.getConnection();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -39,7 +56,7 @@ public class JDBConnection {
     }
 
     public void close() {
-        if(conn != null)
+        if (conn != null)
             try {
                 conn.close();
             } catch (SQLException e) {

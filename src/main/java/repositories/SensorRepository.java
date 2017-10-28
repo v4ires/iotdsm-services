@@ -34,9 +34,13 @@ public class SensorRepository extends BaseRepository {
     protected SensorSQL getJdbcSql()
     {
         if(jdbcSql == null) {
-            JDBConnection jdbConnection = JDBConnection
-                    .builder().user(PropertiesReader.getValue("USER")).pass(PropertiesReader.getValue("PASSWORD"))
-                    .urlConn("jdbc:" + databaseType + "://" + PropertiesReader.getValue("HOST") + ":" + PropertiesReader.getValue("PORT") + "/" + PropertiesReader.getValue("DATABASE"))
+            JDBConnection jdbConnection = JDBConnection.builder()
+                    .user(PropertiesReader.getValue("USER"))
+                    .pass(PropertiesReader.getValue("PASSWORD"))
+                    .host(PropertiesReader.getValue("HOST"))
+                    .port(Integer.parseInt(PropertiesReader.getValue("PORT")))
+                    .database(PropertiesReader.getValue("DATABASE"))
+                    .databaseType(PropertiesReader.getValue("DATABASETYPE"))
                     .classDriver(PropertiesReader.getValue("DRIVER"))
                     .build();
 
