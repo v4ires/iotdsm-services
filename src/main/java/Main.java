@@ -2,6 +2,9 @@ import controllers.SensorController;
 import controllers.SensorSourceController;
 import org.apache.commons.cli.*;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.slf4j.LoggerFactory;
 import repositories.BaseRepository;
 import utils.PropertiesReader;
 
@@ -16,8 +19,9 @@ public class Main {
 
     public static void main(String[] args) {
 
-        options.addOption("c", "configuration", true, "Caminho para o arquivo de configuração.");
+        options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao.");
         options.addOption("l", "log", true, "Habilitar ou desabilitar log.");
+        options.addOption("v", "log-level", true, "Muda o nivel do log. (OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL)");
         options.addOption("h", "help", false, "Mostra ajuda.");
 
         CommandLineParser parser = new DefaultParser();
@@ -39,10 +43,14 @@ public class Main {
             }
         }
 
+        if (cmd.hasOption("v")) {
+            LogManager.getRootLogger().setLevel(Level.toLevel(cmd.getOptionValue("v")));
+        }
+
         Path path = Paths.get(_configFileName);
 
         if (!Files.exists(path)) {
-            System.out.println("Arquivo de configurações \"config.properties\" não encontrado no caminho \"" + path + "\".");
+            System.out.println("Arquivo de configuracoes não encontrado no caminho \"" + path + "\".");
             return;
         }
 
