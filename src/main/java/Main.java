@@ -3,9 +3,7 @@ import controllers.SensorSourceController;
 import org.apache.commons.cli.*;
 import org.apache.log4j.BasicConfigurator;
 import repositories.BaseRepository;
-import repositories.SensorRepository;
 import utils.PropertiesReader;
-import utils.sql.JDBConnection;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
