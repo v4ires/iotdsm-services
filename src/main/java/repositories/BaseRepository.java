@@ -12,6 +12,8 @@ import utils.mongodb.GenericMongoDB;
 import utils.sql.JDBConnection;
 import utils.sql.SQLOperation;
 
+import java.sql.SQLException;
+
 public class BaseRepository {
 
     protected Gson _gson = new GsonBuilder()
@@ -60,8 +62,27 @@ public class BaseRepository {
     }
 
     public static void initializeConnections() {
-        if (!Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE")) && PropertiesReader.getValue("DATABASETYPE").equals("mongo")) {
-            new SensorRepository().getMongoConnection();
+        if (!Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
+            if (PropertiesReader.getValue("DATABASETYPE").equals("mongo")) {
+                new SensorRepository().getMongoConnection();
+            } else {
+                JDBConnection jdbConnection = JDBConnection
+                        .builder().user(PropertiesReader.getValue("USER"))
+                        .pass(PropertiesReader.getValue("PASSWORD"))
+                        .host(PropertiesReader.getValue("HOST"))
+                        .port(Integer.parseInt(PropertiesReader.getValue("PORT")))
+                        .database(PropertiesReader.getValue("DATABASE"))
+                        .databaseType(PropertiesReader.getValue("DATABASETYPE"))
+                        .classDriver(PropertiesReader.getValue("DRIVER"))
+                        .build();
+
+                //Inicializa pool de conexões do Hikari e volta a conexão obtida para o pool
+                try {
+                    jdbConnection.getJDBConn().close();
+                }catch (SQLException ex){
+
+                }
+            }
         }
     }
 }
