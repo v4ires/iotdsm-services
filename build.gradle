@@ -96,3 +96,15 @@ jar {
                 'Class-Path': configurations.runtime.files.collect {"$it.name"}.join(' ')
     }
 }
+
+//create a single Jar with all dependencies
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Projeto Rio Transmissor CAS Client',
+                'Implementation-Version': version,
+                'Main-Class': 'Main'
+    }
+    baseName = project.name + '-all'
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

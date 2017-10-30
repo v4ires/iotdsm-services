@@ -63,7 +63,7 @@ public class Main {
         //Spark config
         spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
         //int cores = Runtime.getRuntime().availableProcessors();
-        spark.Spark.threadPool(8, 2, 30000);
+        //spark.Spark.threadPool(8, 2, 30000);
 
         spark.Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
         spark.Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
