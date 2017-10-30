@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>model</OriginalElement>
+  <nodes>
+    <node x="330.0" y="319.0">model.SensorSource</node>
+    <node x="617.0" y="267.0">model.Sensor</node>
+    <node x="0.0" y="581.0">model.SensorMeasure</node>
+    <node x="345.0" y="0.0">model.BasicEntity</node>
+    <node x="0.0" y="319.0">model.SensorMeasureType</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="model.Sensor" target="model.BasicEntity">
+      <point x="0.0" y="-134.5" />
+      <point x="920.0" y="242.0" />
+      <point x="542.5" y="242.0" />
+      <point x="79.0" y="108.5" />
+    </edge>
+    <edge source="model.SensorMeasureType" target="model.BasicEntity">
+      <point x="0.0" y="-82.5" />
+      <point x="155.0" y="242.0" />
+      <point x="384.5" y="242.0" />
+      <point x="-79.0" y="108.5" />
+    </edge>
+    <edge source="model.SensorSource" target="model.BasicEntity">
+      <point x="0.0" y="-82.5" />
+      <point x="0.0" y="108.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.1184210526315788" x="564.3176470588236" y="487.3764705882353" />
+  <SelectedNodes>
+    <node>model.Sensor</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
