@@ -15,9 +15,9 @@ public class MongoDBUtil {
         find.put("_id", name);
         BasicDBObject update = new BasicDBObject();
         update.put("$inc", new BasicDBObject("seq", 1));
-        Document obj =  sequenceCollection.findOneAndUpdate(find, update);
+        Document obj = sequenceCollection.findOneAndUpdate(find, update);
 
-        if(obj == null) {
+        if (obj == null) {
             Document document = new Document();
             document.put("_id", name);
             document.put("seq", 1);
@@ -27,13 +27,14 @@ public class MongoDBUtil {
 
         return Long.parseLong(obj.get("seq").toString());
     }
+
     public static void createIndexIfNotExists(GenericMongoDB genericMongoDB, String collectionName, String indexName, String indexField, boolean unique) {
         MongoCollection<Document> collection = genericMongoDB.getMongoCollection(PropertiesReader.getValue("DATABASE"), collectionName);
 
         boolean create = true;
 
-        for(Document index: collection.listIndexes()){
-            if(index.get("name").equals(indexName))
+        for (Document index : collection.listIndexes()) {
+            if (index.get("name").equals(indexName))
                 create = false;
         }
 
@@ -41,7 +42,7 @@ public class MongoDBUtil {
         options.name(indexName);
         options.unique(unique);
 
-        if(create)
+        if (create)
             collection.createIndex(Indexes.ascending(indexField), options);
     }
 }

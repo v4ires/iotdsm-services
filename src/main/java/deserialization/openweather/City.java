@@ -1,4 +1,3 @@
-
 package deserialization.openweather;
 
 import com.google.gson.annotations.Expose;

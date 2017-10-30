@@ -1,6 +1,5 @@
 package repositories;
 
-import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import model.Sensor;
@@ -10,7 +9,6 @@ import persistence.GenericJPA;
 import persistence.SensorSQL;
 import utils.PropertiesReader;
 import utils.hibernate.CustomTransaction;
-import utils.mongodb.GenericMongoDB;
 import utils.mongodb.MongoDBUtil;
 import utils.sql.JDBConnection;
 import utils.sql.SQLQueryDatabase;
@@ -24,16 +22,16 @@ import java.util.List;
 import static com.mongodb.client.model.Filters.eq;
 
 public class SensorRepository extends BaseRepository {
-    public SensorRepository(CustomTransaction customTransaction){
+    public SensorRepository(CustomTransaction customTransaction) {
         this.hibernateTransaction = customTransaction;
     }
 
-    public SensorRepository(){
+    public SensorRepository() {
 
     }
-    protected SensorSQL getJdbcSql()
-    {
-        if(jdbcSql == null) {
+
+    protected SensorSQL getJdbcSql() {
+        if (jdbcSql == null) {
             JDBConnection jdbConnection = JDBConnection.builder()
                     .user(PropertiesReader.getValue("USER"))
                     .pass(PropertiesReader.getValue("PASSWORD"))
@@ -50,7 +48,7 @@ public class SensorRepository extends BaseRepository {
         return (SensorSQL) jdbcSql;
     }
 
-    public Sensor getSensorById(long sensorId){
+    public Sensor getSensorById(long sensorId) {
         if (useHibernate) {
 
             Sensor sensor = new GenericJPA<>(Sensor.class).findById(getHibernateTransaction(), sensorId);
@@ -82,7 +80,7 @@ public class SensorRepository extends BaseRepository {
         }
     }
 
-    public List<Sensor> getSensors(int limit, int offset){
+    public List<Sensor> getSensors(int limit, int offset) {
         if (useHibernate) {
 
             List<Sensor> sensors;
@@ -101,14 +99,14 @@ public class SensorRepository extends BaseRepository {
 
                 FindIterable<Document> sensorDocuments;
 
-                if(limit > 0)
+                if (limit > 0)
                     sensorDocuments = sensorCollection.find().limit(limit).skip(offset);
                 else
                     sensorDocuments = sensorCollection.find().skip(offset);
 
                 List<Sensor> sensors = new ArrayList<>();
 
-                for(Document cur: sensorDocuments)
+                for (Document cur : sensorDocuments)
                     sensors.add(_gson.fromJson(cur.toJson(), Sensor.class));
 
                 return sensors;
@@ -117,9 +115,9 @@ public class SensorRepository extends BaseRepository {
                 try {
                     List<Sensor> sensors;
 
-                    if(limit > 0)
+                    if (limit > 0)
                         sensors = (List<Sensor>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.mySqlSensorSelectWithLimitAndOffsetQuery, limit, offset);
-                    else if(offset > 0)
+                    else if (offset > 0)
                         sensors = (List<Sensor>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.mySqlSensorSelectWithOffsetQuery, offset);
                     else
                         sensors = (List<Sensor>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.mySqlSensorSelectQuery);
@@ -150,7 +148,7 @@ public class SensorRepository extends BaseRepository {
 
                 MongoCollection<Document> sensorMeasureTypeCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor_measure_type");
 
-                for(SensorMeasureType m : sensor.getSensorMeasures()){
+                for (SensorMeasureType m : sensor.getSensorMeasures()) {
                     m.setId(MongoDBUtil.getNextSequence(getMongoConnection(), "sensor_measure_type"));
                     m.setCreate_time(Date.from(Instant.now()));
 

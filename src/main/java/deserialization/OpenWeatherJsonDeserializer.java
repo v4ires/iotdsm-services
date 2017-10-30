@@ -167,7 +167,7 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
 
     @Override
     public void close() {
-        if(fileStream != null)
+        if (fileStream != null)
             fileStream.close();
     }
 }

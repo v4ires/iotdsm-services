@@ -18,16 +18,16 @@ import java.util.List;
 import static com.mongodb.client.model.Filters.eq;
 
 public class SensorMeasureTypeRepository extends BaseRepository {
-    public SensorMeasureTypeRepository(CustomTransaction customTransaction){
+    public SensorMeasureTypeRepository(CustomTransaction customTransaction) {
         this.hibernateTransaction = customTransaction;
     }
 
-    public SensorMeasureTypeRepository(){
+    public SensorMeasureTypeRepository() {
 
     }
-    protected SensorMeasureTypeSQL getJdbcSql()
-    {
-        if(jdbcSql == null) {
+
+    protected SensorMeasureTypeSQL getJdbcSql() {
+        if (jdbcSql == null) {
             JDBConnection jdbConnection = JDBConnection
                     .builder().user(PropertiesReader.getValue("USER"))
                     .pass(PropertiesReader.getValue("PASSWORD"))
@@ -44,9 +44,9 @@ public class SensorMeasureTypeRepository extends BaseRepository {
         return (SensorMeasureTypeSQL) jdbcSql;
     }
 
-    public List<SensorMeasureType> getSensorMeasureTypeBySensor(long sensorId){
+    public List<SensorMeasureType> getSensorMeasureTypeBySensor(long sensorId) {
         if (useHibernate) {
-            List<SensorMeasureType> sensorMeasureTypes = new GenericJPA<>(SensorMeasureType.class).resultList(getHibernateTransaction(), "SELECT FETCH s.sensorMeasures FROM Sensor s WHERE s.id = "+sensorId);
+            List<SensorMeasureType> sensorMeasureTypes = new GenericJPA<>(SensorMeasureType.class).resultList(getHibernateTransaction(), "SELECT FETCH s.sensorMeasures FROM Sensor s WHERE s.id = " + sensorId);
 
             return sensorMeasureTypes;
         } else {
@@ -57,11 +57,11 @@ public class SensorMeasureTypeRepository extends BaseRepository {
 
                 List<SensorMeasureType> sensorMeasureTypes = new ArrayList<>();
 
-                for(Document sensorMeasureTypeDocument : sensorDocument)
+                for (Document sensorMeasureTypeDocument : sensorDocument)
                     sensorMeasureTypes.add(_gson.fromJson(sensorMeasureTypeDocument.toJson(), SensorMeasureType.class));
 
                 return sensorMeasureTypes;
-            }else {
+            } else {
 
                 try {
                     List<SensorMeasureType> sensorMeasureTypes = (List<SensorMeasureType>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.mySqlSensorMeasureTypeBySensorSelectQuery, sensorId);
@@ -80,7 +80,7 @@ public class SensorMeasureTypeRepository extends BaseRepository {
             new GenericJPA<>(SensorMeasureType.class).insert(getHibernateTransaction(), sensorMeasureType);
         } else {
             //Adicionamos as medidas no Mongo direto no método de adicionar sensores
-            if (!databaseType.equals("mongo")){
+            if (!databaseType.equals("mongo")) {
 
                 try {
                     getJdbcSql().insert_sql(SQLQueryDatabase.mySqlSensorMeasureTypeInsertQuery, sensorMeasureType.getName(), sensorMeasureType.getUnit());

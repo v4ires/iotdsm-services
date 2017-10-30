@@ -14,13 +14,13 @@ public class HibernateUtil {
         try {
             Configuration configuration = new Configuration();
 
-            configuration.addAnnotatedClass (model.SensorMeasure.class);
-            configuration.addAnnotatedClass (model.Sensor.class);
-            configuration.addAnnotatedClass (model.SensorMeasureType.class);
-            configuration.addAnnotatedClass (model.SensorSource.class);
+            configuration.addAnnotatedClass(model.SensorMeasure.class);
+            configuration.addAnnotatedClass(model.Sensor.class);
+            configuration.addAnnotatedClass(model.SensorMeasureType.class);
+            configuration.addAnnotatedClass(model.SensorSource.class);
 
             configuration.setProperty("hibernate.connection.driver_class", PropertiesReader.getValue("DRIVER"));
-            configuration.setProperty("hibernate.connection.url", "jdbc:"+PropertiesReader.getValue("DATABASETYPE")+"://"+PropertiesReader.getValue("HOST")+":"+PropertiesReader.getValue("PORT")+"/"+PropertiesReader.getValue("DATABASE"));
+            configuration.setProperty("hibernate.connection.url", "jdbc:" + PropertiesReader.getValue("DATABASETYPE") + "://" + PropertiesReader.getValue("HOST") + ":" + PropertiesReader.getValue("PORT") + "/" + PropertiesReader.getValue("DATABASE"));
             configuration.setProperty("hibernate.connection.username", PropertiesReader.getValue("USER"));
             configuration.setProperty("hibernate.connection.password", PropertiesReader.getValue("PASSWORD"));
             configuration.setProperty("hibernate.dialect", PropertiesReader.getValue("DIALECT"));

@@ -33,16 +33,16 @@ public class SensorSourceSQL implements SQLOperation {
         try {
             PreparedStatement stmt = jdbConn.getJDBConn().prepareStatement(sql);
 
-            if(params != null) {
-                for(int i = 0;i < params.length;i++)
-                    stmt.setObject(i+1, params[i]);
+            if (params != null) {
+                for (int i = 0; i < params.length; i++)
+                    stmt.setObject(i + 1, params[i]);
             }
 
             stmt.executeUpdate();
 
             ResultSet generatedKeys = stmt.getGeneratedKeys();
 
-            if(generatedKeys.next()) {
+            if (generatedKeys.next()) {
                 lastInsertedId = generatedKeys.getLong(1);
             }
 
@@ -58,7 +58,7 @@ public class SensorSourceSQL implements SQLOperation {
     public Object select_unique_sql(String sql, Object... params) throws SQLException {
         List<Object> sensors_row = select_sql(sql, params);
 
-        if(sensors_row.size() > 0)
+        if (sensors_row.size() > 0)
             return sensors_row.get(0);
 
         return null;
@@ -89,9 +89,9 @@ public class SensorSourceSQL implements SQLOperation {
         try {
             PreparedStatement stmt = jdbConn.getJDBConn().prepareStatement(sql);
 
-            if(params != null) {
-                for(int i = 0;i < params.length;i++)
-                    stmt.setObject(i+1, params[i]);
+            if (params != null) {
+                for (int i = 0; i < params.length; i++)
+                    stmt.setObject(i + 1, params[i]);
             }
 
             ResultSet rs = stmt.executeQuery();
@@ -125,7 +125,7 @@ public class SensorSourceSQL implements SQLOperation {
 
     @Override
     public void close() {
-        if(jdbConn != null)
+        if (jdbConn != null)
             jdbConn.close();
     }
 }

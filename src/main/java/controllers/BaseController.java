@@ -10,7 +10,6 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import spark.Response;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -18,32 +17,34 @@ import java.util.List;
 import java.util.Set;
 
 public class BaseController {
-    protected static String error(Response response, String message)
-    {
+    protected static Gson _gson = new GsonBuilder()
+            .excludeFieldsWithoutExposeAnnotation()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+            .serializeNulls()
+            .create();
+
+    protected static String error(Response response, String message) {
         response.status(400);
         response.type("application/json");
 
         return String.format("{\"error\": \"%s\"}", message);
     }
 
-    protected static String serverError(Response response, Exception ex)
-    {
+    protected static String serverError(Response response, Exception ex) {
         response.status(500);
         response.type("application/json");
 
         return String.format("{\"error\": \"%s\"}", org.apache.commons.lang.exception.ExceptionUtils.getStackTrace(ex).replaceAll("\"", "\\\""));
     }
 
-    protected static String success(Response response, String message)
-    {
+    protected static String success(Response response, String message) {
         response.status(200);
         response.type("application/json");
 
         return message;
     }
 
-    protected static String successXml(Response response, Object message)
-    {
+    protected static String successXml(Response response, Object message) {
         response.status(200);
         response.type("application/xml");
 
@@ -52,59 +53,55 @@ public class BaseController {
         return xstream.toXML(message);
     }
 
-    protected static List<String> printCsvObject(Object o, Set<Field> exposedFields) throws Exception
-    {
+    protected static List<String> printCsvObject(Object o, Set<Field> exposedFields) throws Exception {
         List<String> values = new ArrayList<>();
-        for(Field f : exposedFields){
-            if(BasicEntity.class.isAssignableFrom(f.getType()))
-            {
+        for (Field f : exposedFields) {
+            if (BasicEntity.class.isAssignableFrom(f.getType())) {
                 Set<Field> exposedFieldsOn = utils.Utils.findFields(f.getType(), Expose.class);
-                for(Field ef: exposedFieldsOn)
-                {
-                    Method innerObjectMethod = o.getClass().getMethod("get"+f.getName().substring(0,1).toUpperCase()+f.getName().substring(1));
+                for (Field ef : exposedFieldsOn) {
+                    Method innerObjectMethod = o.getClass().getMethod("get" + f.getName().substring(0, 1).toUpperCase() + f.getName().substring(1));
                     Object innerObject;
 
-                    if(innerObjectMethod == null) {
+                    if (innerObjectMethod == null) {
                         values.add("");
                         continue;
                     }
 
                     innerObject = innerObjectMethod.invoke(o);
 
-                    if(innerObject == null) {
+                    if (innerObject == null) {
                         values.add("");
                         continue;
                     }
 
-                    Method method = innerObject.getClass().getMethod("get"+ef.getName().substring(0,1).toUpperCase()+ef.getName().substring(1));
+                    Method method = innerObject.getClass().getMethod("get" + ef.getName().substring(0, 1).toUpperCase() + ef.getName().substring(1));
 
-                    if(method != null) {
+                    if (method != null) {
                         Object result = method.invoke(innerObject);
-                        values.add(result == null? "": result.toString());
+                        values.add(result == null ? "" : result.toString());
                     }
                 }
-            }
-            else
-            {
-                Method method = o.getClass().getMethod("get"+f.getName().substring(0,1).toUpperCase()+f.getName().substring(1));
+            } else {
+                Method method = o.getClass().getMethod("get" + f.getName().substring(0, 1).toUpperCase() + f.getName().substring(1));
 
-                if(method != null) {
+                if (method != null) {
                     Object result = method.invoke(o);
 
 
-                    values.add(result == null? "": result.toString());
+                    values.add(result == null ? "" : result.toString());
                 }
             }
         }
         return values;
     }
-    protected static String successCsv(Response response, Object message){
+
+    protected static String successCsv(Response response, Object message) {
         StringBuilder appendable = new StringBuilder();
 
         response.status(200);
         response.type("text/csv");
 
-        if(message == null || message instanceof List && ((List<Object>)message).size() == 0)
+        if (message == null || message instanceof List && ((List<Object>) message).size() == 0)
             return "";
 
         try {
@@ -139,17 +136,11 @@ public class BaseController {
             } else {
                 printer.printRecord(printCsvObject(message, exposedFields));
             }
-        }catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return error(response, ex.getMessage());
         }
 
         return appendable.toString();
     }
-
-    protected static Gson _gson = new GsonBuilder()
-            .excludeFieldsWithoutExposeAnnotation()
-            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-            .serializeNulls()
-            .create();
 }

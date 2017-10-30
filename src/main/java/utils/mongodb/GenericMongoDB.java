@@ -25,12 +25,12 @@ public class GenericMongoDB implements MongoOperation {
      */
     public GenericMongoDB(MongoClient mongoFactory) {
         this.mongoFactory = mongoFactory;
-        gson =  new Gson();
+        gson = new Gson();
 
         MongoDBUtil.createIndexIfNotExists(this, "sensor", "id_index", "id", true);
-        MongoDBUtil.createIndexIfNotExists(this, "sensor_measure","id_index", "id", true);
-        MongoDBUtil.createIndexIfNotExists(this, "sensor_measure_type","id_index", "id", true);
-        MongoDBUtil.createIndexIfNotExists(this, "sensor_measure","sensor_id_index", "sensor_id", false);
+        MongoDBUtil.createIndexIfNotExists(this, "sensor_measure", "id_index", "id", true);
+        MongoDBUtil.createIndexIfNotExists(this, "sensor_measure_type", "id_index", "id", true);
+        MongoDBUtil.createIndexIfNotExists(this, "sensor_measure", "sensor_id_index", "sensor_id", false);
     }
 
     @Override
@@ -73,7 +73,9 @@ public class GenericMongoDB implements MongoOperation {
      * @return long
      */
     @Override
-    public long getCollectionCount(DBCollection collection) { return collection.count(); }
+    public long getCollectionCount(DBCollection collection) {
+        return collection.count();
+    }
 
     /**
      * Método que retorna um novo Documento para ser persistido no MongoDB
@@ -162,7 +164,7 @@ public class GenericMongoDB implements MongoOperation {
 
     @Override
     public void close() {
-        if(mongoFactory != null)
+        if (mongoFactory != null)
             mongoFactory.close();
     }
 }

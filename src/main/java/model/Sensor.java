@@ -25,10 +25,10 @@ public class Sensor extends BasicEntity {
     double longitude;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name = "tb_sensor_has_sensor_measure_type",  joinColumns = {
-            @JoinColumn(name = "sensor_id", nullable = false, updatable = false) },
-            inverseJoinColumns = { @JoinColumn(name = "sensor_measure_type_id",
-                    nullable = false, updatable = false) })
+    @JoinTable(name = "tb_sensor_has_sensor_measure_type", joinColumns = {
+            @JoinColumn(name = "sensor_id", nullable = false, updatable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "sensor_measure_type_id",
+                    nullable = false, updatable = false)})
     Set<SensorMeasureType> sensorMeasures;
 
     @ManyToOne(fetch = FetchType.EAGER)

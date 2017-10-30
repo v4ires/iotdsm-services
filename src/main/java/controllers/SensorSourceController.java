@@ -28,8 +28,7 @@ public class SensorSourceController extends BaseController {
             }
         } catch (Exception ex) {
             return serverError(response, ex);
-        }
-        finally {
+        } finally {
             _sensorSourceRepository.close();
         }
     };
@@ -67,8 +66,7 @@ public class SensorSourceController extends BaseController {
             }
         } catch (Exception ex) {
             return serverError(response, ex);
-        }
-        finally {
+        } finally {
             _sensorSourceRepository.close();
         }
     };

@@ -42,8 +42,8 @@ public class OpenWeatherCsvDeserializer implements IDeserializer {
                     line = fileStream.nextLine();
                 } catch (Exception ex) {
 
-                    if(sensorMeasures.size() > 0)
-                        return (List<Object>)(Object)sensorMeasures;
+                    if (sensorMeasures.size() > 0)
+                        return (List<Object>) (Object) sensorMeasures;
 
                     return null;
                 }
@@ -187,7 +187,7 @@ public class OpenWeatherCsvDeserializer implements IDeserializer {
     public boolean loadContent(String... args) {
         String filePath = args[0];
 
-        if(args.length > 1)
+        if (args.length > 1)
             delimiter = args[1];
 
         File file = new File(filePath);
@@ -210,7 +210,7 @@ public class OpenWeatherCsvDeserializer implements IDeserializer {
 
     @Override
     public void close() {
-        if(fileStream != null)
+        if (fileStream != null)
             fileStream.close();
     }
 }

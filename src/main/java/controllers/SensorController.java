@@ -16,7 +16,6 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class SensorController extends BaseController {
 
@@ -33,17 +32,17 @@ public class SensorController extends BaseController {
             }
 
             if (request.queryParams("limit") != null && !request.queryParams("limit").equals("")) {
-                try{
+                try {
                     limit = Integer.parseInt(request.queryParams("limit"));
-                }catch(Exception ex){
+                } catch (Exception ex) {
                     error(response, "Invalid value for limit.");
                 }
             }
 
             if (request.queryParams("offset") != null && !request.queryParams("offset").equals("")) {
-                try{
+                try {
                     offset = Integer.parseInt(request.queryParams("offset"));
-                }catch(Exception ex){
+                } catch (Exception ex) {
                     error(response, "Invalid value for offset.");
                 }
             }
@@ -60,8 +59,7 @@ public class SensorController extends BaseController {
             }
         } catch (Exception ex) {
             return serverError(response, ex);
-        }
-        finally {
+        } finally {
             _sensorRepository.close();
         }
     };
@@ -97,8 +95,7 @@ public class SensorController extends BaseController {
             }
         } catch (Exception ex) {
             return serverError(response, ex);
-        }
-        finally{
+        } finally {
             _sensorMeasureTypeRepository.close();
         }
     };
@@ -168,8 +165,7 @@ public class SensorController extends BaseController {
             }
         } catch (Exception ex) {
             return serverError(response, ex);
-        }
-        finally {
+        } finally {
             _sensorMeasureRepository.close();
         }
     };
@@ -206,8 +202,7 @@ public class SensorController extends BaseController {
             }
         } catch (Exception ex) {
             return serverError(response, ex);
-        }
-        finally {
+        } finally {
             _sensorRepository.close();
         }
     };

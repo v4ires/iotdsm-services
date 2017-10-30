@@ -23,16 +23,16 @@ import static com.mongodb.client.model.Filters.*;
 
 public class SensorMeasureRepository extends BaseRepository {
 
-    public SensorMeasureRepository(CustomTransaction customTransaction){
+    public SensorMeasureRepository(CustomTransaction customTransaction) {
         this.hibernateTransaction = customTransaction;
     }
 
-    public SensorMeasureRepository(){
+    public SensorMeasureRepository() {
 
     }
-    protected SensorMeasureSQL getJdbcSql()
-    {
-        if(jdbcSql == null) {
+
+    protected SensorMeasureSQL getJdbcSql() {
+        if (jdbcSql == null) {
             JDBConnection jdbConnection = JDBConnection
                     .builder().user(PropertiesReader.getValue("USER"))
                     .pass(PropertiesReader.getValue("PASSWORD"))
@@ -49,9 +49,9 @@ public class SensorMeasureRepository extends BaseRepository {
         return (SensorMeasureSQL) jdbcSql;
     }
 
-    public SensorMeasure getSensorMeasureById(long sensorMeasureId){
+    public SensorMeasure getSensorMeasureById(long sensorMeasureId) {
         if (useHibernate) {
-            
+
             SensorMeasure sensorMeasure = new GenericJPA<>(SensorMeasure.class).findById(getHibernateTransaction(), sensorMeasureId);
 
             return sensorMeasure;
@@ -61,7 +61,7 @@ public class SensorMeasureRepository extends BaseRepository {
 
                 Document sensorMeasureDocument = sensorMeasureCollection.find(eq("id", sensorMeasureId)).first();
 
-                if(sensorMeasureDocument != null)
+                if (sensorMeasureDocument != null)
                     return _gson.fromJson(sensorMeasureDocument.toJson(), SensorMeasure.class);
 
                 return null;
@@ -80,11 +80,11 @@ public class SensorMeasureRepository extends BaseRepository {
         }
     }
 
-    public List<SensorMeasure> getSensorMeasure(long sensorId, long measureTypeId, Date startDate, Date endDate){
+    public List<SensorMeasure> getSensorMeasure(long sensorId, long measureTypeId, Date startDate, Date endDate) {
         if (useHibernate) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-            List<SensorMeasure> sensors = new GenericJPA<>(SensorMeasure.class).resultList(getHibernateTransaction(), "FROM SensorMeasure WHERE sensor.id="+sensorId+" AND sensorMeasureType.id="+measureTypeId+" AND create_time >= '"+df.format(startDate)+"' AND create_time <= '"+df.format(endDate)+"'");
+            List<SensorMeasure> sensors = new GenericJPA<>(SensorMeasure.class).resultList(getHibernateTransaction(), "FROM SensorMeasure WHERE sensor.id=" + sensorId + " AND sensorMeasureType.id=" + measureTypeId + " AND create_time >= '" + df.format(startDate) + "' AND create_time <= '" + df.format(endDate) + "'");
 
             return sensors;
         } else {
@@ -97,8 +97,8 @@ public class SensorMeasureRepository extends BaseRepository {
 
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
 
-                for(Document smDocument : sensorMeasureDocuments){
-                    smDocument.put("create_time", df.format((Date)smDocument.get("create_time")));
+                for (Document smDocument : sensorMeasureDocuments) {
+                    smDocument.put("create_time", df.format((Date) smDocument.get("create_time")));
                     sensorMeasures.add(_gson.fromJson(smDocument.toJson(), SensorMeasure.class));
                 }
 

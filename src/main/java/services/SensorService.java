@@ -27,7 +27,7 @@ public class SensorService {
         Long resetCount = 0L;
 
         CustomTransaction hibernateTransaction = null;
-        if(Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
+        if (Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
 
@@ -70,9 +70,9 @@ public class SensorService {
                     resetCount++;
                 }
 
-                if(resetCount > 50000) {
+                if (resetCount > 50000) {
                     resetCount = 0L;
-                    if(hibernateTransaction != null) {
+                    if (hibernateTransaction != null) {
                         hibernateTransaction.commit();
 
                         Session session = HibernateUtil.getSessionFactory().openSession();
@@ -91,7 +91,7 @@ public class SensorService {
                 smList = (List<SensorMeasure>) (Object) deserializer.readArray();
             }
 
-            if(hibernateTransaction != null)
+            if (hibernateTransaction != null)
                 hibernateTransaction.commit();
 
             return insertedMeasures;

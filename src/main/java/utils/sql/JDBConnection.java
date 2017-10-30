@@ -4,8 +4,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -26,12 +24,11 @@ public class JDBConnection {
     private Connection conn;
 
     public Connection getJDBConn() {
-        if(datasource == null)
-        {
+        if (datasource == null) {
             HikariConfig config = new HikariConfig();
 
             config.setDriverClassName(classDriver);
-            config.setJdbcUrl("jdbc:"+databaseType+"://"+host+":"+port+"/"+database);
+            config.setJdbcUrl("jdbc:" + databaseType + "://" + host + ":" + port + "/" + database);
             config.setUsername(user);
             config.setPassword(pass);
 
@@ -44,7 +41,7 @@ public class JDBConnection {
             datasource = new HikariDataSource(config);
         }
 
-        if(conn == null) {
+        if (conn == null) {
             try {
                 conn = datasource.getConnection();
             } catch (Exception e) {

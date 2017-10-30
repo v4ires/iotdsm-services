@@ -4,7 +4,6 @@ import org.apache.commons.cli.*;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
-import org.slf4j.LoggerFactory;
 import repositories.BaseRepository;
 import utils.PropertiesReader;
 
@@ -21,8 +20,8 @@ public class Main {
 
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao.");
         options.addOption("l", "log", true, "Habilitar ou desabilitar log.");
-        options.addOption("v", "log-level", true, "Muda o nivel do log. (OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL)");
-        options.addOption("h", "help", false, "Mostra ajuda.");
+        options.addOption("v", "log-level", true, "Muda o nível do log (OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL).");
+        options.addOption("h", "help", false, "Mostrar ajuda.");
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;

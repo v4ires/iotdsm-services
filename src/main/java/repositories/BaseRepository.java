@@ -16,50 +16,15 @@ import java.sql.SQLException;
 
 public class BaseRepository {
 
+    private static GenericMongoDB mongoConn;
     protected Gson _gson = new GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
             .create();
-
     protected boolean useHibernate = Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"));
     protected String databaseType = PropertiesReader.getValue("DATABASETYPE");
-    private static GenericMongoDB mongoConn;
     protected SQLOperation jdbcSql;
     protected CustomTransaction hibernateTransaction;
-
-    public GenericMongoDB getMongoConnection()
-    {
-        if(mongoConn == null)
-            mongoConn = new GenericMongoDB(new MongoClient(PropertiesReader.getValue("HOST"), Integer.parseInt(PropertiesReader.getValue("PORT"))));
-
-        return mongoConn;
-    }
-
-    public CustomTransaction getHibernateTransaction()
-    {
-        if(hibernateTransaction == null){
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-
-            hibernateTransaction = new CustomTransaction(session, transaction);
-        }
-
-        return hibernateTransaction;
-    }
-
-    public void close()
-    {
-        if(hibernateTransaction != null)
-            hibernateTransaction.close();
-
-        if(jdbcSql != null)
-            jdbcSql.close();
-    }
-
-    public void setHibernateTransaction(CustomTransaction hibernateTransaction)
-    {
-        this.hibernateTransaction = hibernateTransaction;
-    }
 
     public static void initializeConnections() {
         if (!Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
@@ -79,10 +44,40 @@ public class BaseRepository {
                 //Inicializa pool de conexões do Hikari e volta a conexão obtida para o pool
                 try {
                     jdbConnection.getJDBConn().close();
-                }catch (SQLException ex){
+                } catch (SQLException ex) {
 
                 }
             }
         }
+    }
+
+    public GenericMongoDB getMongoConnection() {
+        if (mongoConn == null)
+            mongoConn = new GenericMongoDB(new MongoClient(PropertiesReader.getValue("HOST"), Integer.parseInt(PropertiesReader.getValue("PORT"))));
+
+        return mongoConn;
+    }
+
+    public CustomTransaction getHibernateTransaction() {
+        if (hibernateTransaction == null) {
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Transaction transaction = session.beginTransaction();
+
+            hibernateTransaction = new CustomTransaction(session, transaction);
+        }
+
+        return hibernateTransaction;
+    }
+
+    public void setHibernateTransaction(CustomTransaction hibernateTransaction) {
+        this.hibernateTransaction = hibernateTransaction;
+    }
+
+    public void close() {
+        if (hibernateTransaction != null)
+            hibernateTransaction.close();
+
+        if (jdbcSql != null)
+            jdbcSql.close();
     }
 }
