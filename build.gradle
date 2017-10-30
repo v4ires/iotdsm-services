@@ -73,7 +73,7 @@ dependencies {
     //compile group: 'org.sql2o', name: 'sql2o', version: '1.5.4'
 
     //JDBC Drivers - SQL Databases
-    compile group: 'postgresql', name: 'postgresql', version: '9.0-801.jdbc4'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
     //compile group: 'com.h2database', name: 'h2', version: '1.3.148'
 

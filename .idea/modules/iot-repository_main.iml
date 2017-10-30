@@ -20,7 +20,6 @@
           <option name="pluginClasspaths">
             <array />
           </option>
-          <option name="version" value="true" />
         </compilerArguments>
       </configuration>
     </facet>
@@ -46,7 +45,7 @@
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-csv:1.5" level="project" />
     <orderEntry type="library" name="Gradle: javax.xml.parsers:jaxp-api:1.4.5" level="project" />
     <orderEntry type="library" name="Gradle: com.thoughtworks.xstream:xstream:1.4.10" level="project" />
-    <orderEntry type="library" name="Gradle: postgresql:postgresql:9.0-801.jdbc4" level="project" />
+    <orderEntry type="library" name="Gradle: org.postgresql:postgresql:42.1.4" level="project" />
     <orderEntry type="library" name="Gradle: mysql:mysql-connector-java:5.1.6" level="project" />
     <orderEntry type="library" name="Gradle: org.mongodb:mongo-java-driver:3.5.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache-extras.cassandra-jdbc:cassandra-jdbc:1.2.5" level="project" />
