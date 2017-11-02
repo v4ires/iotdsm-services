@@ -17,15 +17,30 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class SensorMeasureTypeRepository extends BaseRepository {
+
+    /**
+     *
+     */
     public SensorMeasureTypeRepository(CustomTransaction customTransaction) {
         this.hibernateTransaction = customTransaction;
     }
 
+    /**
+     *
+     */
     public SensorMeasureTypeRepository() {
 
     }
 
+    /**
+     *
+     */
     protected SensorMeasureTypeSQL getJdbcSql() {
         if (jdbcSql == null) {
             JDBConnection jdbConnection = JDBConnection
@@ -44,6 +59,9 @@ public class SensorMeasureTypeRepository extends BaseRepository {
         return (SensorMeasureTypeSQL) jdbcSql;
     }
 
+    /**
+     *
+     */
     public List<SensorMeasureType> getSensorMeasureTypeBySensor(long sensorId) {
         if (useHibernate) {
             List<SensorMeasureType> sensorMeasureTypes = new GenericJPA<>(SensorMeasureType.class).resultList(getHibernateTransaction(), "SELECT FETCH s.sensorMeasures FROM Sensor s WHERE s.id = " + sensorId);
@@ -64,7 +82,7 @@ public class SensorMeasureTypeRepository extends BaseRepository {
             } else {
 
                 try {
-                    List<SensorMeasureType> sensorMeasureTypes = (List<SensorMeasureType>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.mySqlSensorMeasureTypeBySensorSelectQuery, sensorId);
+                    List<SensorMeasureType> sensorMeasureTypes = (List<SensorMeasureType>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.sqlSensorMeasureTypeBySensorSelectQuery, sensorId);
 
                     return sensorMeasureTypes;
                 } catch (SQLException e) {
@@ -75,6 +93,9 @@ public class SensorMeasureTypeRepository extends BaseRepository {
         }
     }
 
+    /**
+     *
+     */
     public void addSensorMeasureType(SensorMeasureType sensorMeasureType) {
         if (useHibernate) {
             new GenericJPA<>(SensorMeasureType.class).insert(getHibernateTransaction(), sensorMeasureType);
@@ -83,7 +104,7 @@ public class SensorMeasureTypeRepository extends BaseRepository {
             if (!databaseType.equals("mongo")) {
 
                 try {
-                    getJdbcSql().insert_sql(SQLQueryDatabase.mySqlSensorMeasureTypeInsertQuery, sensorMeasureType.getName(), sensorMeasureType.getUnit());
+                    getJdbcSql().insert_sql(SQLQueryDatabase.sqlSensorMeasureTypeInsertQuery, sensorMeasureType.getName(), sensorMeasureType.getUnit());
                     sensorMeasureType.setId(getJdbcSql().get_last_generated_key());
                 } catch (SQLException e) {
                     e.printStackTrace();

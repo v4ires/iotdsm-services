@@ -5,35 +5,49 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class SensorData {
 
     @SerializedName("dt")
     @Expose
     private Integer dt;
+
     @SerializedName("temp")
     @Expose
     private Temp temp;
+
     @SerializedName("pressure")
     @Expose
     private Double pressure;
+
     @SerializedName("humidity")
     @Expose
     private Integer humidity;
+
     @SerializedName("weather")
     @Expose
     private List<Weather> weather = null;
+
     @SerializedName("speed")
     @Expose
     private Double speed;
+
     @SerializedName("deg")
     @Expose
     private Integer deg;
+
     @SerializedName("clouds")
     @Expose
     private Integer clouds;
+
     @SerializedName("rain")
     @Expose
     private Double rain;
+
     @SerializedName("snow")
     @Expose
     private Double snow;

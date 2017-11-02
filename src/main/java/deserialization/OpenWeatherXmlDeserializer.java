@@ -17,14 +17,27 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class OpenWeatherXmlDeserializer implements IDeserializer {
+
     private SensorSource sensorSource;
+
     private SensorMeasureType tempMeasureType;
+
     private SensorMeasureType pressMeasureType;
+
     private SensorMeasureType humidityMeasureType;
+
     private SensorMeasureType speedWindMeasureType;
+
     private XStream xstream;
+
     private ObjectInputStream objectInputStream;
+
     private InputStream inputStream;
 
     @Override

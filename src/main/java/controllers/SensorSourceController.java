@@ -5,8 +5,16 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class SensorSourceController extends BaseController {
 
+    /**
+     *
+     */
     public static Route serveSensorSourceListPage = (Request request, Response response) -> {
         SensorSourceRepository _sensorSourceRepository = new SensorSourceRepository();
 
@@ -33,6 +41,9 @@ public class SensorSourceController extends BaseController {
         }
     };
 
+    /**
+     *
+     */
     public static Route serveSensorById = (Request request, Response response) -> {
         SensorSourceRepository _sensorSourceRepository = new SensorSourceRepository();
 
@@ -70,7 +81,6 @@ public class SensorSourceController extends BaseController {
             _sensorSourceRepository.close();
         }
     };
-
 }
 
 

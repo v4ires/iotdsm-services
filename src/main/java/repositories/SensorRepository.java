@@ -21,15 +21,30 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class SensorRepository extends BaseRepository {
+
+    /**
+     *
+     */
     public SensorRepository(CustomTransaction customTransaction) {
         this.hibernateTransaction = customTransaction;
     }
 
+    /**
+     *
+     */
     public SensorRepository() {
 
     }
 
+    /**
+     *
+     */
     protected SensorSQL getJdbcSql() {
         if (jdbcSql == null) {
             JDBConnection jdbConnection = JDBConnection.builder()
@@ -44,21 +59,20 @@ public class SensorRepository extends BaseRepository {
 
             jdbcSql = new SensorSQL(jdbConnection);
         }
-
         return (SensorSQL) jdbcSql;
     }
 
+    /**
+     *
+     */
     public Sensor getSensorById(long sensorId) {
         if (useHibernate) {
-
             Sensor sensor = new GenericJPA<>(Sensor.class).findById(getHibernateTransaction(), sensorId);
-
             return sensor;
         } else {
             if (databaseType.equals("mongo")) {
+
                 MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor");
-
-
                 Document sensorDocument = sensorCollection.find(eq("id", sensorId)).first();
 
                 if (sensorDocument != null) {
@@ -67,10 +81,8 @@ public class SensorRepository extends BaseRepository {
 
                 return null;
             } else {
-
                 try {
-                    Sensor sensor = (Sensor) getJdbcSql().select_unique_sql(SQLQueryDatabase.mySqlUniqueSensorSelectQuery, sensorId);
-
+                    Sensor sensor = (Sensor) getJdbcSql().select_unique_sql(SQLQueryDatabase.sqlUniqueSensorSelectQuery, sensorId);
                     return sensor;
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -80,6 +92,9 @@ public class SensorRepository extends BaseRepository {
         }
     }
 
+    /**
+     *
+     */
     public List<Sensor> getSensors(int limit, int offset) {
         if (useHibernate) {
 
@@ -116,11 +131,11 @@ public class SensorRepository extends BaseRepository {
                     List<Sensor> sensors;
 
                     if (limit > 0)
-                        sensors = (List<Sensor>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.mySqlSensorSelectWithLimitAndOffsetQuery, limit, offset);
+                        sensors = (List<Sensor>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.sqlSensorSelectWithLimitAndOffsetQuery, limit, offset);
                     else if (offset > 0)
-                        sensors = (List<Sensor>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.mySqlSensorSelectWithOffsetQuery, offset);
+                        sensors = (List<Sensor>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.sqlSensorSelectWithOffsetQuery, offset);
                     else
-                        sensors = (List<Sensor>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.mySqlSensorSelectQuery);
+                        sensors = (List<Sensor>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.sqlSensorSelectQuery);
 
                     return sensors;
                 } catch (SQLException e) {
@@ -131,6 +146,9 @@ public class SensorRepository extends BaseRepository {
         }
     }
 
+    /**
+     *
+     */
     public void addSensor(Sensor sensor) {
         if (useHibernate) {
             new GenericJPA<>(Sensor.class).insertOrUpdate(getHibernateTransaction(), sensor);
@@ -160,7 +178,7 @@ public class SensorRepository extends BaseRepository {
             } else {
 
                 try {
-                    getJdbcSql().insert_sql(SQLQueryDatabase.mySqlSensorInsertQuery, sensor.getDescription(), sensor.getLatitude(), sensor.getLongitude(), sensor.getName(), sensor.getSensorSource().getId());
+                    getJdbcSql().insert_sql(SQLQueryDatabase.sqlSensorInsertQuery, sensor.getDescription(), sensor.getLatitude(), sensor.getLongitude(), sensor.getName(), sensor.getSensorSource().getId());
                     sensor.setId(getJdbcSql().get_last_generated_key());
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -169,7 +187,7 @@ public class SensorRepository extends BaseRepository {
 
                 for (SensorMeasureType smt : sensor.getSensorMeasures()) {
                     try {
-                        getJdbcSql().insert_sql(SQLQueryDatabase.mySqlSensorSensorMeasureInsertQuery, sensor.getId(), smt.getId());
+                        getJdbcSql().insert_sql(SQLQueryDatabase.sqlSensorSensorMeasureInsertQuery, sensor.getId(), smt.getId());
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }

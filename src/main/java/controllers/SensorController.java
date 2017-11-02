@@ -17,8 +17,16 @@ import javax.servlet.http.Part;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class SensorController extends BaseController {
 
+    /**
+     *
+     */
     public static Route serveSensorListPage = (Request request, Response response) -> {
         SensorRepository _sensorRepository = new SensorRepository();
         int limit = 0;
@@ -64,6 +72,9 @@ public class SensorController extends BaseController {
         }
     };
 
+    /**
+     *
+     */
     public static Route serveSensorMeasureTypesBySensorId = (Request request, Response response) -> {
         SensorMeasureTypeRepository _sensorMeasureTypeRepository = new SensorMeasureTypeRepository();
         try {
@@ -100,6 +111,9 @@ public class SensorController extends BaseController {
         }
     };
 
+    /**
+     *
+     */
     public static Route serveSensorMeasuresBySensorIdAndDate = (Request request, Response response) -> {
         SensorMeasureRepository _sensorMeasureRepository = new SensorMeasureRepository();
 
@@ -170,6 +184,9 @@ public class SensorController extends BaseController {
         }
     };
 
+    /**
+     *
+     */
     public static Route serveSensorById = (Request request, Response response) -> {
         SensorRepository _sensorRepository = new SensorRepository();
 
@@ -207,6 +224,9 @@ public class SensorController extends BaseController {
         }
     };
 
+    /**
+     *
+     */
     public static Route handleFileUpload = (Request request, Response response) -> {
         try {
             String inputFormat = "json";

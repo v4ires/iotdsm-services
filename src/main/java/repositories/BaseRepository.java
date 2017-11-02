@@ -14,18 +14,31 @@ import utils.sql.SQLOperation;
 
 import java.sql.SQLException;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class BaseRepository {
 
     private static GenericMongoDB mongoConn;
+
     protected Gson _gson = new GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
             .create();
+
     protected boolean useHibernate = Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"));
+
     protected String databaseType = PropertiesReader.getValue("DATABASETYPE");
+
     protected SQLOperation jdbcSql;
+
     protected CustomTransaction hibernateTransaction;
 
+    /**
+     *
+     */
     public static void initializeConnections() {
         if (!Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
             if (PropertiesReader.getValue("DATABASETYPE").equals("mongo")) {
@@ -51,6 +64,9 @@ public class BaseRepository {
         }
     }
 
+    /**
+     *
+     */
     public GenericMongoDB getMongoConnection() {
         if (mongoConn == null)
             mongoConn = new GenericMongoDB(new MongoClient(PropertiesReader.getValue("HOST"), Integer.parseInt(PropertiesReader.getValue("PORT"))));
@@ -58,6 +74,9 @@ public class BaseRepository {
         return mongoConn;
     }
 
+    /**
+     *
+     */
     public CustomTransaction getHibernateTransaction() {
         if (hibernateTransaction == null) {
             Session session = HibernateUtil.getSessionFactory().openSession();
@@ -69,10 +88,16 @@ public class BaseRepository {
         return hibernateTransaction;
     }
 
+    /**
+     *
+     */
     public void setHibernateTransaction(CustomTransaction hibernateTransaction) {
         this.hibernateTransaction = hibernateTransaction;
     }
 
+    /**
+     *
+     */
     public void close() {
         if (hibernateTransaction != null)
             hibernateTransaction.close();

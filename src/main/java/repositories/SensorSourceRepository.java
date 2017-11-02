@@ -19,15 +19,30 @@ import java.util.*;
 
 import static com.mongodb.client.model.Filters.eq;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class SensorSourceRepository extends BaseRepository {
+
+    /**
+     *
+     */
     public SensorSourceRepository(CustomTransaction customTransaction) {
         this.hibernateTransaction = customTransaction;
     }
 
+    /**
+     *
+     */
     public SensorSourceRepository() {
 
     }
 
+    /**
+     *
+     */
     private SensorSourceSQL getJdbcSql() {
         if (jdbcSql == null) {
             JDBConnection jdbConnection = JDBConnection
@@ -42,10 +57,12 @@ public class SensorSourceRepository extends BaseRepository {
 
             jdbcSql = new SensorSourceSQL(jdbConnection);
         }
-
         return (SensorSourceSQL) jdbcSql;
     }
 
+    /**
+     *
+     */
     public List<SensorSource> getSensorSources() {
         if (useHibernate) {
             List<SensorSource> sensorSources = new GenericJPA<>(SensorSource.class).findAll(getHibernateTransaction());
@@ -66,10 +83,8 @@ public class SensorSourceRepository extends BaseRepository {
 
                 return new ArrayList<>(sensorSources.values());
             } else {
-
                 try {
-                    List<SensorSource> sensorSources = (List<SensorSource>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.mySqlSensorSourceSelectQuery);
-
+                    List<SensorSource> sensorSources = (List<SensorSource>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.sqlSensorSourceSelectQuery);
                     return sensorSources;
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -79,28 +94,24 @@ public class SensorSourceRepository extends BaseRepository {
         }
     }
 
+    /**
+     *
+     */
     public SensorSource getSensorSourceById(long sensorSourceId) {
         if (useHibernate) {
-
             SensorSource sensorSource = new GenericJPA<>(SensorSource.class).findById(getHibernateTransaction(), sensorSourceId);
-
             return sensorSource;
         } else {
             if (databaseType.equals("mongo")) {
                 MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor");
-
                 Document sensorDocument = sensorCollection.find(eq("sensorSource.id", sensorSourceId)).first();
-
                 if (sensorDocument != null) {
                     return _gson.fromJson(sensorDocument.toJson(), Sensor.class).getSensorSource();
                 }
-
                 return null;
             } else {
-
                 try {
-                    SensorSource sensorSource = (SensorSource) getJdbcSql().select_unique_sql(SQLQueryDatabase.mySqlUniqueSensorSourceSelectQuery, sensorSourceId);
-
+                    SensorSource sensorSource = (SensorSource) getJdbcSql().select_unique_sql(SQLQueryDatabase.sqlUniqueSensorSourceSelectQuery, sensorSourceId);
                     return sensorSource;
                 } catch (SQLException e) {
                     e.printStackTrace();
@@ -110,20 +121,20 @@ public class SensorSourceRepository extends BaseRepository {
         }
     }
 
+    /**
+     *
+     */
     public void addSensorSource(SensorSource sensorSource) {
         if (useHibernate) {
             new GenericJPA<>(SensorSource.class).insert(getHibernateTransaction(), sensorSource);
-
         } else {
             //Adicionamos os sources dos sensores direto na coleção de sensores no Mongo, no objeto Sensor. Aqui, só geramos um ID unico e a data de criação.
             if (databaseType.equals("mongo")) {
-
                 sensorSource.setId(MongoDBUtil.getNextSequence(getMongoConnection(), "sensor_source"));
                 sensorSource.setCreate_time(Date.from(Instant.now()));
-
             } else {
                 try {
-                    getJdbcSql().insert_sql(SQLQueryDatabase.mySqlSensorSourceInsertQuery, sensorSource.getDescription(), sensorSource.getName());
+                    getJdbcSql().insert_sql(SQLQueryDatabase.sqlSensorSourceInsertQuery, sensorSource.getDescription(), sensorSource.getName());
                     sensorSource.setId(getJdbcSql().get_last_generated_key());
                 } catch (SQLException e) {
                     e.printStackTrace();

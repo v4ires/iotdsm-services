@@ -13,12 +13,23 @@ import java.io.FileNotFoundException;
 import java.time.Instant;
 import java.util.*;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class OpenWeatherJsonDeserializer implements IDeserializer {
+
     private Scanner fileStream;
+
     private SensorSource sensorSource;
+
     private SensorMeasureType tempMeasureType;
+
     private SensorMeasureType pressMeasureType;
+
     private SensorMeasureType humidityMeasureType;
+
     private SensorMeasureType speedWindMeasureType;
 
     @Override

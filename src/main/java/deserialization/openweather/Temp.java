@@ -3,23 +3,33 @@ package deserialization.openweather;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class Temp {
 
     @SerializedName("day")
     @Expose
     private Double day;
+
     @SerializedName("min")
     @Expose
     private Double min;
+
     @SerializedName("max")
     @Expose
     private Double max;
+
     @SerializedName("night")
     @Expose
     private Double night;
+
     @SerializedName("eve")
     @Expose
     private Double eve;
+
     @SerializedName("morn")
     @Expose
     private Double morn;

@@ -16,43 +16,58 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class BaseController {
+
     protected static Gson _gson = new GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
             .serializeNulls()
             .create();
-
+    /**
+     *
+     */
     protected static String error(Response response, String message) {
         response.status(400);
         response.type("application/json");
-
         return String.format("{\"error\": \"%s\"}", message);
     }
 
+    /**
+     *
+     */
     protected static String serverError(Response response, Exception ex) {
         response.status(500);
         response.type("application/json");
-
         return String.format("{\"error\": \"%s\"}", org.apache.commons.lang.exception.ExceptionUtils.getStackTrace(ex).replaceAll("\"", "\\\""));
     }
 
+    /**
+     *
+     */
     protected static String success(Response response, String message) {
         response.status(200);
         response.type("application/json");
-
         return message;
     }
 
+    /**
+     *
+     */
     protected static String successXml(Response response, Object message) {
         response.status(200);
         response.type("application/xml");
-
         XStream xstream = new XStream(new DomDriver());
-
         return xstream.toXML(message);
     }
 
+    /**
+     *
+     */
     protected static List<String> printCsvObject(Object o, Set<Field> exposedFields) throws Exception {
         List<String> values = new ArrayList<>();
         for (Field f : exposedFields) {
@@ -95,6 +110,9 @@ public class BaseController {
         return values;
     }
 
+    /**
+     *
+     */
     protected static String successCsv(Response response, Object message) {
         StringBuilder appendable = new StringBuilder();
 

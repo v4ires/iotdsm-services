@@ -14,6 +14,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 @Data
 @Getter
 @Setter
@@ -24,10 +29,16 @@ public class SensorSourceSQL implements SQLOperation {
 
     private Long lastInsertedId;
 
+    /**
+     *
+     */
     public SensorSourceSQL(JDBConnection jdbConn) {
         this.jdbConn = jdbConn;
     }
 
+    /**
+     *
+     */
     @Override
     public boolean execute_sql(String sql, Object... params) throws SQLException {
         try {
@@ -54,6 +65,9 @@ public class SensorSourceSQL implements SQLOperation {
         return true;
     }
 
+    /**
+     *
+     */
     @Override
     public Object select_unique_sql(String sql, Object... params) throws SQLException {
         List<Object> sensors_row = select_sql(sql, params);
@@ -64,6 +78,9 @@ public class SensorSourceSQL implements SQLOperation {
         return null;
     }
 
+    /**
+     *
+     */
     public List<SensorSource> parseSensorSources(ResultSet rs) throws SQLException {
 
         ArrayList<SensorSource> sensors = new ArrayList<>();
@@ -84,6 +101,9 @@ public class SensorSourceSQL implements SQLOperation {
         return sensors;
     }
 
+    /**
+     *
+     */
     @Override
     public List<Object> select_sql(String sql, Object... params) throws SQLException {
         try {
@@ -103,26 +123,41 @@ public class SensorSourceSQL implements SQLOperation {
         }
     }
 
+    /**
+     *
+     */
     @Override
     public boolean insert_sql(String sql, Object... params) throws SQLException {
         return execute_sql(sql, params);
     }
 
+    /**
+     *
+     */
     @Override
     public boolean update_sql(String sql, Object... params) throws SQLException {
         return execute_sql(sql, params);
     }
 
+    /**
+     *
+     */
     @Override
     public boolean delete_sql(String sql, Object... params) throws SQLException {
         return execute_sql(sql, params);
     }
 
+    /**
+     *
+     */
     @Override
     public Long get_last_generated_key() {
         return lastInsertedId;
     }
 
+    /**
+     *
+     */
     @Override
     public void close() {
         if (jdbConn != null)

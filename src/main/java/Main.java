@@ -11,11 +11,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class Main {
 
     private static String _configFileName = "config.properties";
     private static Options options = new Options();
 
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args) {
 
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao.");
@@ -80,11 +89,12 @@ public class Main {
         BaseRepository.initializeConnections();
     }
 
+    /**
+     *
+     */
     private static void showHelp() {
         HelpFormatter formatter = new HelpFormatter();
-
         formatter.printHelp("Main", options);
-
         System.exit(0);
     }
 }

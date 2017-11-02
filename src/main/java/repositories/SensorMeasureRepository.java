@@ -21,16 +21,30 @@ import java.util.List;
 
 import static com.mongodb.client.model.Filters.*;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class SensorMeasureRepository extends BaseRepository {
 
+    /**
+     *
+     */
     public SensorMeasureRepository(CustomTransaction customTransaction) {
         this.hibernateTransaction = customTransaction;
     }
 
+    /**
+     *
+     */
     public SensorMeasureRepository() {
 
     }
 
+    /**
+     *
+     */
     protected SensorMeasureSQL getJdbcSql() {
         if (jdbcSql == null) {
             JDBConnection jdbConnection = JDBConnection
@@ -49,6 +63,9 @@ public class SensorMeasureRepository extends BaseRepository {
         return (SensorMeasureSQL) jdbcSql;
     }
 
+    /**
+     *
+     */
     public SensorMeasure getSensorMeasureById(long sensorMeasureId) {
         if (useHibernate) {
 
@@ -69,7 +86,7 @@ public class SensorMeasureRepository extends BaseRepository {
 
 
                 try {
-                    SensorMeasure sensorMeasure = (SensorMeasure) getJdbcSql().select_unique_sql(String.format(SQLQueryDatabase.mySqlUniqueSensorMeasureSelectQuery, sensorMeasureId));
+                    SensorMeasure sensorMeasure = (SensorMeasure) getJdbcSql().select_unique_sql(String.format(SQLQueryDatabase.sqlUniqueSensorMeasureSelectQuery, sensorMeasureId));
 
                     return sensorMeasure;
                 } catch (SQLException e) {
@@ -80,6 +97,9 @@ public class SensorMeasureRepository extends BaseRepository {
         }
     }
 
+    /**
+     *
+     */
     public List<SensorMeasure> getSensorMeasure(long sensorId, long measureTypeId, Date startDate, Date endDate) {
         if (useHibernate) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -105,7 +125,7 @@ public class SensorMeasureRepository extends BaseRepository {
                 return sensorMeasures;
             } else {
                 try {
-                    List<SensorMeasure> sensors = (List<SensorMeasure>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.mySqlSensorMeasureByDateAndSensorSelectQuery, sensorId, measureTypeId, startDate, endDate);
+                    List<SensorMeasure> sensors = (List<SensorMeasure>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.sqlSensorMeasureByDateAndSensorSelectQuery, sensorId, measureTypeId, startDate, endDate);
 
                     return sensors;
                 } catch (SQLException e) {
@@ -116,6 +136,9 @@ public class SensorMeasureRepository extends BaseRepository {
         }
     }
 
+    /**
+     *
+     */
     public void addSensorMeasure(SensorMeasure sensorMeasure) {
         if (useHibernate) {
             new GenericJPA<>(SensorMeasure.class).insert(getHibernateTransaction(), sensorMeasure);
@@ -135,7 +158,7 @@ public class SensorMeasureRepository extends BaseRepository {
             } else {
 
                 try {
-                    getJdbcSql().insert_sql(SQLQueryDatabase.mySqlSensorMeasureInsertQuery, sensorMeasure.getSensor().getId(), sensorMeasure.getValue(), sensorMeasure.getSensorMeasureType().getId(), sensorMeasure.getCreate_time());
+                    getJdbcSql().insert_sql(SQLQueryDatabase.sqlSensorMeasureInsertQuery, sensorMeasure.getSensor().getId(), sensorMeasure.getValue(), sensorMeasure.getSensorMeasureType().getId(), sensorMeasure.getCreate_time());
                     sensorMeasure.setId(getJdbcSql().get_last_generated_key());
                 } catch (SQLException e) {
                     e.printStackTrace();

@@ -6,6 +6,11 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 @Entity
 @Table(name = "tb_sensor_measure_type")
 @Builder
@@ -14,6 +19,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SensorMeasureType extends BasicEntity {
+
     @Expose
     String name;
 

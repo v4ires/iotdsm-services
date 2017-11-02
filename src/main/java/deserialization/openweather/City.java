@@ -3,17 +3,25 @@ package deserialization.openweather;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class City {
 
     @SerializedName("id")
     @Expose
     private Integer id;
+
     @SerializedName("name")
     @Expose
     private String name;
+
     @SerializedName("country")
     @Expose
     private String country;
+
     @SerializedName("coord")
     @Expose
     private Coord coord;

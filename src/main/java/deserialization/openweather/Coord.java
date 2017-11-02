@@ -3,11 +3,17 @@ package deserialization.openweather;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class Coord {
 
     @SerializedName("lon")
     @Expose
     private Double lon;
+
     @SerializedName("lat")
     @Expose
     private Double lat;

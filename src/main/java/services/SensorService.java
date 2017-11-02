@@ -20,7 +20,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * University of São Paulo
+ * IoT Repository Module
+ * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ */
 public class SensorService {
+
+    /**
+     *
+     */
     public long deserializeMeasures(IDeserializer deserializer) {
         List<SensorMeasure> smList;
         Long insertedMeasures = 0L;
