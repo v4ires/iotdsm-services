@@ -6,6 +6,7 @@ import com.google.gson.annotations.Expose;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 import model.BasicEntity;
+import model.HTTPCompressType;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import spark.Response;
@@ -19,6 +20,7 @@ import java.util.Set;
 /**
  * University of São Paulo
  * IoT Repository Module
+ *
  * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
  */
 public class BaseController {
@@ -28,6 +30,7 @@ public class BaseController {
             .setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ")
             .serializeNulls()
             .create();
+
     /**
      *
      */
@@ -49,18 +52,24 @@ public class BaseController {
     /**
      *
      */
-    protected static String success(Response response, String message) {
+    protected static String successJSON(Response response, String message, HTTPCompressType type) {
         response.status(200);
         response.type("application/json");
+        if (type != null) {
+            response.header("Content-Encoding", type.getContentEncoding());
+        }
         return message;
     }
 
     /**
      *
      */
-    protected static String successXml(Response response, Object message) {
+    protected static String successXml(Response response, Object message, HTTPCompressType type) {
         response.status(200);
         response.type("application/xml");
+        if (type != null) {
+            response.header("Content-Encoding", type.getContentEncoding());
+        }
         XStream xstream = new XStream(new DomDriver());
         return xstream.toXML(message);
     }
@@ -113,11 +122,14 @@ public class BaseController {
     /**
      *
      */
-    protected static String successCsv(Response response, Object message) {
+    protected static String successCsv(Response response, Object message, HTTPCompressType type) {
         StringBuilder appendable = new StringBuilder();
 
         response.status(200);
         response.type("text/csv");
+        if (type != null) {
+            response.header("Content-Encoding", type.getContentEncoding());
+        }
 
         if (message == null || message instanceof List && ((List<Object>) message).size() == 0)
             return "";

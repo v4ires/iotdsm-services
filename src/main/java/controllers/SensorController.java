@@ -3,6 +3,10 @@ package controllers;
 import deserialization.OpenWeatherCsvDeserializer;
 import deserialization.OpenWeatherJsonDeserializer;
 import deserialization.OpenWeatherXmlDeserializer;
+import model.HTTPCompressType;
+import model.Sensor;
+import model.SensorMeasure;
+import model.SensorMeasureType;
 import repositories.SensorMeasureRepository;
 import repositories.SensorMeasureTypeRepository;
 import repositories.SensorRepository;
@@ -16,10 +20,12 @@ import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 /**
  * University of São Paulo
  * IoT Repository Module
+ *
  * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
  */
 public class SensorController extends BaseController {
@@ -55,15 +61,22 @@ public class SensorController extends BaseController {
                 }
             }
 
+            List<Sensor> sensorList = _sensorRepository.getSensors(limit, offset);
+
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorRepository.getSensors(limit, offset)));
+                    return successJSON(response, _gson.toJson(sensorList), null);
+                case "json_gzip":
+                    return successJSON(response, _gson.toJson(sensorList), HTTPCompressType.gzip);
                 case "xml":
-                    return successXml(response, _sensorRepository.getSensors(limit, offset));
+                    return successXml(response, sensorList, null);
+                case "xml_gzip":
+                    return successXml(response, _gson.toJson(sensorList), HTTPCompressType.gzip);
                 case "csv":
-                    return successCsv(response, _sensorRepository.getSensors(limit, offset));
-
+                    return successCsv(response, sensorList, null);
+                case "csv_gzip":
+                    return successCsv(response, sensorList, HTTPCompressType.gzip);
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -95,14 +108,16 @@ public class SensorController extends BaseController {
                 return error(response, "Invalid sensor id.");
             }
 
+            List<SensorMeasureType> sensorMeasureTypeList = _sensorMeasureTypeRepository.getSensorMeasureTypeBySensor(sensorId);
+
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorMeasureTypeRepository.getSensorMeasureTypeBySensor(sensorId)));
+                    return successJSON(response, _gson.toJson(sensorMeasureTypeList), null);
                 case "xml":
-                    return successXml(response, _sensorMeasureTypeRepository.getSensorMeasureTypeBySensor(sensorId));
+                    return successXml(response, sensorMeasureTypeList, null);
                 case "csv":
-                    return successCsv(response, _sensorMeasureTypeRepository.getSensorMeasureTypeBySensor(sensorId));
+                    return successCsv(response, sensorMeasureTypeList, null);
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -168,14 +183,16 @@ public class SensorController extends BaseController {
                 }
             }
 
+            List<SensorMeasure> sensorMeasureList = _sensorMeasureRepository.getSensorMeasure(sensorId, measureTypeId, startDate, endDate);
+
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorMeasureRepository.getSensorMeasure(sensorId, measureTypeId, startDate, endDate)));
+                    return successJSON(response, _gson.toJson(sensorMeasureList), null);
                 case "xml":
-                    return successXml(response, _sensorMeasureRepository.getSensorMeasure(sensorId, measureTypeId, startDate, endDate));
+                    return successXml(response, sensorMeasureList, null);
                 case "csv":
-                    return successCsv(response, _sensorMeasureRepository.getSensorMeasure(sensorId, measureTypeId, startDate, endDate));
+                    return successCsv(response, sensorMeasureList, null);
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -208,14 +225,16 @@ public class SensorController extends BaseController {
                 return error(response, "Invalid sensor id.");
             }
 
+            Sensor sensor = _sensorRepository.getSensorById(sensorId);
+
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorRepository.getSensorById(sensorId)));
+                    return successJSON(response, _gson.toJson(sensor), null);
                 case "xml":
-                    return successXml(response, _sensorRepository.getSensorById(sensorId));
+                    return successXml(response, sensor, null);
                 case "csv":
-                    return successCsv(response, _sensorRepository.getSensorById(sensorId));
+                    return successCsv(response, sensor, null);
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -285,7 +304,7 @@ public class SensorController extends BaseController {
                     break;
             }
 
-            return success(response, "{\"result\": \"OK. " + insertedMeasures + " medidas inseridas.\"}");
+            return successJSON(response, "{\"result\": \"OK. " + insertedMeasures + " medidas inseridas.\"}", null);
         } catch (Exception ex) {
             return serverError(response, ex);
         }

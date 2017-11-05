@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 /**
  * University of São Paulo
  * IoT Repository Module
+ *
  * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
  */
 public class Main {
@@ -22,11 +23,41 @@ public class Main {
     private static Options options = new Options();
 
     /**
-     *
      * @param args
      */
     public static void main(String[] args) {
+        initCMDOptions(args);
+        initProperties();
+        initSpark();
+    }
 
+    private static void initSpark() {
+        BaseRepository.initializeConnections();
+        //Spark config
+        spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
+        //int cores = Runtime.getRuntime().availableProcessors();
+        //spark.Spark.threadPool(8, 2, 30000);
+
+        spark.Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
+        spark.Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
+        spark.Spark.get("/sensor", SensorController.serveSensorListPage);
+        spark.Spark.get("/sensor/:id/measure", SensorController.serveSensorMeasureTypesBySensorId);
+        spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
+        spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
+        spark.Spark.get("/sensor/:id", SensorController.serveSensorById);
+        spark.Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
+        spark.Spark.notFound((req, res) -> {
+            res.type("application/json");
+            return "{\"message\":\"Rout Not Found 404\"}";
+        });
+
+        spark.Spark.exception(Exception.class, (exception, request, response) -> {
+            exception.printStackTrace();
+        });
+        System.out.println("Spark Running...");
+    }
+
+    private static void initCMDOptions(String[] args) {
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao.");
         options.addOption("l", "log", true, "Habilitar ou desabilitar log.");
         options.addOption("v", "log-level", true, "Muda o nível do log (OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL).");
@@ -54,43 +85,19 @@ public class Main {
         if (cmd.hasOption("v")) {
             LogManager.getRootLogger().setLevel(Level.toLevel(cmd.getOptionValue("v")));
         }
+    }
 
+    public static void initProperties() {
         Path path = Paths.get(_configFileName);
-
         if (!Files.exists(path)) {
             System.out.println("Arquivo de configuracoes não encontrado no caminho \"" + path + "\".");
             return;
         }
-
         PropertiesReader.initialize(_configFileName);
-
+        System.out.println("API Port: " + PropertiesReader.getValue("APIPORT"));
         System.out.println("Database Type: " + PropertiesReader.getValue("DATABASETYPE"));
         System.out.println("Hibernate is On: " + PropertiesReader.getValue("USEHIBERNATE"));
         System.out.println("SQL Debug is On: " + PropertiesReader.getValue("SQL_DEBUG"));
-
-        //Spark config
-        spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
-        //int cores = Runtime.getRuntime().availableProcessors();
-        //spark.Spark.threadPool(8, 2, 30000);
-
-        spark.Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
-        spark.Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
-        spark.Spark.get("/sensor", SensorController.serveSensorListPage);
-        spark.Spark.get("/sensor/:id/measure", SensorController.serveSensorMeasureTypesBySensorId);
-        spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
-        spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
-        spark.Spark.get("/sensor/:id", SensorController.serveSensorById);
-        spark.Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
-        spark.Spark.notFound((req, res) -> {
-            res.type("application/json");
-            return "{\"message\":\"Rout Not Found 404\"}";
-        });
-
-        spark.Spark.exception(Exception.class, (exception, request, response) -> {
-            exception.printStackTrace();
-        });
-
-        BaseRepository.initializeConnections();
     }
 
     /**

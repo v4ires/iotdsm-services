@@ -28,11 +28,11 @@ public class SensorSourceController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(new SensorSourceRepository().getSensorSources()));
+                    return successJSON(response, _gson.toJson(new SensorSourceRepository().getSensorSources()), null);
                 case "xml":
-                    return successXml(response, new SensorSourceRepository().getSensorSources());
+                    return successXml(response, new SensorSourceRepository().getSensorSources(), null);
                 case "csv":
-                    return successCsv(response, new SensorSourceRepository().getSensorSources());
+                    return successCsv(response, new SensorSourceRepository().getSensorSources(), null);
             }
         } catch (Exception ex) {
             return serverError(response, ex);
@@ -68,11 +68,11 @@ public class SensorSourceController extends BaseController {
             switch (outputFormat) {
                 default:
                 case "json":
-                    return success(response, _gson.toJson(_sensorSourceRepository.getSensorSourceById(sensorId)));
+                    return successJSON(response, _gson.toJson(_sensorSourceRepository.getSensorSourceById(sensorId)), null);
                 case "xml":
-                    return successXml(response, _sensorSourceRepository.getSensorSourceById(sensorId));
+                    return successXml(response, _sensorSourceRepository.getSensorSourceById(sensorId), null);
                 case "csv":
-                    return successCsv(response, _sensorSourceRepository.getSensorSourceById(sensorId));
+                    return successCsv(response, _sensorSourceRepository.getSensorSourceById(sensorId), null);
 
             }
         } catch (Exception ex) {
