@@ -81,6 +81,10 @@ public class Main {
         spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
         spark.Spark.get("/sensor/:id", SensorController.serveSensorById);
         spark.Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
+        spark.Spark.notFound((req, res) -> {
+            res.type("application/json");
+            return "{\"message\":\"Rout Not Found 404\"}";
+        });
 
         spark.Spark.exception(Exception.class, (exception, request, response) -> {
             exception.printStackTrace();
