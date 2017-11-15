@@ -249,7 +249,7 @@ public class SensorController extends BaseController {
     public static Route handleFileUpload = (Request request, Response response) -> {
         try {
             String inputFormat = "json";
-            String location = PropertiesReader.getValue("UPLOADDIR");          // the directory location where files will be stored
+            String location = System.getProperty("java.io.tmpdir");          // the directory location where files will be stored
             long maxFileSize = 10000000000L;       // the maximum size allowed for uploaded files
             long maxRequestSize = 10000000000L;    // the maximum size allowed for multipart/form-data requests
             int fileSizeThreshold = 1024;       // the size threshold after which files will be written to disk

@@ -28,8 +28,10 @@
       <point x="0.0" y="108.5" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="0.5244075829383886" x="1100.2846299810244" y="334.0" />
-  <SelectedNodes />
+  <settings layout="Hierarchic Group" zoom="0.9196682464454976" x="664.8736912172528" y="461.1579879571769" />
+  <SelectedNodes>
+    <node>model.SensorMeasureType</node>
+  </SelectedNodes>
   <Categories>
     <Category>Fields</Category>
     <Category>Inner Classes</Category>

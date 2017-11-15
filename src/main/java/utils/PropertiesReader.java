@@ -12,7 +12,6 @@ public class PropertiesReader {
         props = new Properties();
         try {
             InputStream in = new FileInputStream(fileName);
-
             props.load(in);
             in.close();
         } catch (Exception e) {

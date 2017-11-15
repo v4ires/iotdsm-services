@@ -5,6 +5,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import repositories.BaseRepository;
+import spark.Spark;
 import utils.PropertiesReader;
 
 import java.nio.file.Files;
@@ -28,33 +29,50 @@ public class Main {
     public static void main(String[] args) {
         initCMDOptions(args);
         initProperties();
+        initDatabaseConnection();
         initSpark();
     }
 
-    private static void initSpark() {
+    private static void initDatabaseConnection() {
         BaseRepository.initializeConnections();
+        System.out.println("Database Connection Enabled!");
+    }
+
+    private static void initSpark() {
+
         //Spark config
+        //Spark.secure("keystore.jks", "password", null, null);
         spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
-        //int cores = Runtime.getRuntime().availableProcessors();
-        //spark.Spark.threadPool(8, 2, 30000);
+        if (Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL")))) {
+            int maxThreads = Integer.parseInt(PropertiesReader.getValue("SPARK_THREAD_POOL_MIN"));
+            int minThreads = Integer.parseInt(PropertiesReader.getValue("SPARK_THREAD_POOL_MAX"));
+            int idleTimeoutMilis = Integer.parseInt(PropertiesReader.getValue("SPARK_THREAD_POOL_TIMEOUT"));
+            spark.Spark.threadPool(maxThreads, minThreads, idleTimeoutMilis);
+        }
 
-        spark.Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
-        spark.Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
-        spark.Spark.get("/sensor", SensorController.serveSensorListPage);
-        spark.Spark.get("/sensor/:id/measure", SensorController.serveSensorMeasureTypesBySensorId);
-        spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
-        spark.Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
-        spark.Spark.get("/sensor/:id", SensorController.serveSensorById);
-        spark.Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
-        spark.Spark.notFound((req, res) -> {
-            res.type("application/json");
-            return "{\"message\":\"Rout Not Found 404\"}";
-        });
+        Spark.staticFiles.location("/public");
 
-        spark.Spark.exception(Exception.class, (exception, request, response) -> {
-            exception.printStackTrace();
-        });
-        System.out.println("Spark Running...");
+        Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
+
+        Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
+
+        Spark.get("/sensor", SensorController.serveSensorListPage);
+
+        Spark.get("/sensor/:id/measure", SensorController.serveSensorMeasureTypesBySensorId);
+
+        Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
+
+        Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
+
+        Spark.get("/sensor/:id", SensorController.serveSensorById);
+
+        Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
+
+        Spark.notFound((req, res) -> "{\"message\":\"Rout Not Found 404\"}");
+
+        spark.Spark.exception(Exception.class, (exception, request, response) -> exception.printStackTrace());
+
+        System.out.println("Web Server is Running...");
     }
 
     private static void initCMDOptions(String[] args) {
@@ -76,10 +94,8 @@ public class Main {
             _configFileName = cmd.getOptionValue("c");
         }
 
-        if (cmd.hasOption("l")) {
-            if (Boolean.parseBoolean(cmd.getOptionValue("l"))) {
-                BasicConfigurator.configure();
-            }
+        if ((cmd.hasOption("l") && Boolean.parseBoolean(cmd.getOptionValue("l")))) {
+            BasicConfigurator.configure();
         }
 
         if (cmd.hasOption("v")) {
@@ -91,13 +107,23 @@ public class Main {
         Path path = Paths.get(_configFileName);
         if (!Files.exists(path)) {
             System.out.println("Arquivo de configuracoes não encontrado no caminho \"" + path + "\".");
-            return;
+        } else {
+            PropertiesReader.initialize(_configFileName);
+            System.out.println("--------------------------");
+            System.out.println("Config Properties File");
+            System.out.println("--------------------------");
+            System.out.println("HTTP API Port: " + PropertiesReader.getValue("APIPORT"));
+            System.out.println("Database Type: " + PropertiesReader.getValue("DATABASETYPE"));
+            System.out.println("Hibernate is On: " + PropertiesReader.getValue("USEHIBERNATE"));
+            System.out.println("SQL Debug is On: " + PropertiesReader.getValue("SQL_DEBUG"));
+            System.out.println("Thread Pool is On: " + Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL"))));
+            if (Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL")))) {
+                System.out.println("Thread Pool Timeout: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_TIMEOUT"))));
+                System.out.println("Thread Pool Min: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_MIN"))));
+                System.out.println("Thread Pool Max: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_MAX"))));
+            }
+            System.out.println("--------------------------");
         }
-        PropertiesReader.initialize(_configFileName);
-        System.out.println("API Port: " + PropertiesReader.getValue("APIPORT"));
-        System.out.println("Database Type: " + PropertiesReader.getValue("DATABASETYPE"));
-        System.out.println("Hibernate is On: " + PropertiesReader.getValue("USEHIBERNATE"));
-        System.out.println("SQL Debug is On: " + PropertiesReader.getValue("SQL_DEBUG"));
     }
 
     /**
