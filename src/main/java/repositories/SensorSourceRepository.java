@@ -5,6 +5,8 @@ import com.mongodb.client.MongoCollection;
 import model.Sensor;
 import model.SensorSource;
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import persistence.GenericJPA;
 import persistence.SensorSourceSQL;
 import utils.PropertiesReader;
@@ -22,9 +24,12 @@ import static com.mongodb.client.model.Filters.eq;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class SensorSourceRepository extends BaseRepository {
+
+    private static final Logger log = LoggerFactory.getLogger(SensorSourceRepository.class);
 
     /**
      *
@@ -87,6 +92,7 @@ public class SensorSourceRepository extends BaseRepository {
                     List<SensorSource> sensorSources = (List<SensorSource>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.sqlSensorSourceSelectQuery);
                     return sensorSources;
                 } catch (SQLException e) {
+                    log.error(e.getMessage());
                     e.printStackTrace();
                     return null;
                 }
@@ -114,6 +120,7 @@ public class SensorSourceRepository extends BaseRepository {
                     SensorSource sensorSource = (SensorSource) getJdbcSql().select_unique_sql(SQLQueryDatabase.sqlUniqueSensorSourceSelectQuery, sensorSourceId);
                     return sensorSource;
                 } catch (SQLException e) {
+                    log.error(e.getMessage());
                     e.printStackTrace();
                     return null;
                 }
@@ -137,6 +144,7 @@ public class SensorSourceRepository extends BaseRepository {
                     getJdbcSql().insert_sql(SQLQueryDatabase.sqlSensorSourceInsertQuery, sensorSource.getDescription(), sensorSource.getName());
                     sensorSource.setId(getJdbcSql().get_last_generated_key());
                 } catch (SQLException e) {
+                    log.error(e.getMessage());
                     e.printStackTrace();
                 }
             }

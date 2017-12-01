@@ -6,6 +6,8 @@ import lombok.NonNull;
 import lombok.Setter;
 import model.Sensor;
 import model.SensorSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.sql.JDBConnection;
 import utils.sql.SQLOperation;
 
@@ -19,12 +21,15 @@ import java.util.List;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 @Data
 @Getter
 @Setter
 public class SensorSQL implements SQLOperation {
+
+    private static final Logger log = LoggerFactory.getLogger(SensorSQL.class);
 
     @NonNull
     private JDBConnection jdbConn;
@@ -61,6 +66,7 @@ public class SensorSQL implements SQLOperation {
 
             stmt.close();
         } catch (SQLException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -133,6 +139,7 @@ public class SensorSQL implements SQLOperation {
             return (List<Object>) (Object) parseSensors(rs);
 
         } catch (SQLException e) {
+            log.error(e.getMessage());
             throw e;
         }
     }

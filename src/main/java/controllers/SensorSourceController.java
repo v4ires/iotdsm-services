@@ -1,5 +1,7 @@
 package controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import repositories.SensorSourceRepository;
 import spark.Request;
 import spark.Response;
@@ -8,9 +10,12 @@ import spark.Route;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class SensorSourceController extends BaseController {
+
+    private static final Logger log = LoggerFactory.getLogger(SensorSourceController.class);
 
     /**
      *
@@ -35,6 +40,7 @@ public class SensorSourceController extends BaseController {
                     return successCsv(response, new SensorSourceRepository().getSensorSources(), null);
             }
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             return serverError(response, ex);
         } finally {
             _sensorSourceRepository.close();
@@ -52,6 +58,7 @@ public class SensorSourceController extends BaseController {
             Long sensorId;
 
             if (request.params("id") == null || request.params("id").equals("")) {
+                log.warn("Invalid sensor source id.");
                 return error(response, "Invalid sensor source id.");
             }
 
@@ -62,6 +69,7 @@ public class SensorSourceController extends BaseController {
             try {
                 sensorId = Long.parseLong(request.params("id"));
             } catch (Exception ex) {
+                log.error(ex.getMessage());
                 return error(response, "Invalid sensor source id.");
             }
 
@@ -76,6 +84,7 @@ public class SensorSourceController extends BaseController {
 
             }
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             return serverError(response, ex);
         } finally {
             _sensorSourceRepository.close();

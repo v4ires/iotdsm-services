@@ -4,6 +4,8 @@ import model.Sensor;
 import model.SensorMeasure;
 import model.SensorMeasureType;
 import model.SensorSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,9 +15,13 @@ import java.util.*;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class OpenWeatherCsvDeserializer implements IDeserializer {
+
+    private static final Logger log = LoggerFactory.getLogger(OpenWeatherCsvDeserializer.class);
+
     private Scanner fileStream;
     private String delimiter = ",";
     private String nextLine;
@@ -46,6 +52,7 @@ public class OpenWeatherCsvDeserializer implements IDeserializer {
                 try {
                     line = fileStream.nextLine();
                 } catch (Exception ex) {
+                    log.error(ex.getMessage());
 
                     if (sensorMeasures.size() > 0)
                         return (List<Object>) (Object) sensorMeasures;
@@ -200,6 +207,7 @@ public class OpenWeatherCsvDeserializer implements IDeserializer {
         try {
             fileStream = new Scanner(file);
         } catch (FileNotFoundException e) {
+            log.error(e.getMessage());
             return false;
         }
 
@@ -207,6 +215,7 @@ public class OpenWeatherCsvDeserializer implements IDeserializer {
         try {
             fileStream.nextLine();
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             return false;
         }
 

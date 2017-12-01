@@ -9,6 +9,8 @@ import model.Sensor;
 import model.SensorMeasure;
 import model.SensorMeasureType;
 import model.SensorSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.time.Instant;
@@ -20,9 +22,12 @@ import java.util.List;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class OpenWeatherXmlDeserializer implements IDeserializer {
+
+    private static final Logger log = LoggerFactory.getLogger(OpenWeatherXmlDeserializer.class);
 
     private SensorSource sensorSource;
 
@@ -55,6 +60,7 @@ public class OpenWeatherXmlDeserializer implements IDeserializer {
         try {
             result = (OpenWeatherEntry) objectInputStream.readObject();
         } catch (Exception e) {
+            log.error(e.getMessage());
             e.printStackTrace();
             return null;
         }
@@ -179,12 +185,14 @@ public class OpenWeatherXmlDeserializer implements IDeserializer {
         try {
             inputStream = new FileInputStream(file);
         } catch (FileNotFoundException e) {
+            log.error(e.getMessage());
             return false;
         }
 
         try {
             objectInputStream = xstream.createObjectInputStream(inputStream);
         } catch (IOException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
             this.close();
             return false;
@@ -198,6 +206,7 @@ public class OpenWeatherXmlDeserializer implements IDeserializer {
             try {
                 objectInputStream.close();
             } catch (IOException e) {
+                log.error(e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -205,6 +214,7 @@ public class OpenWeatherXmlDeserializer implements IDeserializer {
             try {
                 inputStream.close();
             } catch (IOException e) {
+                log.error(e.getMessage());
                 e.printStackTrace();
             }
         }

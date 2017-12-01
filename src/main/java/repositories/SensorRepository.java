@@ -5,6 +5,8 @@ import com.mongodb.client.MongoCollection;
 import model.Sensor;
 import model.SensorMeasureType;
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import persistence.GenericJPA;
 import persistence.SensorSQL;
 import utils.PropertiesReader;
@@ -24,9 +26,12 @@ import static com.mongodb.client.model.Filters.eq;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class SensorRepository extends BaseRepository {
+
+    private static final Logger log = LoggerFactory.getLogger(SensorRepository.class);
 
     /**
      *
@@ -85,6 +90,7 @@ public class SensorRepository extends BaseRepository {
                     Sensor sensor = (Sensor) getJdbcSql().select_unique_sql(SQLQueryDatabase.sqlUniqueSensorSelectQuery, sensorId);
                     return sensor;
                 } catch (SQLException e) {
+                    log.error(e.getMessage());
                     e.printStackTrace();
                     return null;
                 }
@@ -139,6 +145,7 @@ public class SensorRepository extends BaseRepository {
 
                     return sensors;
                 } catch (SQLException e) {
+                    log.error(e.getMessage());
                     e.printStackTrace();
                     return null;
                 }
@@ -152,7 +159,6 @@ public class SensorRepository extends BaseRepository {
     public void addSensor(Sensor sensor) {
         if (useHibernate) {
             new GenericJPA<>(Sensor.class).insertOrUpdate(getHibernateTransaction(), sensor);
-
         } else {
             if (databaseType.equals("mongo")) {
                 MongoCollection<Document> sensorCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor");
@@ -181,6 +187,7 @@ public class SensorRepository extends BaseRepository {
                     getJdbcSql().insert_sql(SQLQueryDatabase.sqlSensorInsertQuery, sensor.getDescription(), sensor.getLatitude(), sensor.getLongitude(), sensor.getName(), sensor.getSensorSource().getId());
                     sensor.setId(getJdbcSql().get_last_generated_key());
                 } catch (SQLException e) {
+                    log.error(e.getMessage());
                     e.printStackTrace();
                     return;
                 }
@@ -189,6 +196,7 @@ public class SensorRepository extends BaseRepository {
                     try {
                         getJdbcSql().insert_sql(SQLQueryDatabase.sqlSensorSensorMeasureInsertQuery, sensor.getId(), smt.getId());
                     } catch (SQLException e) {
+                        log.error(e.getMessage());
                         e.printStackTrace();
                     }
                 }

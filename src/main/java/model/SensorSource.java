@@ -9,7 +9,8 @@ import javax.persistence.Table;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 @Entity
 @Table(name = "tb_sensor_source")

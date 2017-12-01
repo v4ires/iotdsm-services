@@ -9,6 +9,8 @@ import model.BasicEntity;
 import model.HTTPCompressType;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import spark.Response;
 
 import java.lang.reflect.Field;
@@ -21,9 +23,11 @@ import java.util.Set;
  * University of São Paulo
  * IoT Repository Module
  *
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class BaseController {
+
+    private static final Logger log = LoggerFactory.getLogger(BaseController.class);
 
     protected static Gson _gson = new GsonBuilder()
             .excludeFieldsWithoutExposeAnnotation()
@@ -167,6 +171,7 @@ public class BaseController {
                 printer.printRecord(printCsvObject(message, exposedFields));
             }
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             ex.printStackTrace();
             return error(response, ex.getMessage());
         }

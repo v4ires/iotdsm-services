@@ -7,6 +7,8 @@ import model.HTTPCompressType;
 import model.Sensor;
 import model.SensorMeasure;
 import model.SensorMeasureType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import repositories.SensorMeasureRepository;
 import repositories.SensorMeasureTypeRepository;
 import repositories.SensorRepository;
@@ -14,7 +16,7 @@ import services.SensorService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-import utils.PropertiesReader;
+import utils.Utils;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
@@ -26,21 +28,26 @@ import java.util.List;
  * University of São Paulo
  * IoT Repository Module
  *
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class SensorController extends BaseController {
+
+    private static final Logger log = LoggerFactory.getLogger(SensorController.class);
 
     /**
      *
      */
     public static Route serveSensorListPage = (Request request, Response response) -> {
         SensorRepository _sensorRepository = new SensorRepository();
+        String outputFormat = "json";
+        String output_time = "thread-id: %d operation: serialization limit: %d output_format: %s %s";
+        String httpResponse = "";
         int limit = 0;
         int offset = 0;
+        long start = 0;
+        long end = 0;
 
         try {
-            String outputFormat = "json";
-
             if (request.queryParams("output_format") != null && !request.queryParams("output_format").equals("")) {
                 outputFormat = request.queryParams("output_format");
             }
@@ -49,6 +56,7 @@ public class SensorController extends BaseController {
                 try {
                     limit = Integer.parseInt(request.queryParams("limit"));
                 } catch (Exception ex) {
+                    log.error(ex.getMessage());
                     error(response, "Invalid value for limit.");
                 }
             }
@@ -57,32 +65,46 @@ public class SensorController extends BaseController {
                 try {
                     offset = Integer.parseInt(request.queryParams("offset"));
                 } catch (Exception ex) {
+                    log.error(ex.getMessage());
                     error(response, "Invalid value for offset.");
                 }
             }
 
             List<Sensor> sensorList = _sensorRepository.getSensors(limit, offset);
+            start = System.currentTimeMillis();
 
             switch (outputFormat) {
                 default:
                 case "json":
-                    return successJSON(response, _gson.toJson(sensorList), null);
+                    httpResponse = successJSON(response, _gson.toJson(sensorList), null);
+                    break;
                 case "json_gzip":
-                    return successJSON(response, _gson.toJson(sensorList), HTTPCompressType.gzip);
+                    httpResponse = successJSON(response, _gson.toJson(sensorList), HTTPCompressType.gzip);
+                    break;
                 case "xml":
-                    return successXml(response, sensorList, null);
+                    httpResponse = successXml(response, sensorList, null);
+                    break;
                 case "xml_gzip":
-                    return successXml(response, _gson.toJson(sensorList), HTTPCompressType.gzip);
+                    httpResponse = successXml(response, _gson.toJson(sensorList), HTTPCompressType.gzip);
+                    break;
                 case "csv":
-                    return successCsv(response, sensorList, null);
+                    httpResponse = successCsv(response, sensorList, null);
+                    break;
                 case "csv_gzip":
-                    return successCsv(response, sensorList, HTTPCompressType.gzip);
+                    httpResponse = successCsv(response, sensorList, HTTPCompressType.gzip);
+                    break;
             }
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             return serverError(response, ex);
         } finally {
             _sensorRepository.close();
+            end = System.currentTimeMillis();
+            output_time = String.format(output_time, Thread.currentThread().getId(),
+                    limit, outputFormat, Utils.printElapsedTime(start, end));
+            log.info(output_time);
         }
+        return httpResponse;
     };
 
     /**
@@ -90,11 +112,17 @@ public class SensorController extends BaseController {
      */
     public static Route serveSensorMeasureTypesBySensorId = (Request request, Response response) -> {
         SensorMeasureTypeRepository _sensorMeasureTypeRepository = new SensorMeasureTypeRepository();
+        String outputFormat = "json";
+        String output_time = "thread-id: %d operation: serialization output_format: %s %s";
+        String httpResponse = "";
+        long start = 0;
+        long end = 0;
+
         try {
-            String outputFormat = "json";
             Long sensorId;
 
             if (request.params("id") == null || request.params("id").equals("")) {
+                log.warn("Invalid sensor id.");
                 return error(response, "Invalid sensor id.");
             }
 
@@ -105,25 +133,34 @@ public class SensorController extends BaseController {
             try {
                 sensorId = Long.parseLong(request.params("id"));
             } catch (Exception ex) {
+                log.error(ex.getMessage());
                 return error(response, "Invalid sensor id.");
             }
 
             List<SensorMeasureType> sensorMeasureTypeList = _sensorMeasureTypeRepository.getSensorMeasureTypeBySensor(sensorId);
-
+            start = System.currentTimeMillis();
             switch (outputFormat) {
                 default:
                 case "json":
-                    return successJSON(response, _gson.toJson(sensorMeasureTypeList), null);
+                    httpResponse = successJSON(response, _gson.toJson(sensorMeasureTypeList), null);
+                    break;
                 case "xml":
-                    return successXml(response, sensorMeasureTypeList, null);
+                    httpResponse = successXml(response, sensorMeasureTypeList, null);
+                    break;
                 case "csv":
-                    return successCsv(response, sensorMeasureTypeList, null);
+                    httpResponse = successCsv(response, sensorMeasureTypeList, null);
+                    break;
             }
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             return serverError(response, ex);
         } finally {
             _sensorMeasureTypeRepository.close();
+            end = System.currentTimeMillis();
+            output_time = String.format(output_time, Thread.currentThread().getId(), outputFormat, Utils.printElapsedTime(start, end));
+            log.info(output_time);
         }
+        return httpResponse;
     };
 
     /**
@@ -131,23 +168,30 @@ public class SensorController extends BaseController {
      */
     public static Route serveSensorMeasuresBySensorIdAndDate = (Request request, Response response) -> {
         SensorMeasureRepository _sensorMeasureRepository = new SensorMeasureRepository();
+        String outputFormat = "json";
+        String output_time = "thread-id: %d operation: serialization output_format: %s %s";
+        String httpResponse = "";
+        long start = 0;
+        long end = 0;
 
         try {
-            String outputFormat = "json";
             Long sensorId;
             Long measureTypeId;
             Date startDate;
             Date endDate = new Date(Long.MAX_VALUE);
 
             if (request.params("id") == null || request.params("id").equals("")) {
+                log.warn("Invalid sensor id.");
                 return error(response, "Invalid sensor id.");
             }
 
             if (request.params("measureTypeId") == null || request.params("measureTypeId").equals("")) {
+                log.warn("Invalid measure type id.");
                 return error(response, "Invalid measure type id.");
             }
 
             if (request.params("startDate") == null || request.params("startDate").equals("")) {
+                log.warn("Invalid start date. Must be in ISO-8601 format.");
                 return error(response, "Invalid start date. Must be in ISO-8601 format.");
             }
 
@@ -158,12 +202,14 @@ public class SensorController extends BaseController {
             try {
                 sensorId = Long.parseLong(request.params("id"));
             } catch (Exception ex) {
+                log.error("Invalid sensor id.");
                 return error(response, "Invalid sensor id.");
             }
 
             try {
                 measureTypeId = Long.parseLong(request.params("measureTypeId"));
             } catch (Exception ex) {
+                log.error("Invalid measure type id.");
                 return error(response, "Invalid measure type id.");
             }
 
@@ -172,6 +218,7 @@ public class SensorController extends BaseController {
             try {
                 startDate = simpleDateFormat.parse(request.params("startDate"));
             } catch (Exception ex) {
+                log.error("Invalid start date. Must be in ISO-8601 format.");
                 return error(response, "Invalid start date. Must be in ISO-8601 format.");
             }
 
@@ -179,26 +226,35 @@ public class SensorController extends BaseController {
                 try {
                     endDate = simpleDateFormat.parse(request.params("endDate"));
                 } catch (Exception ex) {
+                    log.error("Invalid end date. Must be in ISO-8601 format.");
                     return error(response, "Invalid end date. Must be in ISO-8601 format.");
                 }
             }
 
             List<SensorMeasure> sensorMeasureList = _sensorMeasureRepository.getSensorMeasure(sensorId, measureTypeId, startDate, endDate);
-
+            start = System.currentTimeMillis();
             switch (outputFormat) {
                 default:
                 case "json":
-                    return successJSON(response, _gson.toJson(sensorMeasureList), null);
+                    httpResponse = successJSON(response, _gson.toJson(sensorMeasureList), null);
+                    break;
                 case "xml":
-                    return successXml(response, sensorMeasureList, null);
+                    httpResponse = successXml(response, sensorMeasureList, null);
+                    break;
                 case "csv":
-                    return successCsv(response, sensorMeasureList, null);
+                    httpResponse = successCsv(response, sensorMeasureList, null);
+                    break;
             }
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             return serverError(response, ex);
         } finally {
             _sensorMeasureRepository.close();
+            end = System.currentTimeMillis();
+            output_time = String.format(output_time, Thread.currentThread().getId(), outputFormat, Utils.printElapsedTime(start, end));
+            log.info(output_time);
         }
+        return httpResponse;
     };
 
     /**
@@ -206,12 +262,17 @@ public class SensorController extends BaseController {
      */
     public static Route serveSensorById = (Request request, Response response) -> {
         SensorRepository _sensorRepository = new SensorRepository();
+        String outputFormat = "json";
+        String output_time = "thread-id: %d operation: serialization output_format: %s %s";
+        String httpResponse = "";
+        long start = 0;
+        long end = 0;
 
         try {
-            String outputFormat = "json";
             Long sensorId;
 
             if (request.params("id") == null || request.params("id").equals("")) {
+                log.warn("Invalid sensor id.");
                 return error(response, "Invalid sensor id.");
             }
 
@@ -222,33 +283,46 @@ public class SensorController extends BaseController {
             try {
                 sensorId = Long.parseLong(request.params("id"));
             } catch (Exception ex) {
+                log.error("Invalid sensor id.");
                 return error(response, "Invalid sensor id.");
             }
 
             Sensor sensor = _sensorRepository.getSensorById(sensorId);
-
+            start = System.currentTimeMillis();
             switch (outputFormat) {
                 default:
                 case "json":
-                    return successJSON(response, _gson.toJson(sensor), null);
+                    httpResponse = successJSON(response, _gson.toJson(sensor), null);
+                    break;
                 case "xml":
-                    return successXml(response, sensor, null);
+                    httpResponse = successXml(response, sensor, null);
+                    break;
                 case "csv":
-                    return successCsv(response, sensor, null);
+                    httpResponse = successCsv(response, sensor, null);
+                    break;
             }
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             return serverError(response, ex);
         } finally {
             _sensorRepository.close();
+            end = System.currentTimeMillis();
+            output_time = String.format(output_time, Thread.currentThread().getId(), outputFormat, Utils.printElapsedTime(start, end));
+            log.info(output_time);
         }
+        return httpResponse;
     };
 
     /**
      *
      */
     public static Route handleFileUpload = (Request request, Response response) -> {
+        String inputFormat = "json";
+        String output_time = "thread-id: %d operation: serialization output_format: %s %s";
+        String httpResponse = "";
+        long start = 0;
+        long end = 0;
         try {
-            String inputFormat = "json";
             String location = System.getProperty("java.io.tmpdir");          // the directory location where files will be stored
             long maxFileSize = 10000000000L;       // the maximum size allowed for uploaded files
             long maxRequestSize = 10000000000L;    // the maximum size allowed for multipart/form-data requests
@@ -277,22 +351,21 @@ public class SensorController extends BaseController {
             SensorService sensorService = new SensorService();
 
             switch (inputFormat) {
+
                 case "csv":
                     OpenWeatherCsvDeserializer csvDeserializer = new OpenWeatherCsvDeserializer();
                     csvDeserializer.loadContent(location + "/" + fName, ",");
-
                     insertedMeasures = sensorService.deserializeMeasures(csvDeserializer);
-
                     csvDeserializer.close();
                     break;
+
                 case "xml":
                     OpenWeatherXmlDeserializer xmlDeserializer = new OpenWeatherXmlDeserializer();
                     xmlDeserializer.loadContent(location + "/" + fName);
-
                     insertedMeasures = sensorService.deserializeMeasures(xmlDeserializer);
-
                     xmlDeserializer.close();
                     break;
+
                 default:
                 case "json":
                     OpenWeatherJsonDeserializer deserializer = new OpenWeatherJsonDeserializer();
@@ -303,13 +376,17 @@ public class SensorController extends BaseController {
                     deserializer.close();
                     break;
             }
-
-            return successJSON(response, "{\"result\": \"OK. " + insertedMeasures + " medidas inseridas.\"}", null);
+            httpResponse = successJSON(response, "{\"result\": \"OK. " + insertedMeasures + " medidas inseridas.\"}", null);
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             return serverError(response, ex);
+        } finally {
+            end = System.currentTimeMillis();
+            output_time = String.format(output_time, Thread.currentThread().getId(), inputFormat, Utils.printElapsedTime(start, end));
+            log.info(output_time);
         }
+        return httpResponse;
     };
-
 }
 
 

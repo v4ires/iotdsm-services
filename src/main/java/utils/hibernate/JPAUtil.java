@@ -1,11 +1,15 @@
 package utils.hibernate;
 
 import org.hibernate.HibernateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 public class JPAUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(JPAUtil.class);
 
     private static EntityManagerFactory emf;
 
@@ -13,7 +17,7 @@ public class JPAUtil {
         try {
             emf = Persistence.createEntityManagerFactory("iot-repository-pu");
         } catch (HibernateException he) {
-            System.err.println("Error creating Session: " + he);
+            log.error(he.getMessage());
             throw new ExceptionInInitializerError(he);
         }
     }

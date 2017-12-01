@@ -4,9 +4,13 @@ import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.PropertiesReader;
 
 public class HibernateUtil {
+
+    private static final Logger log = LoggerFactory.getLogger(HibernateUtil.class);
 
     private static SessionFactory sessionFactory;
 
@@ -41,7 +45,7 @@ public class HibernateUtil {
             StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());
             sessionFactory = configuration.buildSessionFactory(builder.build());
         } catch (HibernateException he) {
-            System.err.println("Error creating Session: " + he);
+            log.error(he.getMessage());
             throw new ExceptionInInitializerError(he);
         }
     }

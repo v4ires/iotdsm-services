@@ -1,5 +1,6 @@
 package services;
 
+import controllers.SensorController;
 import deserialization.IDeserializer;
 import model.Sensor;
 import model.SensorMeasure;
@@ -7,6 +8,8 @@ import model.SensorMeasureType;
 import model.SensorSource;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import repositories.SensorMeasureRepository;
 import repositories.SensorMeasureTypeRepository;
 import repositories.SensorRepository;
@@ -23,9 +26,12 @@ import java.util.Map;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class SensorService {
+
+    private static final Logger log = LoggerFactory.getLogger(SensorService.class);
 
     /**
      *
@@ -39,7 +45,6 @@ public class SensorService {
         if (Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
-
             hibernateTransaction = new CustomTransaction(session, transaction);
         }
 
@@ -105,6 +110,7 @@ public class SensorService {
 
             return insertedMeasures;
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             ex.printStackTrace();
             return -1L;
         } finally {

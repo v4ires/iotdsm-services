@@ -7,6 +7,8 @@ import model.Sensor;
 import model.SensorMeasure;
 import model.SensorMeasureType;
 import model.SensorSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,9 +18,12 @@ import java.util.*;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class OpenWeatherJsonDeserializer implements IDeserializer {
+
+    private static final Logger log = LoggerFactory.getLogger(OpenWeatherJsonDeserializer.class);
 
     private Scanner fileStream;
 
@@ -44,6 +49,7 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
         try {
             line = fileStream.nextLine();
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             return null;
         }
 
@@ -170,6 +176,7 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
         try {
             fileStream = new Scanner(file);
         } catch (FileNotFoundException e) {
+            log.error(e.getMessage());
             return false;
         }
 

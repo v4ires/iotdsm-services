@@ -4,6 +4,8 @@ import org.apache.commons.cli.*;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import repositories.BaseRepository;
 import spark.Spark;
 import utils.PropertiesReader;
@@ -16,17 +18,20 @@ import java.nio.file.Paths;
  * University of São Paulo
  * IoT Repository Module
  *
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class Main {
 
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
     private static String _configFileName = "config.properties";
     private static Options options = new Options();
+    private static String logDefault = "INFO";
 
     /**
      * @param args
      */
     public static void main(String[] args) {
+        LogManager.getRootLogger().setLevel(Level.toLevel(logDefault));
         initCMDOptions(args);
         initProperties();
         initDatabaseConnection();
@@ -35,7 +40,7 @@ public class Main {
 
     private static void initDatabaseConnection() {
         BaseRepository.initializeConnections();
-        System.out.println("Database Connection Enabled!");
+        log.info("Database Connection Enabled!");
     }
 
     private static void initSpark() {
@@ -72,10 +77,11 @@ public class Main {
 
         spark.Spark.exception(Exception.class, (exception, request, response) -> exception.printStackTrace());
 
-        System.out.println("Web Server is Running...");
+        log.info("Web Server is Running...");
     }
 
     private static void initCMDOptions(String[] args) {
+
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao.");
         options.addOption("l", "log", true, "Habilitar ou desabilitar log.");
         options.addOption("v", "log-level", true, "Muda o nível do log (OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL).");
@@ -87,6 +93,7 @@ public class Main {
         try {
             cmd = parser.parse(options, args);
         } catch (ParseException e) {
+            log.error(e.getMessage());
             showHelp();
         }
 
@@ -104,25 +111,26 @@ public class Main {
     }
 
     public static void initProperties() {
+
         Path path = Paths.get(_configFileName);
         if (!Files.exists(path)) {
-            System.out.println("Arquivo de configuracoes não encontrado no caminho \"" + path + "\".");
+            log.error("Arquivo de configuracoes não encontrado no caminho \"" + path + "\".");
         } else {
             PropertiesReader.initialize(_configFileName);
-            System.out.println("--------------------------");
-            System.out.println("Config Properties File");
-            System.out.println("--------------------------");
-            System.out.println("HTTP API Port: " + PropertiesReader.getValue("APIPORT"));
-            System.out.println("Database Type: " + PropertiesReader.getValue("DATABASETYPE"));
-            System.out.println("Hibernate is On: " + PropertiesReader.getValue("USEHIBERNATE"));
-            System.out.println("SQL Debug is On: " + PropertiesReader.getValue("SQL_DEBUG"));
-            System.out.println("Thread Pool is On: " + Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL"))));
+            log.info("--------------------------");
+            log.info("Config Properties File");
+            log.info("--------------------------");
+            log.info("HTTP API Port: " + PropertiesReader.getValue("APIPORT"));
+            log.info("Database Type: " + PropertiesReader.getValue("DATABASETYPE"));
+            log.info("Hibernate is On: " + PropertiesReader.getValue("USEHIBERNATE"));
+            log.info("SQL Debug is On: " + PropertiesReader.getValue("SQL_DEBUG"));
+            log.info("Thread Pool is On: " + Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL"))));
             if (Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL")))) {
-                System.out.println("Thread Pool Timeout: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_TIMEOUT"))));
-                System.out.println("Thread Pool Min: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_MIN"))));
-                System.out.println("Thread Pool Max: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_MAX"))));
+                log.info("Thread Pool Timeout: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_TIMEOUT"))));
+                log.info("Thread Pool Min: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_MIN"))));
+                log.info("Thread Pool Max: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_MAX"))));
             }
-            System.out.println("--------------------------");
+            log.info("--------------------------");
         }
     }
 

@@ -4,6 +4,8 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import model.SensorMeasureType;
 import org.bson.Document;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import persistence.GenericJPA;
 import persistence.SensorMeasureTypeSQL;
 import utils.PropertiesReader;
@@ -20,9 +22,12 @@ import static com.mongodb.client.model.Filters.eq;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class SensorMeasureTypeRepository extends BaseRepository {
+
+    private static final Logger log = LoggerFactory.getLogger(SensorMeasureTypeRepository.class);
 
     /**
      *
@@ -80,12 +85,12 @@ public class SensorMeasureTypeRepository extends BaseRepository {
 
                 return sensorMeasureTypes;
             } else {
-
                 try {
                     List<SensorMeasureType> sensorMeasureTypes = (List<SensorMeasureType>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.sqlSensorMeasureTypeBySensorSelectQuery, sensorId);
 
                     return sensorMeasureTypes;
                 } catch (SQLException e) {
+                    log.error(e.getMessage());
                     e.printStackTrace();
                     return null;
                 }
@@ -102,11 +107,11 @@ public class SensorMeasureTypeRepository extends BaseRepository {
         } else {
             //Adicionamos as medidas no Mongo direto no método de adicionar sensores
             if (!databaseType.equals("mongo")) {
-
                 try {
                     getJdbcSql().insert_sql(SQLQueryDatabase.sqlSensorMeasureTypeInsertQuery, sensorMeasureType.getName(), sensorMeasureType.getUnit());
                     sensorMeasureType.setId(getJdbcSql().get_last_generated_key());
                 } catch (SQLException e) {
+                    log.error(e.getMessage());
                     e.printStackTrace();
                 }
             }

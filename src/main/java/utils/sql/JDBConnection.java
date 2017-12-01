@@ -4,6 +4,8 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -12,6 +14,8 @@ import java.sql.SQLException;
 @Builder
 @AllArgsConstructor
 public class JDBConnection {
+
+    private static final Logger log = LoggerFactory.getLogger(JDBConnection.class);
     private static DataSource datasource;
 
     public String user;
@@ -45,6 +49,7 @@ public class JDBConnection {
             try {
                 conn = datasource.getConnection();
             } catch (Exception e) {
+                log.error(e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -57,6 +62,7 @@ public class JDBConnection {
             try {
                 conn.close();
             } catch (SQLException e) {
+                log.error(e.getMessage());
                 e.printStackTrace();
             }
     }

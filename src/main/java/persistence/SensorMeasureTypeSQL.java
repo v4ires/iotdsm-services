@@ -1,10 +1,13 @@
 package persistence;
 
+import controllers.SensorSourceController;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import model.SensorMeasureType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.sql.JDBConnection;
 import utils.sql.SQLOperation;
 
@@ -17,12 +20,15 @@ import java.util.List;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 @Data
 @Getter
 @Setter
 public class SensorMeasureTypeSQL implements SQLOperation {
+
+    private static final Logger log = LoggerFactory.getLogger(SensorMeasureTypeSQL.class);
 
     @NonNull
     private JDBConnection jdbConn;
@@ -59,6 +65,7 @@ public class SensorMeasureTypeSQL implements SQLOperation {
 
             stmt.close();
         } catch (SQLException e) {
+            log.error(e.getMessage());
             e.printStackTrace();
             return false;
         }
@@ -118,6 +125,7 @@ public class SensorMeasureTypeSQL implements SQLOperation {
             return (List<Object>) (Object) parseSensorMeasureTypes(rs);
 
         } catch (SQLException e) {
+            log.error(e.getMessage());
             throw e;
         }
     }

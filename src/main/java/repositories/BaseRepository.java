@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.mongodb.MongoClient;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.PropertiesReader;
 import utils.hibernate.CustomTransaction;
 import utils.hibernate.HibernateUtil;
@@ -17,9 +19,12 @@ import java.sql.SQLException;
 /**
  * University of São Paulo
  * IoT Repository Module
- * @author Vinícius Aires Barros <viniciusaires7@gmail.com>
+ *
+ * @author Vinícius Aires Barros <viniciusaires@usp.br>
  */
 public class BaseRepository {
+
+    private static final Logger log = LoggerFactory.getLogger(BaseRepository.class);
 
     private static GenericMongoDB mongoConn;
 
@@ -58,7 +63,7 @@ public class BaseRepository {
                 try {
                     jdbConnection.getJDBConn().close();
                 } catch (SQLException ex) {
-
+                    log.error(ex.getMessage());
                 }
             }
         }
