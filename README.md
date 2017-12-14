@@ -1,87 +1,44 @@
-# Internet of Things (IoT-Repository)
+# IoT-Repository Module (IRM)
 
-One Paragraph of project description goes here
+O IoT-Repository Module (IRM) é um projeto desenvolvido pelo Laboratório de Sistemas Distribuídos e Programação Concorrente (LaSDPC) da Universidade de São Paulo (USP). Nós temos como objetivo simplificar a aquisição e armazenamento de dados de redes de sensores no contexto de Internet das Coisas.
+Para isso, nossa ferramenta oferece suporte à diferentes estratégias de armazenamento em bancos de dados SQL e NoSQL. 
+Além disso, provemos uma interface RESTful API para a gestão dos dados armazenados
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+O IRM tem como objetivo fornecer dados sobre objetos pertencentes a um ou mais ambientes inteligentes no contexto de Internet das Coisas (IoT).
+Esta ferramenta fornece uma interface simplificada para conexão com diferentes fontes de dados de redes de sensores.
+Além disso, fornecemos suporte a diferentes tipos de bancos de dados, sejam eles SQL ou NoSQL.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
-
-```
-Give examples
-```
+Para execução do IRM é bastante simples basta executar o arquivo .jar ou realizar o deploy do .war em seu servidor web container favorito.
+O único requisito necessário é ter a versão 1.8 ou superior do Java (JRE ou JDK).
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
+## Running Tests
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
-
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Gradle](https://gradle.org/) - Gerenciador de Dependências.
 
 ## Contributing
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
+Por favor leia o arquivo [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) para mais detalhes sobre como você pode contribuir com o projeto.
 
 ## Authors
 
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
+* **Vinícius Aires Barros** - *Idealizador do Projeto* - [@v4ires](https://github.com/v4ires)
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+Este projeto está licenciado sob a licença MIT - veja o arquivo  [LICENSE.md](LICENSE.md) para mais detalhes.
 
 ## Acknowledgments
 
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
+* Universidade de São Paulos (USP)
+* Intituto de Ciências Matemáticas e de Computação (ICMC)
+* Laboratório de Sistemas Distribuídos e Programação Concorrente (LaSDPC)

@@ -39,13 +39,9 @@ public class SensorController extends BaseController {
      */
     public static Route serveSensorListPage = (Request request, Response response) -> {
         SensorRepository _sensorRepository = new SensorRepository();
-        String outputFormat = "json";
-        String output_time = "thread-id: %d operation: serialization limit: %d output_format: %s %s";
-        String httpResponse = "";
-        int limit = 0;
-        int offset = 0;
-        long start = 0;
-        long end = 0;
+        String outputFormat = "json", httpResponse = "";
+        int limit = 0, offset = 0;
+        long start_convert = 0, end_convert = 0, start_select = 0, end_select = 0;
 
         try {
             if (request.queryParams("output_format") != null && !request.queryParams("output_format").equals("")) {
@@ -70,9 +66,11 @@ public class SensorController extends BaseController {
                 }
             }
 
+            start_select = System.currentTimeMillis();
             List<Sensor> sensorList = _sensorRepository.getSensors(limit, offset);
-            start = System.currentTimeMillis();
+            end_select = System.currentTimeMillis();
 
+            start_convert = System.currentTimeMillis();
             switch (outputFormat) {
                 default:
                 case "json":
@@ -85,7 +83,7 @@ public class SensorController extends BaseController {
                     httpResponse = successXml(response, sensorList, null);
                     break;
                 case "xml_gzip":
-                    httpResponse = successXml(response, _gson.toJson(sensorList), HTTPCompressType.gzip);
+                    httpResponse = successXml(response, sensorList, HTTPCompressType.gzip);
                     break;
                 case "csv":
                     httpResponse = successCsv(response, sensorList, null);
@@ -94,15 +92,21 @@ public class SensorController extends BaseController {
                     httpResponse = successCsv(response, sensorList, HTTPCompressType.gzip);
                     break;
             }
+            end_convert = System.currentTimeMillis();
         } catch (Exception ex) {
             log.error(ex.getMessage());
             return serverError(response, ex);
         } finally {
             _sensorRepository.close();
-            end = System.currentTimeMillis();
-            output_time = String.format(output_time, Thread.currentThread().getId(),
-                    limit, outputFormat, Utils.printElapsedTime(start, end));
-            log.info(output_time);
+
+            String output_time_convert = "thread-id: %d operation: serialization limit: %d output_format: %s %s";
+            String output_time_select = "thread-id: %d operation: select limit: %d output_format: %s %s";
+            output_time_convert = String.format(output_time_convert, Thread.currentThread().getId(), limit, outputFormat,
+                    Utils.printElapsedTime(start_convert, end_convert));
+            output_time_select = String.format(output_time_select, Thread.currentThread().getId(), limit, outputFormat,
+                    Utils.printElapsedTime(start_select, end_select));
+            log.info(output_time_convert);
+            log.info(output_time_select);
         }
         return httpResponse;
     };
@@ -317,11 +321,10 @@ public class SensorController extends BaseController {
      *
      */
     public static Route handleFileUpload = (Request request, Response response) -> {
-        String inputFormat = "json";
-        String output_time = "thread-id: %d operation: serialization output_format: %s %s";
-        String httpResponse = "";
-        long start = 0;
-        long end = 0;
+        String inputFormat = "json", httpResponse = "";
+        long start_insert = 0, end_insert = 0;
+        long start_serialization = 0, end_serialization = 0;
+
         try {
             String location = System.getProperty("java.io.tmpdir");          // the directory location where files will be stored
             long maxFileSize = 10000000000L;       // the maximum size allowed for uploaded files
@@ -354,24 +357,43 @@ public class SensorController extends BaseController {
 
                 case "csv":
                     OpenWeatherCsvDeserializer csvDeserializer = new OpenWeatherCsvDeserializer();
+
+                    start_insert = System.currentTimeMillis();
                     csvDeserializer.loadContent(location + "/" + fName, ",");
+                    end_insert = System.currentTimeMillis();
+
+                    start_serialization = System.currentTimeMillis();
                     insertedMeasures = sensorService.deserializeMeasures(csvDeserializer);
+                    end_serialization = System.currentTimeMillis();
+
                     csvDeserializer.close();
                     break;
 
                 case "xml":
                     OpenWeatherXmlDeserializer xmlDeserializer = new OpenWeatherXmlDeserializer();
+
+                    start_insert = System.currentTimeMillis();
                     xmlDeserializer.loadContent(location + "/" + fName);
+                    end_insert = System.currentTimeMillis();
+
+                    start_serialization = System.currentTimeMillis();
                     insertedMeasures = sensorService.deserializeMeasures(xmlDeserializer);
+                    end_serialization = System.currentTimeMillis();
+
                     xmlDeserializer.close();
                     break;
 
                 default:
                 case "json":
                     OpenWeatherJsonDeserializer deserializer = new OpenWeatherJsonDeserializer();
-                    deserializer.loadContent(location + "/" + fName);
 
+                    start_insert = System.currentTimeMillis();
+                    deserializer.loadContent(location + "/" + fName);
+                    end_insert = System.currentTimeMillis();
+
+                    start_serialization = System.currentTimeMillis();
                     insertedMeasures = sensorService.deserializeMeasures(deserializer);
+                    end_serialization = System.currentTimeMillis();
 
                     deserializer.close();
                     break;
@@ -381,9 +403,16 @@ public class SensorController extends BaseController {
             log.error(ex.getMessage());
             return serverError(response, ex);
         } finally {
-            end = System.currentTimeMillis();
-            output_time = String.format(output_time, Thread.currentThread().getId(), inputFormat, Utils.printElapsedTime(start, end));
-            log.info(output_time);
+
+            String output_time_insert = "thread-id: %d operation: insert output_format: %s %s";
+            end_insert = System.currentTimeMillis();
+            output_time_insert = String.format(output_time_insert, Thread.currentThread().getId(), inputFormat, Utils.printElapsedTime(start_insert, end_insert));
+            log.info(output_time_insert);
+
+            String output_time_serialization = "thread-id: %d operation: serialization output_format: %s %s";
+            end_serialization = System.currentTimeMillis();
+            output_time_insert = String.format(output_time_insert, Thread.currentThread().getId(), inputFormat, Utils.printElapsedTime(start_insert, end_insert));
+            log.info(output_time_insert);
         }
         return httpResponse;
     };

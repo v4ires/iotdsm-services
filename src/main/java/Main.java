@@ -4,15 +4,19 @@ import org.apache.commons.cli.*;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
+import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repositories.BaseRepository;
 import spark.Spark;
 import utils.PropertiesReader;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Properties;
 
 /**
  * University of São Paulo
@@ -24,6 +28,7 @@ public class Main {
 
     private static final Logger log = LoggerFactory.getLogger(Main.class);
     private static String _configFileName = "config.properties";
+    private static String _log4jFile = "log4j.properties";
     private static Options options = new Options();
     private static String logDefault = "INFO";
 
@@ -32,6 +37,7 @@ public class Main {
      */
     public static void main(String[] args) {
         LogManager.getRootLogger().setLevel(Level.toLevel(logDefault));
+        setupLog4J();
         initCMDOptions(args);
         initProperties();
         initDatabaseConnection();
@@ -84,6 +90,7 @@ public class Main {
 
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao.");
         options.addOption("l", "log", true, "Habilitar ou desabilitar log.");
+        options.addOption("lf", "logfile", true, "Arquivo de Configuração do Log4J.");
         options.addOption("v", "log-level", true, "Muda o nível do log (OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL).");
         options.addOption("h", "help", false, "Mostrar ajuda.");
 
@@ -103,6 +110,10 @@ public class Main {
 
         if ((cmd.hasOption("l") && Boolean.parseBoolean(cmd.getOptionValue("l")))) {
             BasicConfigurator.configure();
+        }
+
+        if (cmd.hasOption("lf")) {
+            _log4jFile = cmd.getOptionValue("lf");
         }
 
         if (cmd.hasOption("v")) {
@@ -141,6 +152,19 @@ public class Main {
         HelpFormatter formatter = new HelpFormatter();
         formatter.printHelp("Main", options);
         System.exit(0);
+    }
+
+    private static void setupLog4J() {
+        Properties props = new Properties();
+        try {
+            InputStream configStream = Main.class.getResourceAsStream(_log4jFile);
+            props.load(configStream);
+            configStream.close();
+        } catch (IOException e) {
+            log.error("Cannot open file " + _log4jFile);
+        }
+        LogManager.resetConfiguration();
+        PropertyConfigurator.configure(props);
     }
 }
 

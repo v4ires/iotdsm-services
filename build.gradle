@@ -101,7 +101,7 @@ jar {
 //create a single Jar with all dependencies
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Implementation-Title': 'Projeto Rio Transmissor CAS Client',
+        attributes 'Implementation-Title': 'iot-repository',
                 'Implementation-Version': version,
                 'Main-Class': 'Main'
     }
