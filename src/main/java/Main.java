@@ -88,11 +88,11 @@ public class Main {
 
     private static void initCMDOptions(String[] args) {
 
-        options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao.");
-        options.addOption("l", "log", true, "Habilitar ou desabilitar log.");
-        options.addOption("lf", "logfile", true, "Arquivo de Configuração do Log4J.");
-        options.addOption("v", "log-level", true, "Muda o nível do log (OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL).");
-        options.addOption("h", "help", false, "Mostrar ajuda.");
+        options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao [config.properties].");
+        options.addOption("l", "log", true, "Habilitar ou desabilitar log [true, false].");
+        options.addOption("lf", "logfile", true, "Arquivo de Configuração do Log4J [log4j.properties].");
+        options.addOption("v", "log-level", true, "Muda o nível do log [OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL].");
+        options.addOption("h", "help", false, "Mostrar ajuda [true, false].");
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
@@ -102,6 +102,11 @@ public class Main {
         } catch (ParseException e) {
             log.error(e.getMessage());
             showHelp();
+        }
+
+        if (cmd.hasOption("h")) {
+            showHelp();
+            System.exit(0);
         }
 
         if (cmd.hasOption("c")) {
