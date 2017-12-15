@@ -22,10 +22,10 @@ import java.util.*;
 import static com.mongodb.client.model.Filters.eq;
 
 /**
- * University of São Paulo
+ * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinícius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros <viniciusaires@usp.br>
  */
 public class SensorSourceRepository extends BaseRepository {
 
@@ -135,7 +135,7 @@ public class SensorSourceRepository extends BaseRepository {
         if (useHibernate) {
             new GenericJPA<>(SensorSource.class).insert(getHibernateTransaction(), sensorSource);
         } else {
-            //Adicionamos os sources dos sensores direto na coleção de sensores no Mongo, no objeto Sensor. Aqui, só geramos um ID unico e a data de criação.
+            //Adicionamos os sources dos sensores direto na colecao de sensores no Mongo, no objeto Sensor. Aqui, so geramos um ID unico e a data de criacao.
             if (databaseType.equals("mongo")) {
                 sensorSource.setId(MongoDBUtil.getNextSequence(getMongoConnection(), "sensor_source"));
                 sensorSource.setCreate_time(Date.from(Instant.now()));

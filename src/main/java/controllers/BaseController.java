@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * University of São Paulo
+ * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinícius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros <viniciusaires@usp.br>
  */
 public class BaseController {
 

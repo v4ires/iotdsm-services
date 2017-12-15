@@ -11,14 +11,14 @@ import java.util.List;
 public interface MongoOperation {
 
     /**
-     * Método que cria uma nova Base de Dados no MongoDB
+     * Metodo que cria uma nova Base de Dados no MongoDB
      *
      * @return boolean
      */
     public boolean createMongoDB();
 
     /**
-     * Método que retorna uma referência para o Banco de Dados do MongoDB
+     * Metodo que retorna uma referencia para o Banco de Dados do MongoDB
      *
      * @param db_name
      * @return
@@ -26,7 +26,7 @@ public interface MongoOperation {
     public MongoDatabase getMongoDatabase(String db_name);
 
     /**
-     * Método que cria uma coleção em uma Base de Dados no MongoDB
+     * Metodo que cria uma colecao em uma Base de Dados no MongoDB
      *
      * @param db
      * @return boolean
@@ -34,7 +34,7 @@ public interface MongoOperation {
     public boolean createMongoCollection(MongoDatabase db);
 
     /**
-     * Método que retorna uma Collection do MongoDB
+     * Metodo que retorna uma Collection do MongoDB
      *
      * @param db_name
      * @param collection
@@ -43,7 +43,7 @@ public interface MongoOperation {
     public MongoCollection<Document> getMongoCollection(String db_name, String collection);
 
     /**
-     * Método que retorna a quantidade de itens em uma collection
+     * Metodo que retorna a quantidade de itens em uma collection
      *
      * @param collection
      * @return long
@@ -51,14 +51,14 @@ public interface MongoOperation {
     public long getCollectionCount(DBCollection collection);
 
     /**
-     * Método que cria um novo documento do MongoDB
+     * Metodo que cria um novo documento do MongoDB
      *
      * @return
      */
     public Document createMongoDocument(String json);
 
     /**
-     * Método que insere um documento no MongoDB
+     * Metodo que insere um documento no MongoDB
      *
      * @param document
      * @return
@@ -66,7 +66,7 @@ public interface MongoOperation {
     public boolean insert_mongo(DBObject document, DBCollection collection);
 
     /**
-     * Método que atualiza um documento no MongoDB
+     * Metodo que atualiza um documento no MongoDB
      *
      * @param document
      * @return
@@ -74,7 +74,7 @@ public interface MongoOperation {
     public boolean update_mongo(Document document, MongoCollection<Document> collection);
 
     /**
-     * Método que deleta um Documento de uma Colletion do MongoDB
+     * Metodo que deleta um Documento de uma Colletion do MongoDB
      *
      * @param document
      * @param collection
@@ -83,7 +83,7 @@ public interface MongoOperation {
     public boolean delete_mongo(Document document, MongoCollection<Document> collection);
 
     /**
-     * Método que insere uma Lista de Documentos de uma Colletion do MongoDB
+     * Metodo que insere uma Lista de Documentos de uma Colletion do MongoDB
      *
      * @param documents
      * @param collection
@@ -92,7 +92,7 @@ public interface MongoOperation {
     public boolean insert_list_mongo(List<Document> documents, MongoCollection<Document> collection);
 
     /**
-     * Método que atualiza uma Lista de Documentos de uma Colletion do MongoDB
+     * Metodo que atualiza uma Lista de Documentos de uma Colletion do MongoDB
      *
      * @param documents
      * @param collection
@@ -101,7 +101,7 @@ public interface MongoOperation {
     public boolean update_list_mongo(List<Document> documents, MongoCollection<Document> collection);
 
     /**
-     * Método que remove uma Lista de Documentos de uma Colletion do MongoDB
+     * Metodo que remove uma Lista de Documentos de uma Colletion do MongoDB
      *
      * @param documents
      * @param collection
@@ -110,7 +110,7 @@ public interface MongoOperation {
     public boolean remove_list_mongo(List<Document> documents, MongoCollection<Document> collection);
 
     /**
-     * Método para fechar conexões ativas
+     * Metodo para fechar conexoes ativas
      *
      * @return
      */

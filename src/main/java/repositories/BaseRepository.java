@@ -17,10 +17,10 @@ import utils.sql.SQLOperation;
 import java.sql.SQLException;
 
 /**
- * University of São Paulo
+ * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinícius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros <viniciusaires@usp.br>
  */
 public class BaseRepository {
 
@@ -59,7 +59,7 @@ public class BaseRepository {
                         .classDriver(PropertiesReader.getValue("DRIVER"))
                         .build();
 
-                //Inicializa pool de conexões do Hikari e volta a conexão obtida para o pool
+                //Inicializa pool de conexoes do Hikari e volta a conexao obtida para o pool
                 try {
                     jdbConnection.getJDBConn().close();
                 } catch (SQLException ex) {

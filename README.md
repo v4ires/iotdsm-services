@@ -100,6 +100,36 @@ Essas variáveis são passadas por meio de um arquivo de configuração (config.
 ~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar Main -c=${config_file}
 ```
 
+## Docker
+
+Para compilar as imagens em Docker do IRM basta executar o comando:
+
+```bash
+#Para Compilar Imagem com o Banco de Dados MySQL
+~$ docker build -f mysql.dockerfile -t irm/mysql .
+```
+
+ou
+
+```bash
+#Para Compilar Imagem com o Banco de Dados PostgreSQL
+~$ docker build -f pgsql.dockerfile -t irm/pgsql .
+```
+
+ou
+
+```bash
+#Para Compilar Imagem com o Banco de Dados MongoDB
+~$ docker build -f mongo.dockerfile -t irm/mongo .
+```
+
+Por fim, para executar a imagem desejada basta executar o comando:
+
+```bash
+#Para executar o IRM dado um tipo de Banco de Dados
+~$ docker run -d -p 8081:8081 irm/<db_type>:latest
+```
+
 ## Built With
 
 * [Gradle](https://gradle.org/) - Gerenciador de Dependências.
@@ -110,24 +140,25 @@ O IRM disponibiliza uma página web com uma documentação detalhada sobre API R
 Para acessar esta documentação basta acessar o seguinte link:
 
 ```url
-http://localhost:8081/index.html
+http://<HOST>:<PORT>/index.html
 ```
 
 Além disso, para mais informações sobre o projeto visite a página [WIKI](https://github.com/v4ires/iot-repository/wiki) do projeto.
 
 ## Contributing
 
-Por favor leia o arquivo [CONTRIBUTING.md](CONTRIBUTING.md) para mais detalhes sobre como você pode contribuir com o projeto.
+Por favor leiam o arquivo [CONTRIBUTING.md](CONTRIBUTING.md) para mais detalhes sobre como contribuir com este projeto.
 
 ## Authors
 
-* **Vinícius Aires Barros** - *Idealizador do Projeto* - [@v4ires](https://github.com/v4ires)
+* **Vinicius Aires Barros** - *Idealizador inicial do Projeto* - [@v4ires](https://github.com/v4ires)
+
 ## License
 
 Este projeto está licenciado sob a licença MIT - veja o arquivo  [LICENSE](LICENSE) para mais detalhes.
 
 ## Acknowledgments
 
-* Universidade de São Paulos (USP)
+* Universidade de São Paulo (USP)
 * Instituto de Ciências Matemáticas e de Computação (ICMC)
 * Laboratório de Sistemas Distribuídos e Programação Concorrente (LaSDPC)

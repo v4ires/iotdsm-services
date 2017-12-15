@@ -19,10 +19,10 @@ import java.nio.file.Paths;
 import java.util.Properties;
 
 /**
- * University of São Paulo
+ * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinícius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros <viniciusaires@usp.br>
  */
 public class Main {
 
@@ -36,6 +36,7 @@ public class Main {
      * @param args
      */
     public static void main(String[] args) {
+        System.out.println("Starting...");
         LogManager.getRootLogger().setLevel(Level.toLevel(logDefault));
         setupLog4J();
         initCMDOptions(args);
@@ -90,8 +91,8 @@ public class Main {
 
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao [config.properties].");
         options.addOption("l", "log", true, "Habilitar ou desabilitar log [true, false].");
-        options.addOption("lf", "logfile", true, "Arquivo de Configuração do Log4J [log4j.properties].");
-        options.addOption("v", "log-level", true, "Muda o nível do log [OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL].");
+        options.addOption("lf", "logfile", true, "Arquivo de Configuracao do Log4J [log4j.properties].");
+        options.addOption("v", "log-level", true, "Muda o nivel do log [OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL].");
         options.addOption("h", "help", false, "Mostrar ajuda [true, false].");
 
         CommandLineParser parser = new DefaultParser();
@@ -130,7 +131,7 @@ public class Main {
 
         Path path = Paths.get(_configFileName);
         if (!Files.exists(path)) {
-            log.error("Arquivo de configuracoes não encontrado no caminho \"" + path + "\".");
+            log.error("Arquivo de configuracoes nao encontrado no caminho \"" + path + "\".");
         } else {
             PropertiesReader.initialize(_configFileName);
             log.info("--------------------------");

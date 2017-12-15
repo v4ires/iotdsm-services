@@ -3,10 +3,10 @@ import spark.servlet.SparkApplication;
 import static spark.Spark.get;
 
 /**
- * University of São Paulo
+ * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinícius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros <viniciusaires@usp.br>
  */
 public class ServletMain implements SparkApplication {
 

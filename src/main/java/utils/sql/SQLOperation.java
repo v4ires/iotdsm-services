@@ -6,7 +6,7 @@ import java.util.List;
 public interface SQLOperation {
 
     /**
-     * Método que dispara um comando SQL
+     * Metodo que dispara um comando SQL
      *
      * @param sql
      * @return
@@ -15,7 +15,7 @@ public interface SQLOperation {
     public boolean execute_sql(String sql, Object... params) throws SQLException;
 
     /**
-     * Método que executa um Select Unique SQL
+     * Metodo que executa um Select Unique SQL
      *
      * @param sql
      * @return
@@ -24,7 +24,7 @@ public interface SQLOperation {
     public Object select_unique_sql(String sql, Object... params) throws SQLException;
 
     /**
-     * Método que executa um Select SQL
+     * Metodo que executa um Select SQL
      *
      * @param sql
      * @return
@@ -33,7 +33,7 @@ public interface SQLOperation {
     public List<Object> select_sql(String sql, Object... params) throws SQLException;
 
     /**
-     * Método que executa um Insert SQL
+     * Metodo que executa um Insert SQL
      *
      * @param sql
      * @return
@@ -42,7 +42,7 @@ public interface SQLOperation {
     public boolean insert_sql(String sql, Object... params) throws SQLException;
 
     /**
-     * Método que executa um Update SQL
+     * Metodo que executa um Update SQL
      *
      * @param sql
      * @return
@@ -51,7 +51,7 @@ public interface SQLOperation {
     public boolean update_sql(String sql, Object... params) throws SQLException;
 
     /**
-     * Método que executa um Delete SQL
+     * Metodo que executa um Delete SQL
      *
      * @param sql
      * @return
@@ -61,7 +61,7 @@ public interface SQLOperation {
     public boolean delete_sql(String sql, Object... params) throws SQLException;
 
     /**
-     * Método que retorna o último ID inserido
+     * Metodo que retorna o ultimo ID inserido
      *
      * @return Long
      * @throws SQLException
@@ -69,7 +69,7 @@ public interface SQLOperation {
     public Long get_last_generated_key();
 
     /**
-     * Método para fechar conexões ativas
+     * Metodo para fechar conexoes ativas
      *
      * @return
      */

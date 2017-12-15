@@ -20,10 +20,10 @@ import java.util.List;
 import static com.mongodb.client.model.Filters.eq;
 
 /**
- * University of São Paulo
+ * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinícius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros <viniciusaires@usp.br>
  */
 public class SensorMeasureTypeRepository extends BaseRepository {
 
@@ -105,7 +105,7 @@ public class SensorMeasureTypeRepository extends BaseRepository {
         if (useHibernate) {
             new GenericJPA<>(SensorMeasureType.class).insert(getHibernateTransaction(), sensorMeasureType);
         } else {
-            //Adicionamos as medidas no Mongo direto no método de adicionar sensores
+            //Adicionamos as medidas no Mongo direto no Metodo de adicionar sensores
             if (!databaseType.equals("mongo")) {
                 try {
                     getJdbcSql().insert_sql(SQLQueryDatabase.sqlSensorMeasureTypeInsertQuery, sensorMeasureType.getName(), sensorMeasureType.getUnit());

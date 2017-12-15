@@ -39,7 +39,7 @@ public class GenericMongoDB implements MongoOperation {
     }
 
     /**
-     * Método que retonra a referência de uma base de dados do Mongodb
+     * Metodo que retonra a referencia de uma base de dados do Mongodb
      *
      * @param db_name
      * @return MongoDatabase
@@ -55,7 +55,7 @@ public class GenericMongoDB implements MongoOperation {
     }
 
     /**
-     * Método que retorna uma collection especifica de uma base de dados do MongoDB
+     * Metodo que retorna uma collection especifica de uma base de dados do MongoDB
      *
      * @param db_name
      * @param collection
@@ -67,7 +67,7 @@ public class GenericMongoDB implements MongoOperation {
     }
 
     /**
-     * Método que retorna a quantidade de itens em uma collection
+     * Metodo que retorna a quantidade de itens em uma collection
      *
      * @param collection
      * @return long
@@ -78,7 +78,7 @@ public class GenericMongoDB implements MongoOperation {
     }
 
     /**
-     * Método que retorna um novo Documento para ser persistido no MongoDB
+     * Metodo que retorna um novo Documento para ser persistido no MongoDB
      *
      * @param json
      * @return Document
@@ -92,7 +92,7 @@ public class GenericMongoDB implements MongoOperation {
     }
 
     /**
-     * Método que insere um Documento no MongoDB
+     * Metodo que insere um Documento no MongoDB
      *
      * @param document
      * @return boolean
@@ -103,7 +103,7 @@ public class GenericMongoDB implements MongoOperation {
     }
 
     /**
-     * Método que atualiza um Documento no MongoDB
+     * Metodo que atualiza um Documento no MongoDB
      *
      * @param document
      * @param collection
@@ -115,7 +115,7 @@ public class GenericMongoDB implements MongoOperation {
     }
 
     /**
-     * Método que deleta um Documento no MongoDB
+     * Metodo que deleta um Documento no MongoDB
      *
      * @param document
      * @param collection
@@ -127,7 +127,7 @@ public class GenericMongoDB implements MongoOperation {
     }
 
     /**
-     * Método que insere uma lista de Documentos no MongoDB
+     * Metodo que insere uma lista de Documentos no MongoDB
      *
      * @param documents
      * @param collection
@@ -139,7 +139,7 @@ public class GenericMongoDB implements MongoOperation {
     }
 
     /**
-     * Método que atualiza uma lista de Documentos no MongoDB
+     * Metodo que atualiza uma lista de Documentos no MongoDB
      *
      * @param documents
      * @param collection
@@ -151,7 +151,7 @@ public class GenericMongoDB implements MongoOperation {
     }
 
     /**
-     * Método que remove uma lista de Documentos no MongoDB
+     * Metodo que remove uma lista de Documentos no MongoDB
      *
      * @param documents
      * @param collection
