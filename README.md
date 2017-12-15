@@ -1,5 +1,7 @@
 # IoT-Repository Module (IRM)
 
+<p align="center"><img src="irm-logo.png"/></p>
+
 O IoT-Repository Module (IRM) é um projeto desenvolvido pelo Laboratório de Sistemas Distribuídos e Programação Concorrente (LaSDPC) da Universidade de São Paulo (USP). 
 Este projeto tem como objetivo simplificar a aquisição e armazenamento de dados de redes de sensores no contexto de Internet das Coisas.
 Para isso, o IRM oferece suporte à diferentes estratégias de armazenamento em bancos de dados SQL e NoSQL. 
