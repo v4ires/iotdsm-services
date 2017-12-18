@@ -9,6 +9,7 @@ import model.SensorMeasureType;
 import model.SensorSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import repositories.SensorSourceRepository;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -58,10 +59,11 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
         if (line != null && !line.equals("")) {
             OpenWeatherEntry result = new Gson().fromJson(line, OpenWeatherEntry.class);
 
-            if (sensorSource == null)
+            if (sensorSource == null) {
                 sensorSource = SensorSource.builder()
                         .name("OpenWeatherMap")
                         .build();
+            }
 
             Sensor tempSensor = Sensor.builder()
                     .name("temperature sensor - " + result.getCity().getName())
@@ -76,6 +78,7 @@ public class OpenWeatherJsonDeserializer implements IDeserializer {
                         .name("temperature")
                         .unit("K")
                         .build();
+
             tempSensor.getSensorMeasures().add(tempMeasureType);
 
             Sensor pressureSensor = Sensor.builder()

@@ -154,6 +154,8 @@ Por favor leiam o arquivo [CONTRIBUTING.md](CONTRIBUTING.md) para mais detalhes 
 ## Authors
 
 * **Vinicius Aires Barros** - *Idealizador inicial do Projeto* - [@v4ires](https://github.com/v4ires)
+* **Leonardo Beck Prates**  - *Colaborador* - [@leobeckp](https://github.com/leobeckp)
+
 
 ## License
 

@@ -1,7 +1,6 @@
 import controllers.SensorController;
 import controllers.SensorSourceController;
 import org.apache.commons.cli.*;
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
@@ -11,8 +10,6 @@ import repositories.BaseRepository;
 import spark.Spark;
 import utils.PropertiesReader;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -29,31 +26,32 @@ public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
     private static String _configFileName = "config.properties";
     private static String _log4jFile = "log4j.properties";
+    private static String _logLevel = "ALL";
     private static Options options = new Options();
-    private static String logDefault = "INFO";
 
     /**
      * @param args
      */
     public static void main(String[] args) {
-        System.out.println("Starting...");
-        LogManager.getRootLogger().setLevel(Level.toLevel(logDefault));
-        setupLog4J();
-        initCMDOptions(args);
-        initProperties();
+        System.out.println("Starting IoT Repository Module...");
+        initOptions(args);
+        initServerProperties();
         initDatabaseConnection();
         initSpark();
     }
 
+    /**
+     *
+     */
     private static void initDatabaseConnection() {
         BaseRepository.initializeConnections();
         log.info("Database Connection Enabled!");
     }
 
+    /**
+     *
+     */
     private static void initSpark() {
-
-        //Spark config
-        //Spark.secure("keystore.jks", "password", null, null);
         spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
         if (Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL")))) {
             int maxThreads = Integer.parseInt(PropertiesReader.getValue("SPARK_THREAD_POOL_MIN"));
@@ -63,36 +61,27 @@ public class Main {
         }
 
         Spark.staticFiles.location("/public");
-
         Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
-
         Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
-
         Spark.get("/sensor", SensorController.serveSensorListPage);
-
         Spark.get("/sensor/:id/measure", SensorController.serveSensorMeasureTypesBySensorId);
-
         Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
-
         Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
-
         Spark.get("/sensor/:id", SensorController.serveSensorById);
-
         Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
-
         Spark.notFound((req, res) -> "{\"message\":\"Rout Not Found 404\"}");
-
         spark.Spark.exception(Exception.class, (exception, request, response) -> exception.printStackTrace());
-
         log.info("Web Server is Running...");
     }
 
-    private static void initCMDOptions(String[] args) {
-
+    /**
+     * @param args
+     */
+    private static void initOptions(String[] args) {
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao [config.properties].");
         options.addOption("l", "log", true, "Habilitar ou desabilitar log [true, false].");
-        options.addOption("lf", "logfile", true, "Arquivo de Configuracao do Log4J [log4j.properties].");
-        options.addOption("v", "log-level", true, "Muda o nivel do log [OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL].");
+        options.addOption("lf", "log-file", true, "Arquivo de Configuracao do Log4J [log4j.properties].");
+        options.addOption("lv", "log-level", true, "Muda o nivel do log [OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL].");
         options.addOption("h", "help", false, "Mostrar ajuda [true, false].");
 
         CommandLineParser parser = new DefaultParser();
@@ -114,21 +103,25 @@ public class Main {
             _configFileName = cmd.getOptionValue("c");
         }
 
-        if ((cmd.hasOption("l") && Boolean.parseBoolean(cmd.getOptionValue("l")))) {
-            BasicConfigurator.configure();
-        }
-
-        if (cmd.hasOption("lf")) {
-            _log4jFile = cmd.getOptionValue("lf");
-        }
-
-        if (cmd.hasOption("v")) {
-            LogManager.getRootLogger().setLevel(Level.toLevel(cmd.getOptionValue("v")));
+        if (cmd.hasOption("l")) {
+            if (Boolean.parseBoolean(cmd.getOptionValue("l"))) {
+                if (cmd.hasOption("lf")) {
+                    _log4jFile = cmd.getOptionValue("lf");
+                }
+                if (cmd.hasOption("lv")) {
+                    _logLevel = cmd.getOptionValue("lv");
+                }
+                enableLog4J(_logLevel);
+            } else {
+                disableLog4J();
+            }
         }
     }
 
-    public static void initProperties() {
-
+    /**
+     *
+     */
+    public static void initServerProperties() {
         Path path = Paths.get(_configFileName);
         if (!Files.exists(path)) {
             log.error("Arquivo de configuracoes nao encontrado no caminho \"" + path + "\".");
@@ -160,17 +153,18 @@ public class Main {
         System.exit(0);
     }
 
-    private static void setupLog4J() {
-        Properties props = new Properties();
-        try {
-            InputStream configStream = Main.class.getResourceAsStream(_log4jFile);
-            props.load(configStream);
-            configStream.close();
-        } catch (IOException e) {
-            log.error("Cannot open file " + _log4jFile);
-        }
+    /**
+     *
+     */
+    private static void enableLog4J(String logLevel) {
+        LogManager.getRootLogger().setLevel(Level.toLevel(_logLevel));
+        Properties properties = PropertiesReader.initialize(_log4jFile);
+        LogManager.getRootLogger().setLevel(Level.toLevel(logLevel));
         LogManager.resetConfiguration();
-        PropertyConfigurator.configure(props);
+        PropertyConfigurator.configure(properties);
+    }
+
+    private static void disableLog4J() {
+        LogManager.resetConfiguration();
     }
 }
-
