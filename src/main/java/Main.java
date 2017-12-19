@@ -23,17 +23,17 @@ import java.util.Properties;
  */
 public class Main {
 
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
     private static String _configFileName = "config.properties";
     private static String _log4jFile = "log4j.properties";
     private static String _logLevel = "ALL";
     private static Options options = new Options();
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
 
     /**
      * @param args
      */
     public static void main(String[] args) {
-        System.out.println("Starting IoT Repository Module...");
+        log.info("Starting IoT Repository Module...");
         initOptions(args);
         initServerProperties();
         initDatabaseConnection();
