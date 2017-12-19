@@ -104,3 +104,13 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 # End of https://www.gitignore.io/api/java,gradle,intellij
+/log/*
+.idea/inspectionProfiles/
+scripts/jmeter/data/
+src/main/kotlin/
+src/main/resources/public/css/
+src/main/resources/public/font/
+src/main/resources/public/js/
+src/test/kotlin/
+src/test/resources/
+target/

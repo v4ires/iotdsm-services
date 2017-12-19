@@ -33,7 +33,7 @@ Para executar o servidor RESTFul API do IRM basta executar o comando:
 
 ```bash
 #Executa Serviço RESTFul API do IRM
-~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar Main <args>
+~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain <args>
 ```
 
 ## Running Tests
@@ -60,7 +60,7 @@ Para visualizar os parâmetros disponíveis execute o comando:
 
 ```bash
 #Mostra as opções de parâmetros disponíveis 
-~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar Main -help
+~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain -help
 ``` 
 
 Os parâmetros diponíveis são os seguintes:
@@ -99,7 +99,7 @@ A seguir é apresentado a tabela de argumentos disponíveis.
 Essas variáveis são passadas por meio de um arquivo de configuração (config.properties) através do comando **-c=${config_file}**.
 
 ```bash
-~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar Main -c=${config_file}
+~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain -c=${config_file}
 ```
 
 ## Docker

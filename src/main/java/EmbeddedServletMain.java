@@ -21,19 +21,18 @@ import java.util.Properties;
  *
  * @author Vinicius Aires Barros <viniciusaires@usp.br>
  */
-public class Main {
+public class EmbeddedServletMain {
 
     private static String _configFileName = "config.properties";
     private static String _log4jFile = "log4j.properties";
     private static String _logLevel = "ALL";
     private static Options options = new Options();
-    private static final Logger log = LoggerFactory.getLogger(Main.class);
+    private static final Logger log = LoggerFactory.getLogger(EmbeddedServletMain.class);
 
     /**
      * @param args
      */
     public static void main(String[] args) {
-        log.info("Starting IoT Repository Module...");
         initOptions(args);
         initServerProperties();
         initDatabaseConnection();
@@ -60,6 +59,7 @@ public class Main {
             spark.Spark.threadPool(maxThreads, minThreads, idleTimeoutMilis);
         }
 
+        log.info("Web Server is Running...");
         Spark.staticFiles.location("/public");
         Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
         Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
@@ -70,8 +70,11 @@ public class Main {
         Spark.get("/sensor/:id", SensorController.serveSensorById);
         Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
         Spark.notFound((req, res) -> "{\"message\":\"Rout Not Found 404\"}");
-        spark.Spark.exception(Exception.class, (exception, request, response) -> exception.printStackTrace());
-        log.info("Web Server is Running...");
+
+        spark.Spark.exception(Exception.class, (exception, request, response) -> {
+            log.error(exception.getMessage());
+            exception.printStackTrace();
+        });
     }
 
     /**
@@ -89,58 +92,36 @@ public class Main {
 
         try {
             cmd = parser.parse(options, args);
+            checkCMDOptions(cmd);
         } catch (ParseException e) {
             log.error(e.getMessage());
             showHelp();
-        }
-
-        if (cmd.hasOption("h")) {
-            showHelp();
-            System.exit(0);
-        }
-
-        if (cmd.hasOption("c")) {
-            _configFileName = cmd.getOptionValue("c");
-        }
-
-        if (cmd.hasOption("l")) {
-            if (Boolean.parseBoolean(cmd.getOptionValue("l"))) {
-                if (cmd.hasOption("lf")) {
-                    _log4jFile = cmd.getOptionValue("lf");
-                }
-                if (cmd.hasOption("lv")) {
-                    _logLevel = cmd.getOptionValue("lv");
-                }
-                enableLog4J(_logLevel);
-            } else {
-                disableLog4J();
-            }
         }
     }
 
     /**
      *
      */
-    public static void initServerProperties() {
+    private static void initServerProperties() {
         Path path = Paths.get(_configFileName);
-        if (!Files.exists(path)) {
-            log.error("Arquivo de configuracoes nao encontrado no caminho \"" + path + "\".");
-        } else {
+        if (Files.exists(path)) {
             PropertiesReader.initialize(_configFileName);
             log.info("--------------------------");
             log.info("Config Properties File");
             log.info("--------------------------");
-            log.info("HTTP API Port: " + PropertiesReader.getValue("APIPORT"));
-            log.info("Database Type: " + PropertiesReader.getValue("DATABASETYPE"));
-            log.info("Hibernate is On: " + PropertiesReader.getValue("USEHIBERNATE"));
-            log.info("SQL Debug is On: " + PropertiesReader.getValue("SQL_DEBUG"));
-            log.info("Thread Pool is On: " + Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL"))));
+            log.info("HTTP API Port: {}", PropertiesReader.getValue("APIPORT"));
+            log.info("Database Type: {}", PropertiesReader.getValue("DATABASETYPE"));
+            log.info("Hibernate is On: {}", PropertiesReader.getValue("USEHIBERNATE"));
+            log.info("SQL Debug is On: {}", PropertiesReader.getValue("SQL_DEBUG"));
+            log.info("Thread Pool is On: {}", Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL"))));
             if (Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL")))) {
-                log.info("Thread Pool Timeout: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_TIMEOUT"))));
-                log.info("Thread Pool Min: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_MIN"))));
-                log.info("Thread Pool Max: " + Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_MAX"))));
+                log.info("Thread Pool Timeout: {}", Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_TIMEOUT"))));
+                log.info("Thread Pool Min: {}", Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_MIN"))));
+                log.info("Thread Pool Max: {}", Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_MAX"))));
             }
             log.info("--------------------------");
+        } else {
+            log.error("Arquivo de configuracoes nao encontrado no caminho \"{}\".", path);
         }
     }
 
@@ -149,7 +130,7 @@ public class Main {
      */
     private static void showHelp() {
         HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("Main", options);
+        formatter.printHelp("EmbeddedServletMain", options);
         System.exit(0);
     }
 
@@ -164,7 +145,35 @@ public class Main {
         PropertyConfigurator.configure(properties);
     }
 
+    /**
+     *
+     */
     private static void disableLog4J() {
         LogManager.resetConfiguration();
+    }
+
+    private static void checkCMDOptions(CommandLine cmd) {
+        if (cmd.hasOption("h")) {
+            showHelp();
+            System.exit(0);
+        } else {
+            log.info("Starting IoT Repository Module...");
+            if (cmd.hasOption("c")) {
+                _configFileName = cmd.getOptionValue("c");
+            }
+            if (cmd.hasOption("l")) {
+                if (Boolean.parseBoolean(cmd.getOptionValue("l"))) {
+                    if (cmd.hasOption("lf")) {
+                        _log4jFile = cmd.getOptionValue("lf");
+                    }
+                    if (cmd.hasOption("lv")) {
+                        _logLevel = cmd.getOptionValue("lv");
+                    }
+                    enableLog4J(_logLevel);
+                } else {
+                    disableLog4J();
+                }
+            }
+        }
     }
 }
