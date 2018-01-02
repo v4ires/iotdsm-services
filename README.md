@@ -1,159 +1,158 @@
-# **I**nternet **o**f **T**hings **D**ata as a **S**ervice **M**odule (IoTDSM)
+# **I**nternet **o**f **T**hings **D**ata as a **S**ervice **M**iddleware (IoTDSM)
 
 <p align="center"><img src="iot-dsm-logo.png"/></p>
 
-O  **I**nternet **o**f **T**hings **D**ata as a **S**ervice **M**odule (IoTDSM) é um projeto desenvolvido no Laboratório de Sistemas Distribuídos e Programação Concorrente (LaSDPC) da Universidade de São Paulo (USP).
-Este projeto tem como objetivo simplificar a aquisição e armazenamento de dados de sensores no contexto de Internet das Coisas.
-Para isso, o IoTDSM oferece suporte à diferentes estratégias de armazenamento em bancos de dados SQL e NoSQL. Além de fornecer uma API RESTful para comunicação e gerenciamento do módulo.
+The IoTDSM is a project developed in the Laboratory of Distributed Systems and Concurrent Programming (LaSDPC) of the University of São Paulo (USP). This project aims to simplify the acquisition and storage of sensor data in the Internet of Things context. For this, IoTDSM supports different storage strategies in SQL and NoSQL databases. In addition to providing a RESTful API for communication and data management of sensor networks.
 
 ## Getting Started
 
-O IoTDSM tem como objetivo fornecer dados de objetos pertencentes a um ou mais ambientes inteligentes no contexto de IoT.
-Para isso, esta ferramenta fornece uma interface simplificada para conexão com diferentes fontes de dados de redes de sensores, fornecendo suporte a diferentes tipos de bancos de dados, sejam eles SQL ou NoSQL.
+The IoTDSM aims to provide data from objects belonging to one or more intelligent environments in the context of IoT.
+To do this, this tool provides a simplified interface for connecting to different sensor network data sources, providing support for different types of databases, whether SQL or NoSQL.
 
 ### Installing
 
-Para instalação do IoTDSM, basta compilar o projeto com o comando:
+To install IoTDSM, simply compile the project with the command:
 
 ```bash
-#Compila o projeto com todas as dependências desconsiderando a executação de testes
+#Compile the project with all dependencies disregarding the execution of tests
 ~$ gradle build fatJar -x test
 ```
 
-Esse comando gerará um arquivo .jar com todas as dependências necessárias para execução do projeto.
-O arquivo .jar gerado fica localizado no diretório:
+This command will generate a .jar file with all the dependencies required to run the project.
+The generated .jar file is located in the directory:
 
 ```bash
 #Arquivo: iot-repository-all-1.0-SNAPSHOT.jar
-~$ build/libs  
+~$ build/libs
 ```
 
-Para executar o servidor RESTFul API do IoTDSM basta executar o comando:
+To run the RESTFul API server from IoTDSM just run the command:
 
 ```bash
-#Executa Serviço RESTFul API do IoTDSM
+#Executes RESTFul API Service from IoTDSM
 ~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain <args>
 ```
 
 ## Running Tests
 
-Para executar os testes unitários basta executar o comando:
+To run the unit tests just run the command:
 
 ```bash
-#Executa Testes Unitários
+#Perform Unit Tests
 ~$ gradle test
 ```
 
 ## Running and Deployment
 
-O IoTDSM provê uma interface de entrada para diferentes parâmetros de configuração.
-Esses parâmetros são passados por meio de *flags* definidas pelo sistema.
-Para visualizar os parâmetros disponíveis execute o comando:
+The IoTDSM provides an input interface for different configuration parameters.
+These parameters are passed through system-defined *flags*.
+To view the available parameters, execute the command:
 
 ```bash
 #Mostra as opções de parâmetros disponíveis
 ~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain -help
 ```
 
-Os parâmetros diponíveis são os seguintes:
+The available parameters are as follows:
 
 ```bash
- -c,--configuration <arg>   Caminho para o arquivo de configuracao [config.properties].
- -h,--help                  Mostrar ajuda [true, false].
- -l,--log <arg>             Habilitar ou desabilitar log [true, false].
- -lf,--logfile <arg>        Arquivo de Configuração do Log4J [log4j.properties].
- -v,--log-level <arg>       Muda o nível do log [OFF, TRACE, trace, DEBUG, WARN, ERROR, FATAL, ALL].
+ -c,--configuration <arg>   Path to configuration file [config.properties].
+ -h,--help                  Show help [true, false].
+ -l,--log <arg>             Enable or disable log [true, false].
+ -lf,--logfile <arg>        Log4J Configuration File [log4j.properties].
+ -v,--log-level <arg>       Changes the log level [OFF, TRACE, trace, DEBUG, WARN, ERROR, FATAL, ALL].
 ```
-Além dos parâmetros padrões outras configurações podem ser definidas por meio de um arquivo de configuração.
-Este arquivo especifica a configuração do Banco de Dados e Servidor Web do IoTDSM.
-A seguir é apresentado a tabela de argumentos disponíveis.
+In addition to the default parameters other settings can be defined by means of a configuration file.
+This file specifies the IoTDSM Database and Web Server configuration.
+The table of available arguments is shown below.
 
-**Table 1**: Variáveis de entrada do Servidor Web.
+** Table 1 **: Web Server input variables.
 
 |          Variável         |                   Descrição                  |
 |:-------------------------:|:--------------------------------------------:|
-| HOST                      | Endereço do Host do Banco de Dados           |
-| PORT                      | Porta do Host do Banco de Dados              |
-| DATABASE                  | Nome do Banco de Dados                       |
-| USER                      | Nome do Usuário do Banco de Dados            |
-| PASSWORD                  | Senha do Banco de Dados                      |
+| HOST                      | Database Host Address				           |
+| PORT                      | Database Host Port			               |
+| DATABASE                  | Database Name			                       |
+| USER                      | Database User Name			               |
+| PASSWORD                  | Database Password		                       |
 | DRIVER                    | Driver JDBC                                  |
 | SQL_DEBUG                 | SQL Debug Mode                               |
-| DATABASETYPE              | Tipo do Banco de Dados (mysql, pgsql, mongo) |
-| USEHIBERNATE              | Usar Hibernate                               |
-| SPARK_THREAD_POOL         | Usar Pool de Threads no Servidor             |
-| SPARK_THREAD_POOL_TIMEOUT | Timeout do Pool de Threads do Servidor Web   |
-| SPARK_THREAD_POOL_MIN     | Min Pool Size do Servidor Web                |
-| SPARK_THREAD_POOL_MAX     | Max Pool Size do Servidor Web                |
-| APIPORT                   | Porta do Servidor Web                        |
-| DIALECT                   | Dialeto do Banco de Dados                    |
+| DATABASETYPE              | Database Type (mysql, pgsql, mongo)		   |
+| USEHIBERNATE              | Using Hibernate ORM                          |
+| SPARK_THREAD_POOL         | Use Threads Pool on Server	               |
+| SPARK_THREAD_POOL_TIMEOUT | Web Server Threads Pool Timeout			   |
+| SPARK_THREAD_POOL_MIN     | Min Pool Size Web Server	                   |
+| SPARK_THREAD_POOL_MAX     | Max Pool Size Web Server	                   |
+| APIPORT                   | Web Server Port Number                       |
+| DIALECT                   | Database Dialect		                       |
 
-Essas variáveis são passadas por meio de um arquivo de configuração (config.properties) através do comando **-c=${config_file}**.
+These variables are passed through a configuration file (config.properties) through the command ** -c= ${config_file} **.
 
 ```bash
 ~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain -c=${config_file}
 ```
 
-## Docker
+## Docker Images
 
-Para compilar as imagens em Docker do IoTDSM basta executar o comando:
+This project provides docker images for use in production. The following are the official docker files available.
+To compile the images in Docker from IoTDSM just run the command:
 
 ```bash
-#Para Compilar Imagem com o Banco de Dados MySQL
+#To Compile Image with MySQL Database
 ~$ docker build -f mysql.dockerfile -t iot-dsm/mysql .
 ```
 
-ou
+or
 
 ```bash
-#Para Compilar Imagem com o Banco de Dados PostgreSQL
+#To Compile Image with PgSQL Database
 ~$ docker build -f pgsql.dockerfile -t iot-dsm/pgsql .
 ```
 
-ou
+or
 
 ```bash
-#Para Compilar Imagem com o Banco de Dados MongoDB
+#To Compile Image with Mongo Database
 ~$ docker build -f mongo.dockerfile -t iot-dsm/mongo .
 ```
 
-Por fim, para executar a imagem desejada basta executar o comando:
+Finally, to execute the desired image, just execute the command:
 
 ```bash
-#Para executar o IoTDSM dado um tipo de Banco de Dados
+#To run IoTDSM given a type of Database
 ~$ docker run -d -p 8081:8081 iot-dsm/<db_type>:latest
 ```
 
 ## Built With
 
-* [Gradle](https://gradle.org/) - Gerenciador de Dependências.
+* [Gradle](https://gradle.org/) - Dependency Manager.
 
 ## Documentation
 
-O IoTDSM disponibiliza uma página web com uma documentação detalhada sobre API RESTFul do sistema.
-Para acessar esta documentação basta acessar o link:
+The IoTDSM provides a web page with detailed documentation on the system's RESTFul API.
+To access this documentation, just go to the link:
 
 ```url
 http://<HOST>:<PORT>/index.html
 ```
 
-Além disso, para mais informações sobre o projeto visite a página [WIKI](https://github.com/v4ires/iot-repository/wiki) do projeto.
+In addition, for more information about the project visit the [WIKI] (https://github.com/v4ires/iot-repository/wiki) page of the project.
 
 ## Contributing
 
-Por favor leiam o arquivo [CONTRIBUTING.md](CONTRIBUTING.md) para mais detalhes sobre como contribuir com este projeto.
+Please read the [CONTRIBUTING.md] file (CONTRIBUTING.md) for more details on how to contribute to this project.
 
 ## Authors
 
-* **Vinicius Aires Barros** - *Idealizador inicial do Projeto* - [@v4ires](https://github.com/v4ires)
-* **Leonardo Beck Prates**  - *Colaborador* - [@leobeckp](https://github.com/leobeckp)
+* **Vinicius Aires Barros** - *Initial Project Initializer* - [@v4ires](https://github.com/v4ires)
+* **Leonardo Beck Prates**  - *Collaborator* - [@leobeckp](https://github.com/leobeckp)
 
 ## License
 
-Este projeto está licenciado sob a licença MIT - veja o arquivo  [LICENSE](LICENSE) para mais detalhes.
+This project is licensed under the MIT license - see the   [LICENSE](LICENSE) file for more details.
 
 ## Acknowledgments
 
-* Universidade de São Paulo (USP)
-* Instituto de Ciências Matemáticas e de Computação (ICMC)
-* Laboratório de Sistemas Distribuídos e Programação Concorrente (LaSDPC)
+* University of São Paulo (USP)
+* Institute of Mathematical and Computer Sciences (ICMC)
+* Laboratory of Distributed Systems and Concurrent Programming (LaSDPC)

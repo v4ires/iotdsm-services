@@ -9,13 +9,13 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="295.26251mm"
+   width="204.16949mm"
    height="91.798164mm"
-   viewBox="0 0 1046.2058 325.26909"
+   viewBox="0 0 723.43523 325.26909"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
-   sodipodi:docname="iot-dsm-logo.svg">
+   sodipodi:docname="iot-dsm-logo-min.svg">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -26,8 +26,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.7"
-     inkscape:cx="492.2912"
-     inkscape:cy="5.9838707"
+     inkscape:cx="669.43406"
+     inkscape:cy="157.41244"
      inkscape:document-units="px"
      inkscape:current-layer="g3374"
      showgrid="false"
@@ -155,29 +155,17 @@
         <text
            xml:space="preserve"
            style="font-style:normal;font-weight:normal;font-size:70px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-           x="562.71814"
-           y="461.41602"
+           x="564.14673"
+           y="557.70172"
            id="text3506"
            sodipodi:linespacing="125%"
            inkscape:export-xdpi="45"
            inkscape:export-ydpi="45"><tspan
-             sodipodi:role="line"
-             id="tspan3508"
-             x="562.71814"
-             y="461.41602"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Amiri Quran';-inkscape-font-specification:'Amiri Quran'">Internet of Things</tspan><tspan
-             sodipodi:role="line"
-             x="562.71814"
-             y="548.91602"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Amiri Quran';-inkscape-font-specification:'Amiri Quran'"
-             id="tspan3349">Data as a Service </tspan><tspan
              id="tspan3372"
              sodipodi:role="line"
-             x="562.71814"
-             y="636.41602"
-             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Amiri Quran';-inkscape-font-specification:'Amiri Quran'">Middleware - <tspan
-   style="font-size:60.00000381px"
-   id="tspan3353">IoTDSM</tspan></tspan></text>
+             x="564.14673"
+             y="557.70172"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:100.00001526px;font-family:'Amiri Quran';-inkscape-font-specification:'Amiri Quran'">IoTDSM</tspan></text>
       </g>
     </g>
   </g>
