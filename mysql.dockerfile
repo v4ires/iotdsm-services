@@ -1,5 +1,4 @@
 FROM ubuntu:latest
-MAINTAINER Vinicius Aires Barros <v4ires@gmail.com>
 
 ENV JAVA_VERSION 8
 ENV PGSQL_VERSION 9.6
@@ -9,6 +8,9 @@ ENV PATH $PATH:$GRADLE_HOME/bin
 
 EXPOSE 3306
 EXPOSE 8081
+
+# Create Log Directory
+RUN mkdir -p /var/log/iot-repository
 
 # Update APT Repository
 RUN apt-get -y update \
@@ -29,14 +31,14 @@ RUN cd /usr/lib \
 && rm "gradle-bin.zip"
 
 # Install MySQL/MariaDB
-RUN apt-get install -y mariadb-server
-RUN /etc/init.d/mysql start 
-RUN mysqladmin -u root -p 'qwe1234@'
-RUN mysql -u root -p"qwe1234@" -e 'CREATE SCHEMA `iot-repository`;'
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
 
 # Running IoT Repository Module
-USER root
 ADD . $HOME/iot-repository
 WORKDIR iot-repository 
 RUN gradle build fatJar -x test \
 && cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .
+
+# Clean Up
+RUN apt-get clean \
+&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

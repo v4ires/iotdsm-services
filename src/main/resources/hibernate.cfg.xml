@@ -15,7 +15,7 @@
 
         <!-- MySQL/MariaDB Connection -->
         <property name="connection.url">jdbc:mysql://localhost/iotrepository</property> <!-- BD Mane -->
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property> <!-- DB Driver -->
+        <property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property> <!-- DB Driver -->
         <property name="connection.username">root</property> <!-- DB User -->
         <property name="connection.password">qwe1234@</property> <!-- DB Password -->
         <property name="dialect">org.hibernate.dialect.MariaDBDialect</property> <!-- DB Dialect -->

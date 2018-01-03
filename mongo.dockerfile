@@ -1,5 +1,4 @@
 FROM ubuntu:latest
-MAINTAINER Vinicius Aires Barros <v4ires@gmail.com>
 
 ENV JAVA_VERSION 8
 ENV PGSQL_VERSION 9.6
@@ -10,6 +9,9 @@ ENV PATH $PATH:$GRADLE_HOME/bin
 EXPOSE 27017
 EXPOSE 28017
 EXPOSE 8081
+
+# Create Log Directory
+RUN mkdir -p /var/log/iot-repository
 
 # Update APT Repository
 RUN apt-get -y update \
@@ -39,8 +41,9 @@ RUN apt-get install -y mongodb-org mongodb-org-server mongodb-org-mongos mongodb
 USER root
 ADD . $HOME/iot-repository
 WORKDIR iot-repository
-#RUN wget -O iot-repository-mongo.tar.gz https://www.dropbox.com/s/y7j2k14f2b5fwgj/iot-repository-mongo.tar.gz?dl=0
-#RUN tar -zxvf iot-repository-mongo.tar.gz
-#RUN mongorestore mongo
 RUN gradle build fatJar -x test
 RUN cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .
+
+# Clean Up
+RUN apt-get clean \
+&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

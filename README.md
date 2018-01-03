@@ -66,7 +66,9 @@ In addition to the default parameters other settings can be defined by means of 
 This file specifies the IoTDSM Database and Web Server configuration.
 The table of available arguments is shown below.
 
-** Table 1 **: Web Server input variables.
+**Table 1**: Web Server input variables.
+
+<center>
 
 |          Variável         |                   Descrição                  |
 |:-------------------------:|:--------------------------------------------:|
@@ -86,7 +88,9 @@ The table of available arguments is shown below.
 | APIPORT                   | Web Server Port Number                       |
 | DIALECT                   | Database Dialect		                       |
 
-These variables are passed through a configuration file (config.properties) through the command ** -c= ${config_file} **.
+</center>
+
+These variables are passed through a configuration file (config.properties) through the command **-c= ${config_file}**.
 
 ```bash
 ~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain -c=${config_file}
@@ -120,7 +124,7 @@ Finally, to execute the desired image, just execute the command:
 
 ```bash
 #To run IoTDSM given a type of Database
-~$ docker run -d -p 8081:8081 iot-dsm/<db_type>:latest
+~$ docker run --name iot-dsm-${db_type} -d -p 8081:8081 iot-dsm/${db_type}:latest sh iot-dsm-${db_type}.sh
 ```
 
 ## Built With
@@ -140,7 +144,7 @@ In addition, for more information about the project visit the [WIKI] (https://gi
 
 ## Contributing
 
-Please read the [CONTRIBUTING.md] file (CONTRIBUTING.md) for more details on how to contribute to this project.
+Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file for more details on how to contribute to this project.
 
 ## Authors
 

@@ -10,6 +10,9 @@ ENV PGPASSWORD qwe1234@
 EXPOSE 5432
 EXPOSE 8081
 
+# Create Log Directory
+RUN mkdir -p /var/log/iot-repository
+
 # Update APT Repository
 RUN apt-get -y update \
 && apt-get install -y curl \
@@ -36,9 +39,6 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" >> /etc
 && echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/${PGSQL_VERSION}/main/pg_hba.conf \
 && echo "listen_addresses='*'" >> /etc/postgresql/${PGSQL_VERSION}/main/postgresql.conf
 
-RUN apt-get clean \
-&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 USER postgres
 RUN /etc/init.d/postgresql start \
 && psql -d postgres -U postgres --command "ALTER USER postgres with PASSWORD '${PGPASSWORD}';" \
@@ -48,9 +48,9 @@ RUN /etc/init.d/postgresql start \
 USER root
 ADD . $HOME/iot-repository
 WORKDIR iot-repository 
-RUN /etc/init.d/postgresql start \
-&& wget -O iot-repository-pgsql.sql.tar.gz https://www.dropbox.com/s/0nkss4bvmk31o0a/iot-repository-pgsql.sql.tar.gz?dl=0 \
-&& tar -zxvf iot-repository-pgsql.sql.tar.gz \
-&& psql -U postgres -h localhost -f iot-repository-pgsql.sql iot-repository \
-&& gradle build fatJar -x test \
+RUN gradle build fatJar -x test \
 && cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .
+
+# Clean Up
+RUN apt-get clean \
+&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
