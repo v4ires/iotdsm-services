@@ -7,7 +7,7 @@ ENV GRADLE_VERSION 4.4
 ENV GRADLE_HOME /usr/lib/gradle
 ENV PATH $PATH:$GRADLE_HOME/bin
 
-EXPOSE 5432
+EXPOSE 3306
 EXPOSE 8081
 
 # Update APT Repository
@@ -29,13 +29,14 @@ RUN cd /usr/lib \
 && rm "gradle-bin.zip"
 
 # Install MySQL/MariaDB
+RUN apt-get install -y mariadb-server
+RUN /etc/init.d/mysql start 
+RUN mysqladmin -u root -p 'qwe1234@'
+RUN mysql -u root -p"qwe1234@" -e 'CREATE SCHEMA `iot-repository`;'
 
 # Running IoT Repository Module
 USER root
 ADD . $HOME/iot-repository
-RUN cd iot-repository \
-&& gradle build fatJar -x test \
+WORKDIR iot-repository 
+RUN gradle build fatJar -x test \
 && cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .
-
-CMD /etc/init.d/postgresql start
-CMD java -jar /iot-repository/iot-repository-all-1.0-SNAPSHOT.jar -c=/iot-repository/mysql-hb.properties -v=ALL

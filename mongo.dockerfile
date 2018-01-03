@@ -7,7 +7,8 @@ ENV GRADLE_VERSION 4.4
 ENV GRADLE_HOME /usr/lib/gradle
 ENV PATH $PATH:$GRADLE_HOME/bin
 
-EXPOSE 5432
+EXPOSE 27017
+EXPOSE 28017
 EXPOSE 8081
 
 # Update APT Repository
@@ -29,13 +30,17 @@ RUN cd /usr/lib \
 && rm "gradle-bin.zip"
 
 # Install MongoDB
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
+RUN echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+RUN apt-get update
+RUN apt-get install -y mongodb-org mongodb-org-server mongodb-org-mongos mongodb-org-shell mongodb-org-tools
 
 # Running IoT Repository Module
 USER root
 ADD . $HOME/iot-repository
-RUN cd iot-repository \
-&& gradle build fatJar -x test \
-&& cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .
-
-CMD /etc/init.d/postgresql start
-CMD java -jar /iot-repository/iot-repository-all-1.0-SNAPSHOT.jar -c=/iot-repository/mongo.properties -v=ALL
+WORKDIR iot-repository
+#RUN wget -O iot-repository-mongo.tar.gz https://www.dropbox.com/s/y7j2k14f2b5fwgj/iot-repository-mongo.tar.gz?dl=0
+#RUN tar -zxvf iot-repository-mongo.tar.gz
+#RUN mongorestore mongo
+RUN gradle build fatJar -x test
+RUN cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .

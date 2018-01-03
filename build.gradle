@@ -79,7 +79,7 @@ dependencies {
     compile group: 'com.thoughtworks.xstream', name: 'xstream', version: '1.4.10'
 
     //Object Mapping JDBC - SQL Databases
-    //compile group: 'org.sql2o', name: 'sql2o', version: '1.5.4'
+    compile group: 'org.sql2o', name: 'sql2o', version: '1.5.4'
 
     //JDBC Drivers - SQL Databases
     compile group: 'org.postgresql', name: 'postgresql', version: '42.1.4'

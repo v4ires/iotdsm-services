@@ -1,11 +1,11 @@
 FROM ubuntu:latest
-MAINTAINER Vinicius Aires Barros <v4ires@gmail.com>
 
 ENV JAVA_VERSION 8
-ENV PGSQL_VERSION 9.6
+ENV PGSQL_VERSION 10
 ENV GRADLE_VERSION 4.4
 ENV GRADLE_HOME /usr/lib/gradle
 ENV PATH $PATH:$GRADLE_HOME/bin
+ENV PGPASSWORD qwe1234@
 
 EXPOSE 5432
 EXPOSE 8081
@@ -41,15 +41,16 @@ RUN apt-get clean \
 
 USER postgres
 RUN /etc/init.d/postgresql start \
-&& psql -d postgres -U postgres --command "ALTER USER postgres with PASSWORD 'qwe1234@';" \
-&& createdb -O postgres iot-repository
+&& psql -d postgres -U postgres --command "ALTER USER postgres with PASSWORD '${PGPASSWORD}';" \
+&& createdb -h localhost -p 5432 -U postgres iot-repository
 
 # Running IoT Repository Module
 USER root
 ADD . $HOME/iot-repository
-RUN cd iot-repository \
+WORKDIR iot-repository 
+RUN /etc/init.d/postgresql start \
+&& wget -O iot-repository-pgsql.sql.tar.gz https://www.dropbox.com/s/0nkss4bvmk31o0a/iot-repository-pgsql.sql.tar.gz?dl=0 \
+&& tar -zxvf iot-repository-pgsql.sql.tar.gz \
+&& psql -U postgres -h localhost -f iot-repository-pgsql.sql iot-repository \
 && gradle build fatJar -x test \
 && cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .
-
-CMD /etc/init.d/postgresql start
-CMD java -jar /iot-repository/iot-repository-all-1.0-SNAPSHOT.jar -c=/iot-repository/pgsql-hb.properties -v=ALL
