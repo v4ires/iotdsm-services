@@ -48,9 +48,8 @@ RUN /etc/init.d/postgresql start \
 USER root
 ADD . $HOME/iot-repository
 WORKDIR iot-repository 
-RUN gradle build fatJar -x test \
+RUN gradle build fatJar -x test --parallel \
 && cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .
 
-# Clean Up
-RUN apt-get clean \
-&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+VOLUME /root/.gradle/
+VOLUME /root/iot-repository

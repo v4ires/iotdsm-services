@@ -38,12 +38,10 @@ RUN apt-get update
 RUN apt-get install -y mongodb-org mongodb-org-server mongodb-org-mongos mongodb-org-shell mongodb-org-tools
 
 # Running IoT Repository Module
-USER root
 ADD . $HOME/iot-repository
 WORKDIR iot-repository
-RUN gradle build fatJar -x test
-RUN cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .
+RUN gradle build fatJar -x test --parallel \
+&& cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .
 
-# Clean Up
-RUN apt-get clean \
-&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+VOLUME /root/.gradle/
+VOLUME /root/iot-repository
