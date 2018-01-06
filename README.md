@@ -2,7 +2,7 @@
 
 <p align="center"><img src="iot-dsm-logo.png"/></p>
 
-The IoTDSM is a project developed in the Laboratory of Distributed Systems and Concurrent Programming (LaSDPC) of the University of São Paulo (USP). This project aims to simplify the acquisition and storage of sensor data in the Internet of Things context. For this, IoTDSM supports different storage strategies in SQL and NoSQL databases. In addition to providing a RESTful API for communication and data management of sensor networks.
+The IoTDSM is a project developed in the Laboratory of Distributed Systems and Concurrent Programming (LaSDPC) of the University of São Paulo (USP). This project aims to simplify the acquisition and storage of sensor data in the Internet of Things (IoT) context. For this, IoTDSM supports different storage strategies in SQL and NoSQL databases. In addition to providing a RESTful API for communication and data management of sensor networks.
 
 ## Getting Started
 
@@ -15,14 +15,14 @@ To install IoTDSM, simply compile the project with the command:
 
 ```bash
 #Compile the project with all dependencies disregarding the execution of tests
-~$ gradle build fatJar -x test
+~$ gradle build fatJar -x test --parallel
 ```
 
 This command will generate a .jar file with all the dependencies required to run the project.
 The generated .jar file is located in the directory:
 
 ```bash
-#Arquivo: iot-repository-all-1.0-SNAPSHOT.jar
+#File: iot-repository-all-1.0-SNAPSHOT.jar
 ~$ build/libs
 ```
 
@@ -31,6 +31,12 @@ To run the RESTFul API server from IoTDSM just run the command:
 ```bash
 #Executes RESTFul API Service from IoTDSM
 ~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain <args>
+```
+
+If you only need to download the dependencies, execute the command:
+
+```bash
+~$ gradle build --refresh-dependencies
 ```
 
 ## Running Tests
@@ -60,7 +66,7 @@ The available parameters are as follows:
  -h,--help                  Show help [true, false].
  -l,--log <arg>             Enable or disable log [true, false].
  -lf,--logfile <arg>        Log4J Configuration File [log4j.properties].
- -v,--log-level <arg>       Changes the log level [OFF, TRACE, trace, DEBUG, WARN, ERROR, FATAL, ALL].
+ -v,--log-level <arg>       Changes the log level [OFF, TRACE, DEBUG, WARN, ERROR, FATAL, ALL].
 ```
 In addition to the default parameters other settings can be defined by means of a configuration file.
 This file specifies the IoTDSM Database and Web Server configuration.
@@ -124,7 +130,7 @@ Finally, to execute the desired image, just execute the command:
 
 ```bash
 #To run IoTDSM given a type of Database
-~$ docker run --name iot-dsm-${db_type} -d -p 8081:8081 iot-dsm/${db_type}:latest sh iot-dsm-${db_type}.sh
+~$ docker run -dp 8081:8081 iot-dsm/${db_type}:latest sh iot-dsm-${db_type}.sh
 ```
 
 ## Built With
