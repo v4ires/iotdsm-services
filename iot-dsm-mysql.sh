@@ -1,7 +1,7 @@
 #!/bin/bash
 
 /etc/init.d/mysql start
-mysql -e 'CREATE SCHEMA `iot-repository`;'
+mysql -e 'CREATE SCHEMA `iotdsm-services`;'
 mysqladmin -u root password "qwe1234@"
-mysql -u root -pqwe1234@ iot-repository < scripts/sql/iot-repository-mysql.sql
-java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain -c=mysql-hb.properties
+mysql -u root -pqwe1234@ iotdsm-services < scripts/sql/iotdsm-services-mysql.sql
+java -cp iotdsm-services-all-1.0-SNAPSHOT.jar EmbeddedServletMain -c=mysql-hb.properties

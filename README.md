@@ -22,7 +22,7 @@ This command will generate a .jar file with all the dependencies required to run
 The generated .jar file is located in the directory:
 
 ```bash
-#File: iot-repository-all-1.0-SNAPSHOT.jar
+#File: iotdsm-services-all-1.0-SNAPSHOT.jar
 ~$ build/libs
 ```
 
@@ -30,7 +30,7 @@ To run the RESTFul API server from IoTDSM just run the command:
 
 ```bash
 #Executes RESTFul API Service from IoTDSM
-~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain <args>
+~$ java -cp iotdsm-services-all-1.0-SNAPSHOT.jar EmbeddedServletMain <args>
 ```
 
 If you only need to download the dependencies, execute the command:
@@ -56,7 +56,7 @@ To view the available parameters, execute the command:
 
 ```bash
 #Mostra as opções de parâmetros disponíveis
-~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain -help
+~$ java -cp iotdsm-services-all-1.0-SNAPSHOT.jar EmbeddedServletMain -help
 ```
 
 The available parameters are as follows:
@@ -99,7 +99,7 @@ The table of available arguments is shown below.
 These variables are passed through a configuration file (config.properties) through the command **-c= ${config_file}**.
 
 ```bash
-~$ java -cp iot-repository-all-1.0-SNAPSHOT.jar EmbeddedServletMain -c=${config_file}
+~$ java -cp iotdsm-services-all-1.0-SNAPSHOT.jar EmbeddedServletMain -c=${config_file}
 ```
 
 ## Docker Images
@@ -146,7 +146,7 @@ To access this documentation, just go to the link:
 http://<HOST>:<PORT>/index.html
 ```
 
-In addition, for more information about the project visit the [WIKI] (https://github.com/v4ires/iot-repository/wiki) page of the project.
+In addition, for more information about the project visit the [WIKI] (https://github.com/v4ires/iotdsm-services/wiki) page of the project.
 
 ## Contributing
 

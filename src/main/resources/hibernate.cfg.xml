@@ -7,7 +7,7 @@
 
         <!-- PostgreSQL Connection -->
         <!--<property name="hibernate.archive.autodetection">class, hbm</property>-->
-        <!--<property name="connection.url">jdbc:postgresql://localhost/iot-repository</property> &lt;!&ndash; BD Mane &ndash;&gt;-->
+        <!--<property name="connection.url">jdbc:postgresql://localhost/iotdsm-services</property> &lt;!&ndash; BD Mane &ndash;&gt;-->
         <!--<property name="connection.driver_class">org.postgresql.Driver</property> &lt;!&ndash; DB Driver &ndash;&gt;-->
         <!--<property name="connection.username">postgres</property> &lt;!&ndash; DB User &ndash;&gt;-->
         <!--<property name="connection.password">qwe1234@</property> &lt;!&ndash; DB Password &ndash;&gt;-->

@@ -11,7 +11,7 @@ EXPOSE 5432
 EXPOSE 8081
 
 # Create Log Directory
-RUN mkdir -p /var/log/iot-repository
+RUN mkdir -p /var/log/iotdsm-services
 
 # Update APT Repository
 RUN apt-get -y update \
@@ -42,14 +42,14 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" >> /etc
 USER postgres
 RUN /etc/init.d/postgresql start \
 && psql -d postgres -U postgres --command "ALTER USER postgres with PASSWORD '${PGPASSWORD}';" \
-&& createdb -h localhost -p 5432 -U postgres iot-repository
+&& createdb -h localhost -p 5432 -U postgres iotdsm-services
 
 # Running IoT Repository Module
 USER root
-ADD . $HOME/iot-repository
-WORKDIR iot-repository 
+ADD . $HOME/iotdsm-services
+WORKDIR iotdsm-services
 RUN gradle build fatJar -x test --parallel \
-&& cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .
+&& cp build/libs/iotdsm-services-all-1.0-SNAPSHOT.jar .
 
 VOLUME /root/.gradle/
-VOLUME /root/iot-repository
+VOLUME /root/iotdsm-services

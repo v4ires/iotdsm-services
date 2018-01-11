@@ -15,7 +15,7 @@ public class JPAUtil {
 
     static {
         try {
-            emf = Persistence.createEntityManagerFactory("iot-repository-pu");
+            emf = Persistence.createEntityManagerFactory("iotdsm-services-pu");
         } catch (HibernateException he) {
             log.error(he.getMessage());
             throw new ExceptionInInitializerError(he);

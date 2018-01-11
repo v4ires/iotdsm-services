@@ -1,4 +1,4 @@
-group 'iot-repository'
+group 'iotdsm-services'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -42,7 +42,7 @@ compileKotlin {
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
-group 'iot-repository'
+group 'iotdsm-services'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
@@ -109,7 +109,7 @@ jar {
 //create a single Jar with all dependencies
 task fatJar(type: Jar) {
     manifest {
-        attributes 'Implementation-Title': 'iot-repository',
+        attributes 'Implementation-Title': 'iotdsm-services',
                 'Implementation-Version': version,
                 'Main-Class': 'Main'
     }

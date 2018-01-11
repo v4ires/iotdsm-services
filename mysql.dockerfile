@@ -10,7 +10,7 @@ EXPOSE 3306
 EXPOSE 8081
 
 # Create Log Directory
-RUN mkdir -p /var/log/iot-repository
+RUN mkdir -p /var/log/iotdsm-services
 
 # Update APT Repository
 RUN apt-get -y update \
@@ -34,10 +34,10 @@ RUN cd /usr/lib \
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
 
 # Running IoT Repository Module
-ADD . $HOME/iot-repository
-WORKDIR iot-repository 
+ADD . $HOME/iotdsm-services
+WORKDIR iotdsm-services
 RUN gradle build fatJar -x test --parallel \
-&& cp build/libs/iot-repository-all-1.0-SNAPSHOT.jar .
+&& cp build/libs/iotdsm-services-all-1.0-SNAPSHOT.jar .
 
 VOLUME /root/.gradle/
-VOLUME /root/iot-repository
+VOLUME /root/iotdsm-services
