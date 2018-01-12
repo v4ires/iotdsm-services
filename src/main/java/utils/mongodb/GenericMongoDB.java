@@ -7,7 +7,6 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import org.apache.commons.lang.NotImplementedException;
 import org.bson.Document;
 
 import java.util.List;
@@ -111,7 +110,7 @@ public class GenericMongoDB implements MongoOperation {
      */
     @Override
     public boolean update_mongo(Document document, MongoCollection<Document> collection) {
-        throw new NotImplementedException();
+        return false;
     }
 
     /**
@@ -123,7 +122,7 @@ public class GenericMongoDB implements MongoOperation {
      */
     @Override
     public boolean delete_mongo(Document document, MongoCollection<Document> collection) {
-        throw new NotImplementedException();
+        return false;
     }
 
     /**
@@ -135,7 +134,7 @@ public class GenericMongoDB implements MongoOperation {
      */
     @Override
     public boolean insert_list_mongo(List<Document> documents, MongoCollection<Document> collection) {
-        throw new NotImplementedException();
+        return false;
     }
 
     /**
@@ -147,7 +146,7 @@ public class GenericMongoDB implements MongoOperation {
      */
     @Override
     public boolean update_list_mongo(List<Document> documents, MongoCollection<Document> collection) {
-        throw new NotImplementedException();
+        return false;
     }
 
     /**
@@ -159,7 +158,7 @@ public class GenericMongoDB implements MongoOperation {
      */
     @Override
     public boolean remove_list_mongo(List<Document> documents, MongoCollection<Document> collection) {
-        throw new NotImplementedException();
+        return false;
     }
 
     @Override

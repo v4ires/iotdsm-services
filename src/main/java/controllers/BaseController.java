@@ -50,7 +50,7 @@ public class BaseController {
     protected static String serverError(Response response, Exception ex) {
         response.status(500);
         response.type("application/json");
-        return String.format("{\"error\": \"%s\"}", org.apache.commons.lang.exception.ExceptionUtils.getStackTrace(ex).replaceAll("\"", "\\\""));
+        return String.format("{\"error\": \"%s\"}", ex.getMessage());
     }
 
     /**
