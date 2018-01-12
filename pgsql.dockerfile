@@ -11,7 +11,7 @@ EXPOSE 5432
 EXPOSE 8081
 
 # Create Log Directory
-RUN mkdir -p /var/log/iotdsm-services
+RUN mkdir -p /var/log/iotdsm-edu.usp.icmc.lasdpc.iotdsm.services
 
 # Update APT Repository
 RUN apt-get -y update \
@@ -42,14 +42,14 @@ RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" >> /etc
 USER postgres
 RUN /etc/init.d/postgresql start \
 && psql -d postgres -U postgres --command "ALTER USER postgres with PASSWORD '${PGPASSWORD}';" \
-&& createdb -h localhost -p 5432 -U postgres iotdsm-services
+&& createdb -h localhost -p 5432 -U postgres iotdsm-edu.usp.icmc.lasdpc.iotdsm.services
 
 # Running IoT Repository Module
 USER root
-ADD . $HOME/iotdsm-services
-WORKDIR iotdsm-services
+ADD . $HOME/iotdsm-edu.usp.icmc.lasdpc.iotdsm.services
+WORKDIR iotdsm-edu.usp.icmc.lasdpc.iotdsm.services
 RUN gradle build fatJar -x test --parallel \
-&& cp build/libs/iotdsm-services-all-1.0-SNAPSHOT.jar .
+&& cp build/libs/iotdsm-edu.usp.icmc.lasdpc.iotdsm.services-all-1.0-SNAPSHOT.jar .
 
 VOLUME /root/.gradle/
-VOLUME /root/iotdsm-services
+VOLUME /root/iotdsm-edu.usp.icmc.lasdpc.iotdsm.services

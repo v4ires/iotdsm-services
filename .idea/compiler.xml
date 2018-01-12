@@ -10,6 +10,8 @@
     <bytecodeTargetLevel>
       <module name="iot-repository_main" target="1.8" />
       <module name="iot-repository_test" target="1.8" />
+      <module name="iotdsm-edu.usp.icmc.lasdpc.iotdsm.services_main" target="1.8" />
+      <module name="iotdsm-edu.usp.icmc.lasdpc.iotdsm.services_test" target="1.8" />
       <module name="iotdsm-services_main" target="1.8" />
       <module name="iotdsm-services_test" target="1.8" />
     </bytecodeTargetLevel>

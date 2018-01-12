@@ -7,7 +7,7 @@
 
         <!-- PostgreSQL Connection -->
         <!--<property name="hibernate.archive.autodetection">class, hbm</property>-->
-        <!--<property name="connection.url">jdbc:postgresql://localhost/iotdsm-services</property> &lt;!&ndash; BD Mane &ndash;&gt;-->
+        <!--<property name="connection.url">jdbc:postgresql://localhost/iotdsm-edu.usp.icmc.lasdpc.iotdsm.services</property> &lt;!&ndash; BD Mane &ndash;&gt;-->
         <!--<property name="connection.driver_class">org.postgresql.Driver</property> &lt;!&ndash; DB Driver &ndash;&gt;-->
         <!--<property name="connection.username">postgres</property> &lt;!&ndash; DB User &ndash;&gt;-->
         <!--<property name="connection.password">qwe1234@</property> &lt;!&ndash; DB Password &ndash;&gt;-->
@@ -25,9 +25,9 @@
         <!--<property name="format_sql">true</property> &lt;!&ndash; Show SQL formatted &ndash;&gt;-->
 
         <!-- Mapped Clases -->
-        <mapping class="model.Sensor"/>
-        <mapping class="model.SensorMeasure"/>
-        <mapping class="model.SensorMeasureType"/>
-        <mapping class="model.SensorSource"/>
+        <mapping class="edu.usp.icmc.lasdpc.model.Sensor"/>
+        <mapping class="edu.usp.icmc.lasdpc.model.SensorMeasure"/>
+        <mapping class="edu.usp.icmc.lasdpc.model.SensorMeasureType"/>
+        <mapping class="edu.usp.icmc.lasdpc.model.SensorSource"/>
     </session-factory>
 </hibernate-configuration>
