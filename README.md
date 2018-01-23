@@ -2,16 +2,16 @@
 
 <p align="center"><img src="iot-dsm-logo.png"/></p>
 
-The IoTDSM is a project developed in the Laboratory of Distributed Systems and Concurrent Programming (LaSDPC) of the University of São Paulo (USP). This project aims to simplify the acquisition and storage of sensor data in the Internet of Things (IoT) context. For this, IoTDSM supports different storage strategies in SQL and NoSQL databases. In addition to providing a RESTful API for communication and data management of sensor networks.
+The IoTDSM is a project developed in the Laboratory of Distributed Systems and Concurrent Programming (LaSDPC) of the University of São Paulo (USP). This project aims to simplify the acquisition and storage of sensor data in the Internet of Things (IoT) context. For this, IoTDSM supports different storage strategies in SQL and NoSQL databases. Also, this tool provides a RESTful API for communication and data management of sensor networks.
 
 ## Getting Started
 
 The IoTDSM aims to provide data from objects belonging to one or more intelligent environments in the context of IoT.
-To do this, this tool provides a simplified interface for connecting to different sensor network data sources, providing support for different types of databases, whether SQL or NoSQL.
+This tool provides a simplified interface for connecting to different sensor network data sources, providing support for different types of databases, whether SQL or NoSQL.
 
 ### Installing
 
-To install IoTDSM, simply compile the project with the command:
+To install IoTDSM, merely compile the project with the command:
 
 ```bash
 #Compile the project with all dependencies disregarding the execution of tests
@@ -22,7 +22,7 @@ This command will generate a .jar file with all the dependencies required to run
 The generated .jar file is located in the directory:
 
 ```bash
-#File: iotdsm-edu.usp.icmc.lasdpc.iotdsm.services-all-1.0-SNAPSHOT.jar
+#File: iotdsm-services-all-1.0.0.jar
 ~$ build/libs
 ```
 
@@ -30,7 +30,7 @@ To run the RESTFul API server from IoTDSM just run the command:
 
 ```bash
 #Executes RESTFul API Service from IoTDSM
-~$ java -cp iotdsm-edu.usp.icmc.lasdpc.iotdsm.services-all-1.0-SNAPSHOT.jar EmbeddedServletMain <args>
+~$ java -cp iotdsm-services-all-1.0.0.jar EmbeddedServletMain <args>
 ```
 
 If you only need to download the dependencies, execute the command:
@@ -55,8 +55,8 @@ These parameters are passed through system-defined *flags*.
 To view the available parameters, execute the command:
 
 ```bash
-#Mostra as opções de parâmetros disponíveis
-~$ java -cp iotdsm-edu.usp.icmc.lasdpc.iotdsm.services-all-1.0-SNAPSHOT.jar EmbeddedServletMain -help
+#Shows the options parameters available
+~$ java -cp iotdsm-services-all-1.0.0.jar EmbeddedServletMain -help
 ```
 
 The available parameters are as follows:
@@ -78,28 +78,28 @@ The table of available arguments is shown below.
 
 |          Variável         |                   Descrição                  |
 |:-------------------------:|:--------------------------------------------:|
-| HOST                      | Database Host Address				           |
-| PORT                      | Database Host Port			               |
-| DATABASE                  | Database Name			                       |
-| USER                      | Database User Name			               |
-| PASSWORD                  | Database Password		                       |
+| HOST                      | Database Host Address                           |
+| PORT                      | Database Host Port                           |
+| DATABASE                  | Database Name                                   |
+| USER                      | Database User Name                           |
+| PASSWORD                  | Database Password                               |
 | DRIVER                    | Driver JDBC                                  |
 | SQL_DEBUG                 | SQL Debug Mode                               |
-| DATABASETYPE              | Database Type (mysql, pgsql, mongo)		   |
+| DATABASETYPE              | Database Type (mysql, pgsql, mongo)           |
 | USEHIBERNATE              | Using Hibernate ORM                          |
-| SPARK_THREAD_POOL         | Use Threads Pool on Server	               |
-| SPARK_THREAD_POOL_TIMEOUT | Web Server Threads Pool Timeout			   |
-| SPARK_THREAD_POOL_MIN     | Min Pool Size Web Server	                   |
-| SPARK_THREAD_POOL_MAX     | Max Pool Size Web Server	                   |
+| SPARK_THREAD_POOL         | Use Threads Pool on Server                   |
+| SPARK_THREAD_POOL_TIMEOUT | Web Server Threads Pool Timeout               |
+| SPARK_THREAD_POOL_MIN     | Min Pool Size Web Server                       |
+| SPARK_THREAD_POOL_MAX     | Max Pool Size Web Server                       |
 | APIPORT                   | Web Server Port Number                       |
-| DIALECT                   | Database Dialect		                       |
+| DIALECT                   | Database Dialect                               |
 
 </center>
 
 These variables are passed through a configuration file (config.properties) through the command **-c= ${config_file}**.
 
 ```bash
-~$ java -cp iotdsm-edu.usp.icmc.lasdpc.iotdsm.services-all-1.0-SNAPSHOT.jar EmbeddedServletMain -c=${config_file}
+~$ java -cp iotdsm-services-all-1.0.0.jar EmbeddedServletMain -c=${config_file}
 ```
 
 ## Docker Images
