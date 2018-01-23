@@ -10,14 +10,15 @@ EXPOSE 3306
 EXPOSE 8081
 
 # Create Log Directory
-RUN mkdir -p /var/log/iotdsm-edu.usp.icmc.lasdpc.iotdsm.services
+RUN mkdir -p /var/log/iotdsm-services
 
 # Update APT Repository
 RUN apt-get -y update \
 && apt-get install -y curl \
 && apt-get install -y unzip \
 && apt-get install -y htop \
-&& apt-get install -y wget
+&& apt-get install -y wget \
+&& apt-get install -y vim
 
 # Install OpenJDK 8
 RUN apt-get install -y openjdk-${JAVA_VERSION}-jdk
@@ -34,10 +35,12 @@ RUN cd /usr/lib \
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
 
 # Running IoT Repository Module
-ADD . $HOME/iotdsm-edu.usp.icmc.lasdpc.iotdsm.services
-WORKDIR iotdsm-edu.usp.icmc.lasdpc.iotdsm.services
+ADD . $HOME/iotdsm-services
+WORKDIR iotdsm-services
 RUN gradle build fatJar -x test --parallel \
-&& cp build/libs/iotdsm-edu.usp.icmc.lasdpc.iotdsm.services-all-1.0-SNAPSHOT.jar .
+&& cp build/libs/iotdsm-services-all-1.0.0.jar .
 
-VOLUME /root/.gradle/
-VOLUME /root/iotdsm-edu.usp.icmc.lasdpc.iotdsm.services
+VOLUME $HOME/.gradle/
+VOLUME $HOME/iotdsm-services
+
+CMD [ "sh", "iotdsm-start.sh", "mysql" ]

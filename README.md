@@ -1,6 +1,6 @@
 # **I**nternet **o**f **T**hings **D**ata as a **S**ervice **M**iddleware (IoTDSM)
 
-<p align="center"><img src="iot-dsm-logo.png"/></p>
+<p align="center"><img src="assets/logo/iot-dsm-logo.png"/></p>
 
 The IoTDSM is a project developed in the Laboratory of Distributed Systems and Concurrent Programming (LaSDPC) of the University of São Paulo (USP). This project aims to simplify the acquisition and storage of sensor data in the Internet of Things (IoT) context. For this, IoTDSM supports different storage strategies in SQL and NoSQL databases. Also, this tool provides a RESTful API for communication and data management of sensor networks.
 
@@ -130,7 +130,7 @@ Finally, to execute the desired image, just execute the command:
 
 ```bash
 #To run IoTDSM given a type of Database
-~$ docker run -dp 8081:8081 iot-dsm/${db_type}:latest sh iot-dsm-${db_type}.sh
+~$ docker run -dp 8081:8081 iot-dsm/${db_type}:latest sh iotdsm-start.sh ${db_type}
 ```
 
 ## Built With
@@ -146,7 +146,7 @@ To access this documentation, just go to the link:
 http://<HOST>:<PORT>/index.html
 ```
 
-In addition, for more information about the project visit the [WIKI] (https://github.com/v4ires/iotdsm-edu.usp.icmc.lasdpc.iotdsm.services/wiki) page of the project.
+In addition, for more information about the project visit the [WIKI](https://github.com/v4ires/iotdsm-edu.usp.icmc.lasdpc.iotdsm.services/wiki) page of the project.
 
 ## Contributing
 
