@@ -30,7 +30,7 @@ To run the RESTFul API server from IoTDSM just run the command:
 
 ```bash
 #Executes RESTFul API Service from IoTDSM
-~$ java -cp iotdsm-services-all-1.0.0.jar EmbeddedServletMain <args>
+~$ java -jar iotdsm-services-all-1.0.0.jar <args>
 ```
 
 If you only need to download the dependencies, execute the command:
@@ -56,7 +56,7 @@ To view the available parameters, execute the command:
 
 ```bash
 #Shows the options parameters available
-~$ java -cp iotdsm-services-all-1.0.0.jar EmbeddedServletMain -help
+~$ java -jar iotdsm-services-all-1.0.0.jar -help
 ```
 
 The available parameters are as follows:
@@ -109,28 +109,28 @@ To compile the images in Docker from IoTDSM just run the command:
 
 ```bash
 #To Compile Image with MySQL Database
-~$ docker build -f mysql.dockerfile -t iot-dsm/mysql .
+~$ docker build -f iotdsm-mysql.dockerfile -t iotdsm-mysql .
 ```
 
 or
 
 ```bash
 #To Compile Image with PgSQL Database
-~$ docker build -f pgsql.dockerfile -t iot-dsm/pgsql .
+~$ docker build -f iotdsm-pgsql.dockerfile -t iotdsm-pgsql .
 ```
 
 or
 
 ```bash
 #To Compile Image with Mongo Database
-~$ docker build -f mongo.dockerfile -t iot-dsm/mongo .
+~$ docker build -f iotdsm-mongo.dockerfile -t iotdsm-mongo .
 ```
 
 Finally, to execute the desired image, just execute the command:
 
 ```bash
 #To run IoTDSM given a type of Database
-~$ docker run -dp 8081:8081 iot-dsm/${db_type}:latest sh iotdsm-start.sh ${db_type}
+~$ docker run -dp 8081:8081 iotdsm-${db_type}:latest sh iotdsm-start.sh ${db_type}
 ```
 
 ## Built With

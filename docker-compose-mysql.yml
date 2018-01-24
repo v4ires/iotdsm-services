@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  iotdsm-mysql:
+    build:
+      context: .
+      dockerfile: iotdsm-mysql.dockerfile
+    volumes:
+      - $HOME/.gradle/:$HOME/.gradle/
+      - $HOME/iotdsm-services:$HOME/iotdsm-services
+    ports:
+      - 8081:8081

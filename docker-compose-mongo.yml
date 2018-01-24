@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  iotdsm-mongo:
+    build:
+      context: .
+      dockerfile: iotdsm-mongo.dockerfile
+    volumes:
+      - $HOME/.gradle/:$HOME/.gradle/
+      - $HOME/iotdsm-services:$HOME/iotdsm-services
+    ports:
+      - 8081:8081

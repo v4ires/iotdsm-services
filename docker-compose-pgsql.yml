@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  iotdsm-pgsql:
+    build:
+      context: .
+      dockerfile: iotdsm-pgsql.dockerfile
+    volumes:
+      - $HOME/.gradle/:$HOME/.gradle/
+      - $HOME/iotdsm-services:$HOME/iotdsm-services
+    ports:
+      - 8081:8081
