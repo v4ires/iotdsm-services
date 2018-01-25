@@ -3,35 +3,62 @@
 db_type="$1"
 
 start_pgsql(){
-    /etc/init.d/postgresql start
-}
-
-start_mysql(){
-    /etc/init.d/mysql start
-    mysql -e 'CREATE SCHEMA `iot-repository`;'
-    mysqladmin -u root password "qwe1234@"
-}
-
-start_mongo(){
-    /usr/bin/mongod --config /etc/mongod.conf &
-}
-
-start_iotdsm(){
-    echo "init iotdsm application..."
-
-    if [ "$db_type" = "pgsql" ]; then
-        echo "init pgsql database..."
-        start_pgsql
-        java -jar iotdsm-services-all-1.0.0.jar -c=pgsql-hb.properties
-    elif [ "$db_type" = "mysql" ]; then
-        echo "init mysql database..."
-        start_mysql
-        java -jar iotdsm-services-all-1.0.0.jar -c=mysql-hb.properties
-    elif [ "$db_type" = "mongo" ]; then
-        echo "init mongo database..."
-        start_mongo
-        java -jar iotdsm-services-all-1.0.0.jar -c=mongo.properties
+    SERVICE=postgres
+    if P=$(pgrep $SERVICE)
+    then
+        echo "$SERVICE is already running"
+    else
+        echo "starting postgresql"    
+        /etc/init.d/postgresql start
     fi
 }
 
+start_mysql(){
+    SERVICE=mysql
+    if P=$(pgrep $SERVICE)
+    then
+        echo "$SERVICE is already running"
+    else
+        echo "starting mysql"
+        /etc/init.d/mysql start
+    fi
+}
+
+start_mongo(){
+    SERVICE=mongod
+    if P=$(pgrep $SERVICE)
+    then
+        echo "$SERVICE is already running"
+    else
+        echo "starting mongod"
+        /usr/bin/mongod --config /etc/mongod.conf &
+    fi
+}
+
+start_iotdsm(){
+
+    if [ ! -f "build/libs/iotdsm-services-all-1.0.0.jar" ]; then
+        bash -c "gradle build fatJar -x test --parallel"
+    fi
+
+    properties_file=""
+    if [ "$db_type" = "pgsql" ]; then
+        echo "init pgsql database..."
+        start_pgsql
+        properties_file="pgsql-hb.properties"
+    elif [ "$db_type" = "mysql" ]; then
+        echo "init mysql database..."
+        start_mysql
+        properties_file="mysql-hb.properties"
+    elif [ "$db_type" = "mongo" ]; then
+        echo "init mongo database..."
+        start_mongo
+        properties_file="mongo.properties"
+    fi
+    
+    echo "init iotdsm application..."
+    bash -c "java -jar build/libs/iotdsm-services-all-1.0.0.jar -c=$properties_file"
+}
+
+#Main
 start_iotdsm

@@ -48,8 +48,7 @@ RUN /etc/init.d/postgresql start \
 USER root
 ADD . $HOME/iotdsm-services
 WORKDIR iotdsm-services
-RUN gradle build fatJar -x test --parallel \
-&& cp build/libs/iotdsm-services-all-1.0.0.jar .
+RUN gradle build fatJar -x test --parallel
 
 VOLUME $HOME/.gradle/
 VOLUME $HOME/iotdsm-services

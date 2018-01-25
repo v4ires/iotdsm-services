@@ -3,6 +3,7 @@ FROM ubuntu:latest
 ENV JAVA_VERSION 8
 ENV PGSQL_VERSION 9.6
 ENV GRADLE_VERSION 4.4
+ENV MYSQL_PASSWORD qwe1234@
 ENV GRADLE_HOME /usr/lib/gradle
 ENV PATH $PATH:$GRADLE_HOME/bin
 
@@ -33,12 +34,14 @@ RUN cd /usr/lib \
 
 # Install MySQL/MariaDB
 RUN DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server
+RUN /etc/init.d/mysql start \
+&& mysql -e 'CREATE SCHEMA `iot-repository`;' \
+&& mysqladmin -u root password "${MYSQL_PASSWORD}"
 
 # Running IoT Repository Module
 ADD . $HOME/iotdsm-services
 WORKDIR iotdsm-services
-RUN gradle build fatJar -x test --parallel \
-&& cp build/libs/iotdsm-services-all-1.0.0.jar .
+RUN gradle build fatJar -x test --parallel
 
 VOLUME $HOME/.gradle/
 VOLUME $HOME/iotdsm-services
