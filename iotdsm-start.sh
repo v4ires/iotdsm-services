@@ -61,4 +61,5 @@ start_iotdsm(){
 }
 
 #Main
+sh clean-log.sh
 start_iotdsm
