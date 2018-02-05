@@ -42,7 +42,7 @@ public class BaseRepository {
     protected CustomTransaction hibernateTransaction;
 
     /**
-     *
+     * Inicializa as conexões aos bancos de dados de acordo com o tipo escolhido na configuração.
      */
     public static void initializeConnections() {
         if (!Boolean.parseBoolean(PropertiesReader.getValue("USEHIBERNATE"))) {
@@ -70,7 +70,9 @@ public class BaseRepository {
     }
 
     /**
+     * Método que cria uma conexão ao MongoDB, usando os parâmetros de configuração para conexão. Caso já exista uma conexão aberta, retorna a existente.
      *
+     * @return Conexão ao MongoDb Criada
      */
     public GenericMongoDB getMongoConnection() {
         if (mongoConn == null)
@@ -80,7 +82,9 @@ public class BaseRepository {
     }
 
     /**
+     * Método que cria uma {@link CustomTransaction} para ser usada com o Hibernate, usando os parâmetros de configuração para conexão. Caso já exista uma conexão aberta, retorna a existente.
      *
+     * @return {@link CustomTransaction} criada para o Hibernate.
      */
     public CustomTransaction getHibernateTransaction() {
         if (hibernateTransaction == null) {
@@ -94,6 +98,7 @@ public class BaseRepository {
     }
 
     /**
+     * Método que altera a {@link CustomTransaction} existente.
      *
      */
     public void setHibernateTransaction(CustomTransaction hibernateTransaction) {
@@ -101,7 +106,7 @@ public class BaseRepository {
     }
 
     /**
-     *
+     * Método que fecha as conexões existentes ao banco de dados, tanto a utilizada pelo Hibernate quanto a utilizada pelo JDBC.
      */
     public void close() {
         if (hibernateTransaction != null)

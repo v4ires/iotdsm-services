@@ -35,14 +35,22 @@ public class SensorSourceSQL implements SQLOperation {
     private Long lastInsertedId;
 
     /**
+     * Construtor da classe que recebe um objeto de para uso de conexão JDBC próprio da aplicação já inicializado
      *
+     * @param jdbConn Objeto ja inicializado com as configuraçoes de conexão definidos para uso com conexão JDBC
      */
     public SensorSourceSQL(JDBConnection jdbConn) {
         this.jdbConn = jdbConn;
     }
 
     /**
+     * Executa a instrução SQL fornecida, que pode ser INSERT, UPDATE ou DELETE; ou uma instrução SQL que não retorne nada, como uma instrução SQL DDL.
+     * Os parâmetros da instrução devem ser passados em {@code params} para a utilização de declarações preparadas
      *
+     * @param sql Instrução SQL a ser executada, onde os parâmetros dinâmicos devem ser trocados por ? para utilização das declarações preparadas
+     * @param params Parâmetros para a instrução a ser executada. Deve seguir a ordem dos parâmetros da instrução anterior.
+     *
+     * @return Retorna verdadeiro se a instrução foi executada com sucesso ou falso caso houve algum problema.
      */
     @Override
     public boolean execute_sql(String sql, Object... params) throws SQLException {
@@ -72,7 +80,12 @@ public class SensorSourceSQL implements SQLOperation {
     }
 
     /**
+     * Executa a instrução SQL e retorna o primeiro objeto de um tipo de medida de sensor do resultado, caso haja algum. Se não houver resultados, retorna null.
      *
+     * @param sql Instrução SQL a ser executada, onde os parâmetros dinâmicos devem ser trocados por ? para utilização das declarações preparadas
+     * @param params Parâmetros para a instrução a ser executada. Deve seguir a ordem dos parâmetros da instrução anterior.
+     *
+     * @return Retorna o primeiro objeto do resultado. Caso não haja, retorna null.
      */
     @Override
     public Object select_unique_sql(String sql, Object... params) throws SQLException {
@@ -85,7 +98,11 @@ public class SensorSourceSQL implements SQLOperation {
     }
 
     /**
+     * Efetua a conversão de um {@link ResultSet} para uma lista de objetos do tipo {@link SensorSource}, que são fontes de sensores.
      *
+     * @param rs Resultados de uma consulta a tabela de fontes de sensores.
+     *
+     * @return Retorna uma lista de fontes de sensores.
      */
     public List<SensorSource> parseSensorSources(ResultSet rs) throws SQLException {
 
@@ -108,7 +125,12 @@ public class SensorSourceSQL implements SQLOperation {
     }
 
     /**
+     * Executa a instrução SQL e retorna uma lista de objetos de fontes de sensores, de acordo com os critérios passados.
      *
+     * @param sql Instrução SQL a ser executada, onde os parâmetros dinâmicos devem ser trocados por ? para utilização das declarações preparadas
+     * @param params Parâmetros para a instrução a ser executada. Deve seguir a ordem dos parâmetros da instrução anterior.
+     *
+     * @return Retorna uma lista de fontes de sensores de acordo com a consulta efetuada.
      */
     @Override
     public List<Object> select_sql(String sql, Object... params) throws SQLException {
@@ -131,7 +153,12 @@ public class SensorSourceSQL implements SQLOperation {
     }
 
     /**
+     * Executa a instrução SQL fornecida de INSERT. Os parâmetros da instrução devem ser passados em {@code params} para a utilização de declarações preparadas
      *
+     * @param sql Instrução SQL a ser executada, onde os parâmetros dinâmicos devem ser trocados por ? para utilização das declarações preparadas
+     * @param params Parâmetros para a instrução a ser executada. Deve seguir a ordem dos parâmetros da instrução anterior.
+     *
+     * @return Retorna verdadeiro se a instrução foi executada com sucesso ou falso caso houve algum problema.
      */
     @Override
     public boolean insert_sql(String sql, Object... params) throws SQLException {
@@ -139,7 +166,12 @@ public class SensorSourceSQL implements SQLOperation {
     }
 
     /**
+     * Executa a instrução SQL fornecida de UPDATE. Os parâmetros da instrução devem ser passados em {@code params} para a utilização de declarações preparadas
      *
+     * @param sql Instrução SQL a ser executada, onde os parâmetros dinâmicos devem ser trocados por ? para utilização das declarações preparadas
+     * @param params Parâmetros para a instrução a ser executada. Deve seguir a ordem dos parâmetros da instrução anterior.
+     *
+     * @return Retorna verdadeiro se a instrução foi executada com sucesso ou falso caso houve algum problema.
      */
     @Override
     public boolean update_sql(String sql, Object... params) throws SQLException {
@@ -147,7 +179,12 @@ public class SensorSourceSQL implements SQLOperation {
     }
 
     /**
+     * Executa a instrução SQL fornecida de DELETE. Os parâmetros da instrução devem ser passados em {@code params} para a utilização de declarações preparadas
      *
+     * @param sql Instrução SQL a ser executada, onde os parâmetros dinâmicos devem ser trocados por ? para utilização das declarações preparadas
+     * @param params Parâmetros para a instrução a ser executada. Deve seguir a ordem dos parâmetros da instrução anterior.
+     *
+     * @return Retorna verdadeiro se a instrução foi executada com sucesso ou falso caso houve algum problema.
      */
     @Override
     public boolean delete_sql(String sql, Object... params) throws SQLException {
@@ -155,7 +192,9 @@ public class SensorSourceSQL implements SQLOperation {
     }
 
     /**
+     * Retorna o último id gerado em uma instrução SQL de INSERT.
      *
+     * @return Último id gerado
      */
     @Override
     public Long get_last_generated_key() {
@@ -163,7 +202,7 @@ public class SensorSourceSQL implements SQLOperation {
     }
 
     /**
-     *
+     * Encerra a conexão JDBC.
      */
     @Override
     public void close() {

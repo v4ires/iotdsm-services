@@ -37,14 +37,18 @@ public class SensorMeasureRepository extends BaseRepository {
     private static final Logger log = LoggerFactory.getLogger(SensorMeasureRepository.class);
 
     /**
+     * Construtor do repositório de valores de medida de sensores.
      *
+     * @param customTransaction Objeto da classe que contém uma sessão e uma transação para uso do Hibernate.
      */
     public SensorMeasureRepository(CustomTransaction customTransaction) {
         this.hibernateTransaction = customTransaction;
     }
 
     /**
+     * Método que cria um objeto da classe wrapper que usa conexão JDBC, utilizando os parâmetros de configuração. Caso já exista uma conexão aberta, retorna o objeto já existente.
      *
+     * @return Classe wrapper que utiliza JDBC para acesso ao banco.
      */
     protected SensorMeasureSQL getJdbcSql() {
         if (jdbcSql == null) {
@@ -63,7 +67,10 @@ public class SensorMeasureRepository extends BaseRepository {
     }
 
     /**
+     * Retorna um valor de medida de sensor pelo id especificado, usando o banco de dados especificado nos parâmetros de configuração.
      *
+     * @param sensorMeasureId Id da entrada do valor da medida de um sensor.
+     * @return Retorna um objeto de valor da medida de um sensor, caso exista, ou null se não existe.
      */
     public SensorMeasure getSensorMeasureById(long sensorMeasureId) {
         SensorMeasure sensorMeasure = null;
@@ -96,7 +103,14 @@ public class SensorMeasureRepository extends BaseRepository {
     }
 
     /**
+     * Retorna valores de medida de sensor no intervalo de tempo especificado, usando o banco de dados especificado nos parâmetros de configuração.
      *
+     * @param sensorId Id do sensor que efetuou as medidas
+     * @param measureTypeId Id do tipo da medida de um sensor a ser mostrado
+     * @param startDate Data mínima a ser retornada na lista
+     * @param endDate Data máxima a ser retornada na lista
+     *
+     * @return Retorna uma lista de objetos de valor da medida de um sensor no intervalo especificado.
      */
     public List<SensorMeasure> getSensorMeasure(long sensorId, long measureTypeId, Date startDate, Date endDate) {
         List<SensorMeasure> sensorMeasures = null;
