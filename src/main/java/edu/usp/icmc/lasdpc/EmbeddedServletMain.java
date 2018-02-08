@@ -21,7 +21,7 @@ import java.util.Properties;
  * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinicius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros viniciusaires@usp.br
  */
 public class EmbeddedServletMain {
 
@@ -32,7 +32,7 @@ public class EmbeddedServletMain {
     private static final Logger log = LoggerFactory.getLogger(EmbeddedServletMain.class);
 
     /**
-     * Método Main da Aplicação IoTDSM, inicia todas as configurações necessárias para o seu funcionamento.
+     * Método Main da Aplicação IoTDSM. Inicializa todas as configurações necessárias para o seu funcionamento.
      *
      * @param args
      */

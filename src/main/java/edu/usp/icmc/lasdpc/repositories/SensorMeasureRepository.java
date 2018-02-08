@@ -29,7 +29,7 @@ import static com.mongodb.client.model.Filters.*;
  * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinicius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros viniciusaires@usp.br
  */
 @NoArgsConstructor
 public class SensorMeasureRepository extends BaseRepository {

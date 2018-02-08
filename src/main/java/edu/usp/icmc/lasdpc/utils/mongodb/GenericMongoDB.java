@@ -37,12 +37,6 @@ public class GenericMongoDB implements MongoOperation {
         return false;
     }
 
-    /**
-     * Metodo que retonra a referencia de uma base de dados do Mongodb
-     *
-     * @param db_name
-     * @return MongoDatabase
-     */
     @Override
     public MongoDatabase getMongoDatabase(String db_name) {
         return mongoFactory.getDatabase(db_name);
@@ -53,35 +47,16 @@ public class GenericMongoDB implements MongoOperation {
         return false;
     }
 
-    /**
-     * Metodo que retorna uma collection especifica de uma base de dados do MongoDB
-     *
-     * @param db_name
-     * @param collection
-     * @return MongoCollection<Document>
-     */
     @Override
     public MongoCollection<Document> getMongoCollection(String db_name, String collection) {
         return getMongoDatabase(db_name).getCollection(collection);
     }
 
-    /**
-     * Metodo que retorna a quantidade de itens em uma collection
-     *
-     * @param collection
-     * @return long
-     */
     @Override
     public long getCollectionCount(DBCollection collection) {
         return collection.count();
     }
 
-    /**
-     * Metodo que retorna um novo Documento para ser persistido no MongoDB
-     *
-     * @param json
-     * @return Document
-     */
     @Override
     public Document createMongoDocument(String json) {
         Map<String, Object> map = gson
@@ -90,72 +65,31 @@ public class GenericMongoDB implements MongoOperation {
         return new Document(map);
     }
 
-    /**
-     * Metodo que insere um Documento no MongoDB
-     *
-     * @param document
-     * @return boolean
-     */
     @Override
     public boolean insert_mongo(DBObject document, DBCollection collection) {
         return collection.insert(document) != null ? true : false;
     }
 
-    /**
-     * Metodo que atualiza um Documento no MongoDB
-     *
-     * @param document
-     * @param collection
-     * @return boolean
-     */
     @Override
     public boolean update_mongo(Document document, MongoCollection<Document> collection) {
         return false;
     }
 
-    /**
-     * Metodo que deleta um Documento no MongoDB
-     *
-     * @param document
-     * @param collection
-     * @return boolean
-     */
     @Override
     public boolean delete_mongo(Document document, MongoCollection<Document> collection) {
         return false;
     }
 
-    /**
-     * Metodo que insere uma lista de Documentos no MongoDB
-     *
-     * @param documents
-     * @param collection
-     * @return boolean
-     */
     @Override
     public boolean insert_list_mongo(List<Document> documents, MongoCollection<Document> collection) {
         return false;
     }
 
-    /**
-     * Metodo que atualiza uma lista de Documentos no MongoDB
-     *
-     * @param documents
-     * @param collection
-     * @return boolean
-     */
     @Override
     public boolean update_list_mongo(List<Document> documents, MongoCollection<Document> collection) {
         return false;
     }
 
-    /**
-     * Metodo que remove uma lista de Documentos no MongoDB
-     *
-     * @param documents
-     * @param collection
-     * @return
-     */
     @Override
     public boolean remove_list_mongo(List<Document> documents, MongoCollection<Document> collection) {
         return false;
