@@ -1,6 +1,6 @@
 package edu.usp.icmc.lasdpc;
 
-import edu.usp.icmc.lasdpc.deserialization.VitalSignsHealthDataCsvDeserializer;
+import edu.usp.icmc.lasdpc.deserialization.WisdmCsvDeserializer;
 import edu.usp.icmc.lasdpc.repositories.BaseRepository;
 import edu.usp.icmc.lasdpc.services.SensorService;
 import edu.usp.icmc.lasdpc.utils.PropertiesReader;
@@ -15,12 +15,14 @@ public class Main {
         initServerProperties();
         initDatabaseConnection();
 
-        String fName = "vital_signs_health_data.csv";
-        //String fName = "xaa";
+        //String fName = "vital_signs_health_data.csv";
+        //String path = "/home/aires/dataset/final_trauma_v2/";
+        String path = "/home/aires/dataset/WISDM_ar_v1.1/";
+        String fName = "WISDM_ar_v1.1_raw.csv";
 
         SensorService sensorService = new SensorService();
-        VitalSignsHealthDataCsvDeserializer deserializer = new VitalSignsHealthDataCsvDeserializer();
-        deserializer.loadContent("/home/aires/dataset/final_trauma_v2/" + fName);
+        WisdmCsvDeserializer deserializer = new WisdmCsvDeserializer();
+        deserializer.loadContent(path + fName);
         long insertedMeasures = sensorService.deserializeMeasures(deserializer);
         System.out.println(insertedMeasures);
     }
