@@ -60,6 +60,6 @@ start_iotdsm(){
     bash -c "java -jar build/libs/iotdsm-services-all-1.0.0.jar -c=$properties_file"
 }
 
-#Main
+#edu.usp.icmc.lasdpc.Main
 sh clean-log.sh
 start_iotdsm
