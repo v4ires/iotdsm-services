@@ -65,14 +65,24 @@ public class EmbeddedServletMain {
         Spark.staticFiles.location("/public");
         Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
         Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
+
+        //TODO Implements this newer Endpoints
+
+        //Returns a List of Sensor from SensorSource id
+        //Spark.get("/sensorSource/:id/sensor", SensorSourceController.serveSensorListPage);
+
+        //Returns a List of Sensor Measures from Sensor id and MeasureType id
+        //Spark.get("/sensor/:id/measure/:id", SensorController.listPageSensorMeasureFromId);
+
         Spark.get("/sensor", SensorController.serveSensorListPage);
         Spark.get("/sensor/:id/measure", SensorController.serveSensorMeasureTypesBySensorId);
         Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
         Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
         Spark.get("/sensor/:id", SensorController.serveSensorById);
-        Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
-        Spark.notFound((req, res) -> "{\"message\":\"Rout Not Found 404\"}");
 
+        Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
+
+        Spark.notFound((req, res) -> "{\"message\":\"Rout Not Found 404\"}");
         spark.Spark.exception(Exception.class, (exception, request, response) -> {
             log.error(exception.getMessage());
             exception.printStackTrace();
