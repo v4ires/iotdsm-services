@@ -11,14 +11,20 @@ import spark.Route;
  * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinicius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros viniciusaires@usp.br
  */
 public class SensorSourceController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(SensorSourceController.class);
 
     /**
+     * Função responsável pela chamada GET para mostrar as fontes de sensores disponíveis
+     * Aceita o seguinte parâmetro na query:
+     * - output_format: (Opcional) Formato da saída dos dados. Suporta JSON, XML ou CSF (Padrão: JSON)
      *
+     * @param request Objeto {@link spark.Request} do SparkJava contendo os dados da requisição do cliente
+     * @param response Objeto {@link spark.Response} do SparkJava para a resposta ao cliente da requisição
+     * @return Retorna o conteúdo no formato especificado pelo parâmetro na query da chamada ou uma mensagem de erro (formato JSON) caso algum problema ocorra.
      */
     public static Route serveSensorSourceListPage = (Request request, Response response) -> {
         SensorSourceRepository _sensorSourceRepository = new SensorSourceRepository();
@@ -48,7 +54,14 @@ public class SensorSourceController extends BaseController {
     };
 
     /**
+     * Função responsável pela chamada GET para mostrar os dados de uma fonte de sensores
+     * Aceita os seguintes parâmetros na query:
+     * - output_format: (Opcional) Formato da saída dos dados. Suporta JSON, XML ou CSF (Padrão: JSON)
+     * - id: Id do sensor para mostrar os dados
      *
+     * @param request Objeto {@link spark.Request} do SparkJava contendo os dados da requisição do cliente
+     * @param response Objeto {@link spark.Response} do SparkJava para a resposta ao cliente da requisição
+     * @return Retorna o conteúdo no formato especificado pelo parâmetro na query da chamada ou uma mensagem de erro (formato JSON) caso algum problema ocorra.
      */
     public static Route serveSensorById = (Request request, Response response) -> {
         SensorSourceRepository _sensorSourceRepository = new SensorSourceRepository();

@@ -28,14 +28,22 @@ import java.util.List;
  * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinicius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros viniciusaires@usp.br
  */
 public class SensorController extends BaseController {
 
     private static final Logger log = LoggerFactory.getLogger(SensorController.class);
 
     /**
+     * Função responsável pela chamada GET de listar os sensores disponíveis.
+     * Aceita os seguintes parâmetros opcionais na query:
+     * - output_format: Formato da saída dos dados. Suporta JSON, XML ou CSF (Padrão: JSON)
+     * - limit: Informa o número máximo de entradas que poderão ser retornadas. (Padrão: 0 - todas)
+     * - offset: Informa o número de entradas a partir do início que serão puladas. (Padrão: 0)
      *
+     * @param request Objeto {@link spark.Request} do SparkJava contendo os dados da requisição do cliente
+     * @param response Objeto {@link spark.Response} do SparkJava para a resposta ao cliente da requisição
+     * @return Retorna o conteúdo no formato especificado pelo parâmetro na query da chamada ou uma mensagem de erro (formato JSON) caso algum problema ocorra.
      */
     public static Route serveSensorListPage = (Request request, Response response) -> {
         SensorRepository _sensorRepository = new SensorRepository();
@@ -112,7 +120,14 @@ public class SensorController extends BaseController {
     };
 
     /**
+     * Função responsável pela chamada GET para listar os tipos de medidas disponíveis em um sensor
+     * Aceita os seguintes parâmetros na query:
+     * - output_format: (Opcional) Formato da saída dos dados. Suporta JSON, XML ou CSF (Padrão: JSON)
+     * - id: Id do sensor para listar os tipos de medidas
      *
+     * @param request Objeto {@link spark.Request} do SparkJava contendo os dados da requisição do cliente
+     * @param response Objeto {@link spark.Response} do SparkJava para a resposta ao cliente da requisição
+     * @return Retorna o conteúdo no formato especificado pelo parâmetro na query da chamada ou uma mensagem de erro (formato JSON) caso algum problema ocorra.
      */
     public static Route serveSensorMeasureTypesBySensorId = (Request request, Response response) -> {
         SensorMeasureTypeRepository _sensorMeasureTypeRepository = new SensorMeasureTypeRepository();
@@ -168,7 +183,17 @@ public class SensorController extends BaseController {
     };
 
     /**
+     * Função responsável pela chamada GET para listar os valores de um tipo de medida em um sensor por intervalo de tempo
+     * Aceita os seguintes parâmetros na query:
+     * - output_format: (Opcional) Formato da saída dos dados. Suporta JSON, XML ou CSF (Padrão: JSON)
+     * - id: Id do sensor para listar os tipos de medidas
+     * - measureTypeId: Id do tipo da medida a ser listada
+     * - startDate: Data de início das medidas a serem listadas. Formato ISO-8601.
+     * - endDate: (Opcional) Data de fim das medidas a serem listadas. Formato ISO-8601. (Padrão: Data máxima)
      *
+     * @param request Objeto {@link spark.Request} do SparkJava contendo os dados da requisição do cliente
+     * @param response Objeto {@link spark.Response} do SparkJava para a resposta ao cliente da requisição
+     * @return Retorna o conteúdo no formato especificado pelo parâmetro na query da chamada ou uma mensagem de erro (formato JSON) caso algum problema ocorra.
      */
     public static Route serveSensorMeasuresBySensorIdAndDate = (Request request, Response response) -> {
         SensorMeasureRepository _sensorMeasureRepository = new SensorMeasureRepository();
@@ -262,7 +287,14 @@ public class SensorController extends BaseController {
     };
 
     /**
+     * Função responsável pela chamada GET para mostrar os dados de um sensor
+     * Aceita os seguintes parâmetros na query:
+     * - output_format: (Opcional) Formato da saída dos dados. Suporta JSON, XML ou CSF (Padrão: JSON)
+     * - id: Id do sensor para mostrar os dados
      *
+     * @param request Objeto {@link spark.Request} do SparkJava contendo os dados da requisição do cliente
+     * @param response Objeto {@link spark.Response} do SparkJava para a resposta ao cliente da requisição
+     * @return Retorna o conteúdo no formato especificado pelo parâmetro na query da chamada ou uma mensagem de erro (formato JSON) caso algum problema ocorra.
      */
     public static Route serveSensorById = (Request request, Response response) -> {
         SensorRepository _sensorRepository = new SensorRepository();
@@ -318,7 +350,14 @@ public class SensorController extends BaseController {
     };
 
     /**
+     * Função responsável pela chamada POST que recebe os dados de sensores e importa para o banco
+     * Aceita os seguintes parâmetros na query:
+     * - input_format: (Opcional) Formato da entrada dos dados no arquivo. Suporta JSON, XML ou CSF (Padrão: JSON)
+     * - file: Arquivo contendo os dados a serem importados.
      *
+     * @param request Objeto {@link spark.Request} do SparkJava contendo os dados da requisição do cliente
+     * @param response Objeto {@link spark.Response} do SparkJava para a resposta ao cliente da requisição
+     * @return Retorna o número de valores de medida importados ou uma mensagem de erro caso algum problema ocorra (formato JSON).
      */
     public static Route handleFileUpload = (Request request, Response response) -> {
         String inputFormat = "json", httpResponse = "";

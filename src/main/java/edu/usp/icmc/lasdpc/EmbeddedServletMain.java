@@ -21,7 +21,7 @@ import java.util.Properties;
  * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinicius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros viniciusaires@usp.br
  */
 public class EmbeddedServletMain {
 
@@ -32,6 +32,8 @@ public class EmbeddedServletMain {
     private static final Logger log = LoggerFactory.getLogger(EmbeddedServletMain.class);
 
     /**
+     * Método Main da Aplicação IoTDSM. Inicializa todas as configurações necessárias para o seu funcionamento.
+     *
      * @param args
      */
     public static void main(String[] args) {
@@ -42,7 +44,7 @@ public class EmbeddedServletMain {
     }
 
     /**
-     *
+     * Inicializa as configurações do Banco de Dados
      */
     private static void initDatabaseConnection() {
         BaseRepository.initializeConnections();
@@ -50,7 +52,7 @@ public class EmbeddedServletMain {
     }
 
     /**
-     *
+     * Inicializa as configurações do Spark Java
      */
     private static void initSpark() {
         spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
@@ -90,7 +92,9 @@ public class EmbeddedServletMain {
     }
 
     /**
-     * @param args
+     * Inicializa as configurações de sistema do IoTDSM.
+     *
+     * @param args Argumento de configurações passados pelo método Main
      */
     private static void initOptions(String[] args) {
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao [config.properties].");
@@ -98,6 +102,7 @@ public class EmbeddedServletMain {
         options.addOption("lf", "log-file", true, "Arquivo de Configuracao do Log4J [log4j.properties].");
         options.addOption("lv", "log-level", true, "Muda o nivel do log [OFF, TRACE, INFO, DEBUG, WARN, ERROR, FATAL, ALL].");
         options.addOption("h", "help", false, "Mostrar ajuda [true, false].");
+        options.addOption("v", "version", false, "Mostrar a versão do sistema.");
 
         CommandLineParser parser = new DefaultParser();
         CommandLine cmd = null;
@@ -112,7 +117,7 @@ public class EmbeddedServletMain {
     }
 
     /**
-     *
+     * Configura as propriedades do Servidor de Aplicação.
      */
     private static void initServerProperties() {
         Path path = Paths.get(_configFileName);
@@ -138,7 +143,7 @@ public class EmbeddedServletMain {
     }
 
     /**
-     *
+     * Mostra as opções de argumentos do sistema.
      */
     private static void showHelp() {
         HelpFormatter formatter = new HelpFormatter();
@@ -147,7 +152,7 @@ public class EmbeddedServletMain {
     }
 
     /**
-     *
+     * Método que habilita a utilização do Log4J.
      */
     private static void enableLog4J(String logLevel) {
         LogManager.getRootLogger().setLevel(Level.toLevel(_logLevel));
@@ -158,15 +163,23 @@ public class EmbeddedServletMain {
     }
 
     /**
-     *
+     * Método que desabilita a utilização do Log4J
      */
     private static void disableLog4J() {
         LogManager.resetConfiguration();
     }
 
+    /**
+     * Método que recebe um cmd como parâmetro e executa os argumentos passados pelo usuário.
+     *
+     * @param cmd
+     */
     private static void checkCMDOptions(CommandLine cmd) {
         if (cmd.hasOption("h")) {
             showHelp();
+            System.exit(0);
+        } else if (cmd.hasOption("v")) {
+            System.out.println("IoTDSM v" + EmbeddedServletMain.class.getPackage().getImplementationVersion());
             System.exit(0);
         } else {
             log.info("Starting IoT Repository Module...");

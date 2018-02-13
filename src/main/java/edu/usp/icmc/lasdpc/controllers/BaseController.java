@@ -24,7 +24,7 @@ import java.util.Set;
  * University of Sao Paulo
  * IoT Repository Module
  *
- * @author Vinicius Aires Barros <viniciusaires@usp.br>
+ * @author Vinicius Aires Barros viniciusaires@usp.br
  */
 public class BaseController {
 
@@ -37,7 +37,11 @@ public class BaseController {
             .create();
 
     /**
+     * Envia uma resposta HTTP de código 400 ao cliente. Utilizada para erros causados por entradas inválidas e demais necessidades de informação manual de erro em requisições.
      *
+     * @param response Objeto Response do SparkJava para escrita da resposta ao cliente
+     * @param message Mensagem de erro que será informada ao cliente
+     * @return Retorna um objeto JSON convertido para String contendo a mensagem de erro para o usuário
      */
     protected static String error(Response response, String message) {
         response.status(400);
@@ -46,6 +50,11 @@ public class BaseController {
     }
 
     /**
+     * Envia uma resposta ao cliente de erros internos ocorridos durante o processamento de requisições.
+     *
+     * @param response Objeto Response do SparkJava para escrita da resposta ao cliente
+     * @param ex Exceção ocorrida durante o processamento da requisição
+     * @return Retorna um objeto JSON convertido para String contendo a mensagem de erro para o usuário
      *
      */
     protected static String serverError(Response response, Exception ex) {
@@ -55,7 +64,12 @@ public class BaseController {
     }
 
     /**
+     * Envia uma resposta de sucesso (código 200) ao cliente e retorna o conteúdo da requisição no formato JSON.
      *
+     * @param response Objeto Response do SparkJava para escrita da resposta ao cliente
+     * @param message Resposta JSON convertida para String
+     * @param type Especifica o tipo de encoding utilizado no conteúdo
+     * @return Retorna um objeto JSON convertido para String com o conteúdo
      */
     protected static String successJSON(Response response, String message, HTTPCompressType type) {
         response.status(200);
@@ -67,6 +81,12 @@ public class BaseController {
     }
 
     /**
+     * Envia uma resposta de sucesso (código 200) ao cliente e retorna o conteúdo da requisição no formato XML.
+     *
+     * @param response Objeto Response do SparkJava para escrita da resposta ao cliente
+     * @param message Objeto a ser convertido para XML resultante da requisição
+     * @param type Especifica o tipo de encoding utilizado no conteúdo
+     * @return Retorna um objeto XML convertido para String com o conteúdo
      *
      */
     protected static String successXml(Response response, Object message, HTTPCompressType type) {
@@ -80,6 +100,11 @@ public class BaseController {
     }
 
     /**
+     * Envia uma resposta de sucesso ao cliente com o conteúdo da requisição no formato XML.
+     *
+     * @param o Objeto a ser convertido para CSV
+     * @param exposedFields Campos que serão mostrados no CSV de saída
+     * @return Retorna uma lista com os valores dos campos a serem expostos na ordem do parâmetro exposedFields
      *
      */
     protected static List<String> printCsvObject(Object o, Set<Field> exposedFields) throws Exception {
@@ -125,6 +150,14 @@ public class BaseController {
     }
 
     /**
+     * Envia uma resposta de sucesso (código 200) ao cliente e retorna o conteúdo da requisição no formato CSV.
+     * Os Campos que serão enviados nessa resposta devem estar marcados com a anotação {@code @Expose} e seu nome
+     * será utilizado no cabeçalho do arquivo CSV.
+     *
+     * @param response Objeto Response do SparkJava para escrita da resposta ao cliente
+     * @param message Objeto a ser convertido para CSV resultante da requisição
+     * @param type Especifica o tipo de encoding utilizado no conteúdo
+     * @return Retorna um objeto CSV convertido para String com o conteúdo
      *
      */
     protected static String successCsv(Response response, Object message, HTTPCompressType type) {
