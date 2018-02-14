@@ -52,13 +52,16 @@ dependencies {
     //Test Unit Framework
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
+    //Java 8
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.0'
+
     //Hibernate Dependencies
     compile 'org.hibernate:hibernate-entitymanager:5.2.12.Final'
     compile group: 'org.hibernate', name: 'hibernate-hikaricp', version: '5.2.12.Final'
     compile group: 'com.zaxxer', name: 'HikariCP', version: '2.7.2'
 
     //Class Preprocess
-    compileOnly 'org.projectlombok:lombok:1.16.18'
+    compileOnly 'org.projectlombok:lombok:1.16.20'
 
     //Web Framework
     compile "com.sparkjava:spark-core:2.7.1"
@@ -73,7 +76,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
 
     //JDBC Drivers - SQL Databases
-    compile group: 'org.postgresql', name: 'postgresql', version: '42.1.4'
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.2.1'
     compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
 
     //JDBC Drivers - NOSQL Databases
