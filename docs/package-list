@@ -1,0 +1,12 @@
+edu.usp.icmc.lasdpc
+edu.usp.icmc.lasdpc.controllers
+edu.usp.icmc.lasdpc.deserialization
+edu.usp.icmc.lasdpc.deserialization.openweather
+edu.usp.icmc.lasdpc.model
+edu.usp.icmc.lasdpc.persistence
+edu.usp.icmc.lasdpc.repositories
+edu.usp.icmc.lasdpc.services
+edu.usp.icmc.lasdpc.utils
+edu.usp.icmc.lasdpc.utils.hibernate
+edu.usp.icmc.lasdpc.utils.mongodb
+edu.usp.icmc.lasdpc.utils.sql
