@@ -102,6 +102,43 @@ public class SensorMeasureRepository extends BaseRepository {
         return sensorMeasure;
     }
 
+    //TODO Test this method
+    public List<SensorMeasure> getSensorMeasureBySensorId(long sensorId) {
+        List<SensorMeasure> sensorMeasures = null;
+        String output_time = "thread-id: %d operation: serialization db_type: %s %s";
+        long start = 0;
+        long end = 0;
+        start = System.currentTimeMillis();
+        if (useHibernate) {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            sensorMeasures = new GenericJPA<>(SensorMeasure.class).resultList(getHibernateTransaction(), "FROM SensorMeasure WHERE sensor.id=" + sensorId + "'");
+        } else {
+            if (databaseType.equals("mongo")) {
+                MongoCollection<Document> sensorMeasureCollection = getMongoConnection().getMongoCollection(PropertiesReader.getValue("DATABASE"), "sensor_measure");
+                FindIterable<Document> sensorMeasureDocuments = sensorMeasureCollection.find(and(eq("sensor_id", sensorId)));
+                sensorMeasures = new ArrayList<>();
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX");
+
+                for (Document smDocument : sensorMeasureDocuments) {
+                    smDocument.put("create_time", df.format((Date) smDocument.get("create_time")));
+                    sensorMeasures.add(_gson.fromJson(smDocument.toJson(), SensorMeasure.class));
+                }
+            } else {
+                try {
+                    List<SensorMeasure> sensors = (List<SensorMeasure>) (Object) getJdbcSql().select_sql(SQLQueryDatabase.sqlSensorMeasureBySensorId, sensorId);
+                } catch (SQLException e) {
+                    log.error(e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
+        end = System.currentTimeMillis();
+        output_time = String.format(output_time, Thread.currentThread().getId(), databaseType, Utils.printElapsedTime(start, end));
+        log.info(output_time);
+        return sensorMeasures;
+    }
+
+
     /**
      * Retorna valores de medida de sensor no intervalo de tempo especificado, usando o banco de dados especificado nos parâmetros de configuração.
      *
@@ -151,10 +188,6 @@ public class SensorMeasureRepository extends BaseRepository {
      *
      */
     public void addSensorMeasure(SensorMeasure sensorMeasure) {
-        String output_time = "thread-id: %d operation: serialization db_type: %s %s";
-        long start = 0;
-        long end = 0;
-        start = System.currentTimeMillis();
         if (useHibernate) {
             new GenericJPA<>(SensorMeasure.class).insert(getHibernateTransaction(), sensorMeasure);
         } else {
@@ -177,8 +210,5 @@ public class SensorMeasureRepository extends BaseRepository {
                 }
             }
         }
-        end = System.currentTimeMillis();
-        output_time = String.format(output_time, Thread.currentThread().getId(), databaseType, Utils.printElapsedTime(start, end));
-        log.info(output_time);
     }
 }

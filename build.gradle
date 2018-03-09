@@ -87,7 +87,7 @@ dependencies {
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
 }
 
-mainClassName = 'Main'
+mainClassName = 'EmbeddedServletMain'
 
 jar {
     manifest {

@@ -182,6 +182,62 @@ public class SensorController extends BaseController {
         return httpResponse;
     };
 
+
+    public static Route serveSensorMeasuresBySensorId = (Request request, Response response) -> {
+        SensorMeasureRepository _sensorMeasureRepository = new SensorMeasureRepository();
+        String outputFormat = "json";
+        String output_time = "thread-id: %d operation: serialization output_format: %s %s";
+        String httpResponse = "";
+        long start = 0;
+        long end = 0;
+
+        try {
+            Long sensorId;
+            Long measureTypeId;
+
+            if (request.params("id") == null || request.params("id").equals("")) {
+                log.warn("Invalid sensor id.");
+                return error(response, "Invalid sensor id.");
+            }
+
+            if (request.queryParams("output_format") != null && !request.queryParams("output_format").equals("")) {
+                outputFormat = request.queryParams("output_format");
+            }
+
+            try {
+                sensorId = Long.parseLong(request.params("id"));
+            } catch (Exception ex) {
+                log.error("Invalid sensor id.");
+                return error(response, "Invalid sensor id.");
+            }
+
+            List<SensorMeasure> sensorMeasureList = _sensorMeasureRepository.getSensorMeasureBySensorId(sensorId);
+            start = System.currentTimeMillis();
+            switch (outputFormat) {
+                default:
+                case "json":
+                    httpResponse = successJSON(response, _gson.toJson(sensorMeasureList), null);
+                    break;
+                case "xml":
+                    httpResponse = successXml(response, sensorMeasureList, null);
+                    break;
+                case "csv":
+                    httpResponse = successCsv(response, sensorMeasureList, null);
+                    break;
+            }
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            return serverError(response, ex);
+        } finally {
+            _sensorMeasureRepository.close();
+            end = System.currentTimeMillis();
+            output_time = String.format(output_time, Thread.currentThread().getId(), outputFormat, Utils.printElapsedTime(start, end));
+            log.info(output_time);
+        }
+        return httpResponse;
+    };
+
+
     /**
      * Função responsável pela chamada GET para listar os valores de um tipo de medida em um sensor por intervalo de tempo
      * Aceita os seguintes parâmetros na query:

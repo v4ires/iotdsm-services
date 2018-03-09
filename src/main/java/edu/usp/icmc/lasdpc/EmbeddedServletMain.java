@@ -32,7 +32,7 @@ public class EmbeddedServletMain {
     private static final Logger log = LoggerFactory.getLogger(EmbeddedServletMain.class);
 
     /**
-     * Método Main da Aplicação IoTDSM. Inicializa todas as configurações necessárias para o seu funcionamento.
+     * Método ImportData da Aplicação IoTDSM. Inicializa todas as configurações necessárias para o seu funcionamento.
      *
      * @param args
      */
@@ -77,11 +77,11 @@ public class EmbeddedServletMain {
         //Spark.get("/sensor/:id/measure/:id", SensorController.listPageSensorMeasureFromId);
 
         Spark.get("/sensor", SensorController.serveSensorListPage);
-        Spark.get("/sensor/:id/measure", SensorController.serveSensorMeasureTypesBySensorId);
-        Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
+        Spark.get("/sensor/:id/measure", SensorController.serveSensorMeasuresBySensorId);
+        Spark.get("/sensor/:id/measure/:measureTypeId/", SensorController.serveSensorMeasuresBySensorIdAndDate);
         Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
+        Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
         Spark.get("/sensor/:id", SensorController.serveSensorById);
-
         Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
 
         Spark.notFound((req, res) -> "{\"message\":\"Rout Not Found 404\"}");
@@ -94,7 +94,7 @@ public class EmbeddedServletMain {
     /**
      * Inicializa as configurações de sistema do IoTDSM.
      *
-     * @param args Argumento de configurações passados pelo método Main
+     * @param args Argumento de configurações passados pelo método ImportData
      */
     private static void initOptions(String[] args) {
         options.addOption("c", "configuration", true, "Caminho para o arquivo de configuracao [config.properties].");
