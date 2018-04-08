@@ -1,8 +1,8 @@
-# **I**nternet **o**f **T**hings **D**ata as a **S**ervice **M**iddleware (IoTDSM)
+# **I**nternet **o**f **T**hings **D**ata as a **S**ervice **M**iddleware Service (IoTDSM-S)
 
 <p align="center"><img src="assets/logo/iot-dsm-logo.png"/></p>
 
-The IoTDSM is a project developed in the Laboratory of Distributed Systems and Concurrent Programming (LaSDPC) of the University of São Paulo (USP). This project aims to simplify the acquisition and storage of sensor data in the Internet of Things (IoT) context. For this, IoTDSM supports different storage strategies in SQL and NoSQL databases. Also, this tool provides a RESTful API for communication and data management of sensor networks.
+The **I**nternet **o**f **T**hings **D**ata as a **S**ervice **M**iddleware **S**ervice (IoTDSM-S) is a project developed in the Laboratory of Distributed Systems and Concurrent Programming (LaSDPC) of the University of São Paulo (USP). This project aims to simplify the acquisition and storage of sensor data in the Internet of Things (IoT) context. For this, IoTDSM supports different storage strategies in SQL and NoSQL databases. Also, this tool provides a RESTful API for communication and data management of sensor networks.
 
 ## Getting Started
 
@@ -11,7 +11,7 @@ This tool provides a simplified interface for connecting to different sensor net
 
 ### Installing
 
-To install IoTDSM, merely compile the project with the command:
+To install IoTDSM, compile the project with the command:
 
 ```bash
 #Compile the project with all dependencies disregarding the execution of tests
@@ -26,17 +26,17 @@ The generated .jar file is located in the directory:
 ~$ build/libs
 ```
 
+If you only need to download the dependencies, execute the command:
+
+```bash
+~$ gradle build --refresh-dependencies
+```
+
 To run the RESTFul API server from IoTDSM just run the command:
 
 ```bash
 #Executes RESTFul API Service from IoTDSM
 ~$ java -jar iotdsm-services-all-1.0.0.jar <args>
-```
-
-If you only need to download the dependencies, execute the command:
-
-```bash
-~$ gradle build --refresh-dependencies
 ```
 
 ## Running Tests
@@ -50,9 +50,7 @@ To run the unit tests just run the command:
 
 ## Running and Deployment
 
-The IoTDSM provides an input interface for different configuration parameters.
-These parameters are passed through system-defined *flags*.
-To view the available parameters, execute the command:
+The IoTDSM provides an input interface for different configuration parameters. These parameters are passed through system-defined *flags*. To view the available parameters, execute the command:
 
 ```bash
 #Shows the options parameters available
@@ -72,9 +70,9 @@ In addition to the default parameters other settings can be defined by means of 
 This file specifies the IoTDSM Database and Web Server configuration.
 The table of available arguments is shown below.
 
-**Table 1**: Web Server input variables.
-
 <center>
+
+**Table 1**: Web Server input variables.
 
 |          Variável         |                   Descrição                  |
 |:-------------------------:|:--------------------------------------------:|
@@ -159,7 +157,7 @@ Please read the [CONTRIBUTING.md](CONTRIBUTING.md) file for more details on how 
 
 ## License
 
-This project is licensed under the MIT license - see the   [LICENSE](LICENSE) file for more details.
+This project is licensed under the MIT license - see the [LICENSE](LICENSE) file for more details.
 
 ## Acknowledgments
 
