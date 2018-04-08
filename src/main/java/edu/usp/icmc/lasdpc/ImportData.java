@@ -17,11 +17,11 @@ public class ImportData {
         initDatabaseConnection();
         SensorService sensorService = new SensorService();
 
-        String fName_health = "vital_signs_health_data.csv";
+        /*String fName_health = "vital_signs_health_data.csv";
         String path_health = "/home/aires/dataset/final_trauma_v2/";
         VitalSignsHealthDataCsvDeserializer vshDeserializer = new VitalSignsHealthDataCsvDeserializer();
         long insertedMeasuresVSH = sensorService.deserializeMeasures(vshDeserializer);
-        System.out.println(insertedMeasuresVSH);
+        System.out.println(insertedMeasuresVSH);*/
 
         String path_wisdm = "/home/aires/dataset/WISDM_ar_v1.1/";
         String fName_wisdm = "WISDM_ar_v1.1_raw.csv";
@@ -38,9 +38,9 @@ public class ImportData {
     }
 
     private static void initServerProperties() {
-        Path path = Paths.get("mongo.properties");
+        Path path = Paths.get("pgsql-hb.properties");
         if (Files.exists(path)) {
-            PropertiesReader.initialize("mongo.properties");
+            PropertiesReader.initialize("pgsql-hb.properties");
             System.out.println("--------------------------");
             System.out.println("Config Properties File");
             System.out.println("--------------------------");

@@ -13,7 +13,7 @@ import java.util.*;
 
 public class WisdmCsvDeserializer implements IDeserializer {
 
-    private static final Logger log = LoggerFactory.getLogger(VitalSignsHealthDataCsvDeserializer.class);
+    private static final Logger log = LoggerFactory.getLogger(WisdmCsvDeserializer.class);
 
     private Scanner fileStream;
     private String delimiter = ",";

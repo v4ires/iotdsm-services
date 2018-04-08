@@ -85,6 +85,9 @@ dependencies {
     //Commons Library
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.1'
     compile group: 'commons-cli', name: 'commons-cli', version: '1.4'
+
+    //Weka
+    compile group: 'nz.ac.waikato.cms.weka', name: 'weka-dev', version: '3.9.0'
 }
 
 mainClassName = 'EmbeddedServletMain'

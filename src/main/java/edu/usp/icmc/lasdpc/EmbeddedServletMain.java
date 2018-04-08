@@ -82,7 +82,6 @@ public class EmbeddedServletMain {
         Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
         Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
         Spark.get("/sensor/:id", SensorController.serveSensorById);
-        Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
 
         Spark.notFound((req, res) -> "{\"message\":\"Rout Not Found 404\"}");
         spark.Spark.exception(Exception.class, (exception, request, response) -> {
