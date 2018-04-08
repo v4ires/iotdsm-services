@@ -2,20 +2,15 @@ package edu.usp.icmc.lasdpc;
 
 import edu.usp.icmc.lasdpc.controllers.SensorController;
 import edu.usp.icmc.lasdpc.controllers.SensorSourceController;
+import edu.usp.icmc.lasdpc.controllers.WekaController;
 import edu.usp.icmc.lasdpc.utils.PropertiesReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Spark;
 
-/**
- * University of Sao Paulo
- * IoT Repository Module
- *
- * @author Vinicius Aires Barros viniciusaires@usp.br
- */
-public class EmbeddedServletMain extends BaseMain {
+public class WekaServletMain extends BaseMain {
 
-    static final Logger log = LoggerFactory.getLogger(EmbeddedServletMain.class);
+    private static final Logger log = LoggerFactory.getLogger(WekaController.class);
 
     /**
      * Método ImportData da Aplicação IoTDSM. Inicializa todas as configurações necessárias para o seu funcionamento.
@@ -23,7 +18,6 @@ public class EmbeddedServletMain extends BaseMain {
      * @param args
      */
     public static void main(String[] args) {
-        _configFileName = "pgsql-hb.properties";
         initOptions(args);
         initServerProperties();
         initDatabaseConnection();
@@ -33,8 +27,9 @@ public class EmbeddedServletMain extends BaseMain {
     /**
      * Inicializa as configurações do Spark Java
      */
-    private static void initSpark() {
+    static void initSpark() {
         spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
+
         if (Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL")))) {
             int maxThreads = Integer.parseInt(PropertiesReader.getValue("SPARK_THREAD_POOL_MIN"));
             int minThreads = Integer.parseInt(PropertiesReader.getValue("SPARK_THREAD_POOL_MAX"));
@@ -46,22 +41,19 @@ public class EmbeddedServletMain extends BaseMain {
         Spark.staticFiles.location("/public");
         Spark.get("/sensorSource", SensorSourceController.serveSensorSourceListPage);
         Spark.get("/sensorSource/:id", SensorSourceController.serveSensorById);
-
-        //TODO Implements this newer Endpoints
-
-        //Returns a List of Sensor from SensorSource id
-        //Spark.get("/sensorSource/:id/sensor", SensorSourceController.serveSensorListPage);
-
-        //Returns a List of Sensor Measures from Sensor id and MeasureType id
-        //Spark.get("/sensor/:id/measure/:id", SensorController.listPageSensorMeasureFromId);
-
         Spark.get("/sensor", SensorController.serveSensorListPage);
         Spark.get("/sensor/:id/measure", SensorController.serveSensorMeasuresBySensorId);
         Spark.get("/sensor/:id/measure/:measureTypeId/", SensorController.serveSensorMeasuresBySensorIdAndDate);
         Spark.get("/sensor/:id/measure/:measureTypeId/:startDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
         Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
         Spark.get("/sensor/:id", SensorController.serveSensorById);
-        Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
+
+        //Weka Classification
+        Spark.post("/sensor/nv", WekaController.naiveBayesPost);
+        Spark.post("/sensor/lr", WekaController.lRPost);
+        Spark.post("/sensor/knn", WekaController.dTPost);
+        Spark.post("/sensor/mlp", WekaController.mlpPost);
+        Spark.post("/sensor/knn", WekaController.knnPost);
 
         Spark.notFound((req, res) -> "{\"message\":\"Rout Not Found 404\"}");
         spark.Spark.exception(Exception.class, (exception, request, response) -> {
