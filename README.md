@@ -2,12 +2,9 @@
 
 <p align="center"><img src="assets/logo/iot-dsm-logo.png"/></p>
 
+## TL;DR
+
 The **I**nternet **o**f **T**hings **D**ata as a **S**ervice **M**iddleware **S**ervice (IoTDSM-S) is a project developed in the Laboratory of Distributed Systems and Concurrent Programming (LaSDPC) of the University of São Paulo (USP). This project aims to simplify the acquisition and storage of sensor data in the Internet of Things (IoT) context. For this, IoTDSM supports different storage strategies in SQL and NoSQL databases. Also, this tool provides a RESTful API for communication and data management of sensor networks.
-
-## Getting Started
-
-The IoTDSM aims to provide data from objects belonging to one or more intelligent environments in the context of IoT.
-This tool provides a simplified interface for connecting to different sensor network data sources, providing support for different types of databases, whether SQL or NoSQL.
 
 ### Installing
 
