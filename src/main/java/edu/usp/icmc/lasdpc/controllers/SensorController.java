@@ -10,10 +10,10 @@ import edu.usp.icmc.lasdpc.model.SensorMeasureType;
 import edu.usp.icmc.lasdpc.repositories.SensorMeasureRepository;
 import edu.usp.icmc.lasdpc.repositories.SensorMeasureTypeRepository;
 import edu.usp.icmc.lasdpc.repositories.SensorRepository;
+import edu.usp.icmc.lasdpc.services.SensorService;
 import edu.usp.icmc.lasdpc.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import edu.usp.icmc.lasdpc.services.SensorService;
 import spark.Request;
 import spark.Response;
 import spark.Route;
@@ -510,6 +510,13 @@ public class SensorController extends BaseController {
             log.info(output_time_insert);
         }
         return httpResponse;
+    };
+
+    //TODO Implements Wrapper for IoTDSM-B
+    public static Route brokerPost = (Request request, Response response) -> {
+        String msg = request.body();
+        System.out.println(msg);
+        return "Ok";
     };
 }
 

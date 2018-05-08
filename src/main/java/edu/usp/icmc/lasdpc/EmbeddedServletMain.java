@@ -23,7 +23,6 @@ public class EmbeddedServletMain extends BaseMain {
      * @param args
      */
     public static void main(String[] args) {
-        _configFileName = "pgsql-hb.properties";
         initOptions(args);
         initServerProperties();
         initDatabaseConnection();
@@ -62,6 +61,8 @@ public class EmbeddedServletMain extends BaseMain {
         Spark.get("/sensor/:id/measure/:measureTypeId/:startDate/:endDate", SensorController.serveSensorMeasuresBySensorIdAndDate);
         Spark.get("/sensor/:id", SensorController.serveSensorById);
         Spark.post("/sensor/upload", "multipart/form-data", SensorController.handleFileUpload);
+
+        Spark.post("/sensor", "multipart/form-data", SensorController.brokerPost);
 
         Spark.notFound((req, res) -> "{\"message\":\"Rout Not Found 404\"}");
         spark.Spark.exception(Exception.class, (exception, request, response) -> {

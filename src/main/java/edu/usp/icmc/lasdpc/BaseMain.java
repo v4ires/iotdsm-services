@@ -16,7 +16,7 @@ import java.util.Properties;
 
 public class BaseMain {
 
-    public static String _configFileName = "config.properties";
+    public static String _configFileName = "cloud-rest.properties";
     public static String _log4jFile = "log4j.properties";
     public static String _logLevel = "ALL";
     private static Options options = new Options();
@@ -26,8 +26,10 @@ public class BaseMain {
      * Inicializa as configurações do Banco de Dados
      */
     static void initDatabaseConnection() {
-        BaseRepository.initializeConnections();
-        log.info("Database Connection Enabled!");
+        if (Boolean.parseBoolean(PropertiesReader.getValue("DB_ACTIVE"))) {
+            BaseRepository.initializeConnections();
+            log.info("Database Connection Enabled!");
+        }
     }
 
     /**
@@ -66,10 +68,14 @@ public class BaseMain {
             log.info("Config Properties File");
             log.info("--------------------------");
             log.info("HTTP API Port: {}", PropertiesReader.getValue("APIPORT"));
-            log.info("Database Type: {}", PropertiesReader.getValue("DATABASETYPE"));
-            log.info("Hibernate is On: {}", PropertiesReader.getValue("USEHIBERNATE"));
-            log.info("SQL Debug is On: {}", PropertiesReader.getValue("SQL_DEBUG"));
-            log.info("Thread Pool is On: {}", Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL"))));
+
+            if (Boolean.parseBoolean(PropertiesReader.getValue("DB_ACTIVE"))) {
+                log.info("Database Type: {}", PropertiesReader.getValue("DATABASETYPE"));
+                log.info("Hibernate is On: {}", PropertiesReader.getValue("USEHIBERNATE"));
+                log.info("SQL Debug is On: {}", PropertiesReader.getValue("SQL_DEBUG"));
+                log.info("Thread Pool is On: {}", Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL"))));
+            }
+
             if (Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL")))) {
                 log.info("Thread Pool Timeout: {}", Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_TIMEOUT"))));
                 log.info("Thread Pool Min: {}", Integer.parseInt((PropertiesReader.getValue("SPARK_THREAD_POOL_MIN"))));
