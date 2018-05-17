@@ -16,7 +16,7 @@ import java.util.Properties;
 
 public class BaseMain {
 
-    public static String _configFileName = "cloud-rest.properties";
+    public static String _configFileName = "pgsql-hb.properties";
     public static String _log4jFile = "log4j.properties";
     public static String _logLevel = "ALL";
     private static Options options = new Options();
