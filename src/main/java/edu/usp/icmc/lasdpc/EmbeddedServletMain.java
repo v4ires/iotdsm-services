@@ -33,6 +33,7 @@ public class EmbeddedServletMain extends BaseMain {
      * Inicializa as configurações do Spark Java
      */
     private static void initSpark() {
+
         spark.Spark.port(Integer.parseInt(PropertiesReader.getValue("APIPORT")));
         if (Boolean.parseBoolean((PropertiesReader.getValue("SPARK_THREAD_POOL")))) {
             int maxThreads = Integer.parseInt(PropertiesReader.getValue("SPARK_THREAD_POOL_MIN"));
