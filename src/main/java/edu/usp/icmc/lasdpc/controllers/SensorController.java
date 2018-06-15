@@ -515,7 +515,7 @@ public class SensorController extends BaseController {
     //TODO Implements Wrapper for IoTDSM-B
     public static Route brokerPost = (Request request, Response response) -> {
         String msg = request.body();
-        System.out.println(msg);
+        //System.out.println(msg);
         return "Ok";
     };
 }
